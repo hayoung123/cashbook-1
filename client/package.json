@@ -1,0 +1,41 @@
+{
+  "name": "cashbook-1-client",
+  "version": "1.0.0",
+  "description": "우아한 가계부 클라이언트",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "dev": "webpack serve --config webpack.dev.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woowa-techcamp-2021/cashbook-1.git"
+  },
+  "keywords": [
+    "woowahan",
+    "typescript",
+    "express"
+  ],
+  "author": "woowa-techcamp-cashbook-1",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/woowa-techcamp-2021/cashbook-1/issues"
+  },
+  "homepage": "https://github.com/woowa-techcamp-2021/cashbook-1#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^6.2.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.2",
+    "mini-css-extract-plugin": "^2.1.0",
+    "sass-loader": "^12.1.0",
+    "webpack": "^5.46.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-middleware": "^5.0.0",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
