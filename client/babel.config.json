@@ -6,6 +6,9 @@
         "targets": "> 1%, not dead",
         "useBuiltIns": "usage"
       }
+    ],
+    [
+      "@babel/preset-typescript"
     ]
   ]
 }

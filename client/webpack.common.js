@@ -6,7 +6,7 @@ const __dirname = path.resolve();
 
 export default {
   target: 'web',
-  entry: './index.js',
+  entry: './index.ts',
   output: {
     filename: 'bundle.js',
     path: path.join(__dirname, 'build'),
@@ -33,6 +33,13 @@ export default {
         test: /\.(svg|png|ico|jpe?g|woff|ttf|woff2)$/i,
         loader: 'file-loader'
       },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'ts-loader',
+        }
+      }
     ],
   },
   plugins: [
@@ -44,4 +51,7 @@ export default {
       favicon: 'public/favicon.ico',
     }),
   ],
+  resolve: {
+    extensions: ['.ts', '.js']
+  }
 };
