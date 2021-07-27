@@ -31,15 +31,15 @@ export default {
       },
       {
         test: /\.(svg|png|ico|jpe?g|woff|ttf|woff2)$/i,
-        loader: 'file-loader'
+        loader: 'file-loader',
       },
       {
         test: /\.ts$/,
         exclude: /node_modules/,
         use: {
           loader: 'ts-loader',
-        }
-      }
+        },
+      },
     ],
   },
   plugins: [
@@ -52,6 +52,6 @@ export default {
     }),
   ],
   resolve: {
-    extensions: ['.ts', '.js']
-  }
+    extensions: ['.ts', '.js'],
+  },
 };
