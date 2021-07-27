@@ -4,7 +4,7 @@
   "description": "우아한 가계부 클라이언트",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint ./index.ts",
+    "lint": "eslint ./*.ts",
     "build": "npm run lint && webpack --config webpack.prod.js",
     "dev": "webpack serve --config webpack.dev.js",
     "check-types": "tsc"
