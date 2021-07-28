@@ -12,6 +12,8 @@
   "ignorePatterns": ["webpack.*.js"],
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "max-len": ["error", 100]
+    "max-len": ["error", 100],
+    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+    "comma-dangle": ["error", "always-multiline"]
   }
 }
