@@ -1,3 +1,7 @@
+@import './src/style/global.scss';
+@import './src/style/reset.scss';
+@import './src/style/variable.scss';
+
 div {
   box-sizing: border-box;
 }

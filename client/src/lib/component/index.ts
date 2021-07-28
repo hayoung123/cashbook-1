@@ -1,19 +1,17 @@
 import { subscribe, unsubscribe } from 'src/lib/observer';
-type objType = {
-  [key: string]: any;
-};
+import { objType, Partial } from './type';
 
-export default class Component extends HTMLElement {
-  public props?: any;
-  public state: any;
+export default class Component<S = void, T = void> extends HTMLElement {
+  public state: S | void;
+  public props?: T;
   public keys: Array<string>;
   public reRender: () => void;
   public components: objType;
 
-  constructor(props?: any) {
+  constructor(props?: T) {
     super();
     this.props = props;
-    this.state = {};
+    this.state = this.initState();
 
     this.keys = [];
     this.components = {};
@@ -22,19 +20,20 @@ export default class Component extends HTMLElement {
     this.reRender = this.subscribedRender.bind(this);
   }
 
-  init() {
-    this.state = this.initState();
+  init(): void {
     this.render();
     this.addEvent();
   }
 
-  initState() {
-    return {};
+  initState(): S | void {
+    return;
   }
 
-  addEvent() {}
+  addEvent(): void {
+    return;
+  }
 
-  render() {
+  render(): void {
     this.components = this.setComponents();
     this.innerHTML = this.setTemplate();
     this.setLayout();
@@ -46,7 +45,7 @@ export default class Component extends HTMLElement {
   }
 
   //컴포넌트를 각 위치에 맞게 replace
-  setLayout() {
+  setLayout(): void {
     for (const [key, Comp] of Object.entries(this.components)) {
       const $$ = this.querySelector(`#${key}`) as HTMLElement;
       this.replaceChild(Comp, $$);
@@ -54,27 +53,27 @@ export default class Component extends HTMLElement {
   }
 
   //사용하는 컴포넌트 init
-  setComponents() {
+  setComponents(): objType {
     return {};
   }
 
   //클래스 추가 메소드
-  addClass(...args: Array<string>) {
+  addClass(...args: Array<string>): void {
     this.className = args.join(' ');
   }
 
   //구독한 상태 변경시 렌더링 되는 함수
-  subscribedRender() {
+  subscribedRender(): void {
     this.unsubscribe(); //하위 컴포넌트 구독 해제
     this.render(); //하위 컴포넌트 재생성
   }
 
   //key에 속한 것들 render
-  subscribe() {
+  subscribe(): void {
     this.keys.forEach((key) => subscribe(key, this.reRender));
   }
 
-  unsubscribe(isCurrentComp = true) {
+  unsubscribe(isCurrentComp = true): void {
     if (!isCurrentComp && this.keys.length) {
       this.keys.forEach((key) => unsubscribe(key, this.reRender));
     }
@@ -87,12 +86,15 @@ export default class Component extends HTMLElement {
   }
 
   //TODO: 하위 전부다 렌더링 되는 것 해결
-  setState(newState: ((arg?: any) => objType) | objType) {
+  //TODO: throw Error를 에러처리를 따로 해놓지 않는다면 배포 당시에 삭제해야되나??
+  setState(newState: ((arg?: S) => Partial<S>) | Partial<S>): void {
+    if (!this.state) throw Error('변경할 상태가 없습니다!');
+
     if (typeof newState === 'function') {
       this.state = { ...this.state, ...newState(this.state) };
     } else {
       this.state = { ...this.state, ...newState };
     }
-    this.render();
+    this.reRender();
   }
 }
