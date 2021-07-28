@@ -1,4 +1,4 @@
-import { subscribe, unsubscribe } from '../observer';
+import { subscribe, unsubscribe } from 'src/lib/observer';
 type objType = {
   [key: string]: any;
 };

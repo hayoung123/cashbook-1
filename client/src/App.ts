@@ -1,7 +1,7 @@
-import Component from './lib/component';
+import Component from 'src/lib/component';
 
-import { pageState } from './store/page';
-import { getState } from './lib/observer';
+import { pageState } from 'src/store/page';
+import { getState } from 'src/lib/observer';
 
 export default class App extends Component {
   constructor() {
