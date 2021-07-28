@@ -16,5 +16,5 @@ const routes = isLoggedIn ? authorizedRoutes : unauthorizedRoutes;
 
 export const router = new Router({ routes, pageState });
 
-const app: HTMLElement = new App();
+const app: HTMLElement = new App({ isLoggedIn });
 root?.append(app);

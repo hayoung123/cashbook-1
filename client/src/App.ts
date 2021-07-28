@@ -1,26 +1,38 @@
 import Component from 'src/lib/component';
 
+import Header from 'src/components/Header';
 import { pageState } from 'src/store/page';
 import { getState } from 'src/lib/observer';
 
-export default class App extends Component {
-  constructor() {
-    super();
+type objType = {
+  [key: string]: any;
+};
+
+type StateType = {};
+type PropsType = {
+  isLoggedIn: boolean;
+};
+
+export default class App extends Component<StateType, PropsType> {
+  constructor(props: PropsType) {
+    super(props);
     this.addClass('app');
     this.keys = [pageState];
     this.subscribe();
   }
 
-  setTemplate() {
+  setTemplate(): string {
     return `
+      ${this.props?.isLoggedIn ? `<div id="app_header"></div>` : ''}
       <div id="page"></div>
     `;
   }
 
-  setComponents() {
+  setComponents(): objType {
     const { Page } = getState(pageState);
     return {
       page: new Page(),
+      app_header: new Header(),
     };
   }
 }

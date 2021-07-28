@@ -1,0 +1,49 @@
+header {
+  display: flex;
+  justify-content: center;
+  font-family: 'Do Hyeon', sans-serif;
+  color: var(--off-white-color);
+  background-color: var(--primary-color);
+
+  .header__content {
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0;
+
+    .title {
+      font-size: var(--display-small-size);
+    }
+  }
+
+  .month-picker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .month-display {
+    text-align: center;
+    margin: 0 44px;
+
+    .month {
+      font-size: var(--display-large-size);
+    }
+    .year {
+      font-size: var(--display-small-size);
+    }
+    & > img {
+    }
+  }
+
+  .navigator {
+    display: flex;
+    gap: 27px;
+
+    button {
+      opacity: 0.5;
+    }
+    .selected {
+      opacity: 1;
+    }
+  }
+}
