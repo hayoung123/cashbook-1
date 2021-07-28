@@ -1,11 +1,17 @@
+import { pageState } from './../../store/page';
 import { routesType, paramsType } from './type';
 import { setState } from '../observer';
+
+type PropsType = {
+  routes: { [key: string]: Object };
+  pageState: string;
+};
 
 export default class Router {
   routes: routesType;
   setPage: (arg: any) => void;
   currIndex: number;
-  constructor({ routes, pageState }) {
+  constructor({ routes, pageState }: PropsType) {
     this.routes = routes;
     this.setPage = setState(pageState);
     this.currIndex = 0;
@@ -79,7 +85,7 @@ export default class Router {
   }
 
   parseParams(routePath: string, path: string): paramsType {
-    const params = {};
+    const params: paramsType = {};
 
     const routeChunks = routePath.split('/');
     const chunks = path.split('/');
@@ -95,7 +101,7 @@ export default class Router {
     return params;
   }
 
-  isBack(index) {
+  isBack(index: number) {
     return index < this.currIndex;
   }
 }
