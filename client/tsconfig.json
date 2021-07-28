@@ -68,8 +68,8 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"],
-      "@public/*": ["public/*"]
+      "src/*": ["src/*"],
+      "public/*": ["public/*"]
     }
   },
   "include": ["./index.ts", "src/*.ts"],

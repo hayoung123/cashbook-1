@@ -53,8 +53,8 @@ export default {
   ],
   resolve: {
     alias: {
-      '@src': path.resolve(__dirname, 'src'),
-      '@public': path.resolve(__dirname, 'public'),
+      src: path.resolve(__dirname, 'src'),
+      public: path.resolve(__dirname, 'public'),
     },
     extensions: ['.ts', '.js'],
   },
