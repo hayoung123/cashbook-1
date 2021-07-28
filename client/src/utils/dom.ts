@@ -7,11 +7,17 @@ type createElemType = {
 type targetType = HTMLElement | Document;
 
 const _ = {
-  $: (selector: string, target: targetType = document): HTMLElement =>
-    target.querySelector(selector),
-  $$: (selector: string, target: targetType = document): NodeListOf<HTMLElement> =>
-    target.querySelectorAll(selector),
-  onEvent: (target: HTMLElement, eventType: string, fn: () => void): void => {
+  $: (selector: string, target: targetType = document): HTMLElement | null => {
+    return target.querySelector(selector);
+  },
+  $$: (selector: string, target: targetType = document): NodeListOf<HTMLElement> => {
+    return target.querySelectorAll(selector);
+  },
+  onEvent: (
+    target: HTMLElement,
+    eventType: keyof HTMLElementEventMap,
+    fn: (e: Event) => void,
+  ): void => {
     target.addEventListener(eventType, fn);
   },
   createElement: ({ tagName, classNames = [], value = '' }: createElemType): HTMLElement => {
