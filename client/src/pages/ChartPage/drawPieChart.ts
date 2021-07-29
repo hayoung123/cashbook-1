@@ -1,11 +1,15 @@
 function drawPieChart(element: HTMLElement, canvasID: string): void {
-  const canvas: HTMLCanvasElement = element.querySelector(`#${canvasID}`);
+  const canvas: HTMLCanvasElement | null = element.querySelector(`#${canvasID}`);
 
   if (!canvas) {
     return;
   }
 
   const ctx = canvas.getContext('2d');
+
+  if (!ctx) {
+    return;
+  }
 
   const x = 127;
   const y = 127;

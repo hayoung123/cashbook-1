@@ -1,11 +1,15 @@
 function drawCoordinatePlane(element: HTMLElement, canvasID: string): void {
-  const canvas: HTMLCanvasElement = element.querySelector(`#${canvasID}`);
+  const canvas: HTMLCanvasElement | null = element.querySelector(`#${canvasID}`);
 
   if (!canvas) {
     return;
   }
 
-  const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d');
+
+  if (!ctx) {
+    return;
+  }
 
   const coordinateWidth = 750;
   const coordinateHeight = 300;
