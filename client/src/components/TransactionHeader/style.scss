@@ -1,0 +1,24 @@
+transaction-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--primary-dark-color);
+  margin-bottom: 8px;
+
+  .transaction__total {
+    font-size: var(--body-large-size);
+  }
+
+  .transaciton__price-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: var(--body-medium-size);
+
+    & > div {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+}
