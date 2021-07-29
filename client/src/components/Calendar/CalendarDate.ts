@@ -14,6 +14,12 @@ interface calendarPriceInfoType {
   [key: string]: TotalPriceType;
 }
 
+interface DateType {
+  year: number;
+  month: number;
+  date: number;
+}
+
 export default class CalendarDate extends Component {
   constructor() {
     super();
@@ -27,11 +33,15 @@ export default class CalendarDate extends Component {
 
     const monthTemplate: string = monthArr.reduce((acc, weekArr) => {
       const weekTemplate = weekArr.reduce((acc, day) => {
+        const tdClass = this.isToday({ year: date.year, month: date.month, date: day ?? 0 })
+          ? 'today-date'
+          : '';
+        console.log(tdClass);
         const priceTemplate = this.priceTemplate(priceInfo[day ? day : '']);
 
         return (
           acc +
-          `<td>
+          `<td class=${tdClass}>
             ${priceTemplate}
             <div class='calendar-date__date'>${day ? day : ''}</div>
            </td>`
@@ -68,6 +78,18 @@ export default class CalendarDate extends Component {
   getPriceInfo(): calendarPriceInfoType {
     //fetch 작업
     return sample;
+  }
+
+  isToday({ year, month, date }: DateType): boolean {
+    const dateObj = new Date();
+
+    const todayYear = dateObj.getFullYear();
+    const todayMonth = dateObj.getMonth() + 1;
+    const todayDate = dateObj.getDate();
+
+    if (todayYear === year && todayMonth === month && todayDate === date) return true;
+
+    return false;
   }
 }
 

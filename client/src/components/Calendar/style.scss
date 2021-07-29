@@ -40,6 +40,10 @@ calendar-date {
       padding: 10px;
       flex: 1;
     }
+
+    .today-date {
+      background-color: var(--background-color);
+    }
   }
 
   tr:not(:last-child) {
