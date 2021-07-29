@@ -3,6 +3,7 @@ woowa-calendar {
 }
 
 calendar-day {
+  margin-bottom: 16px;
   border: 1px solid var(#ccd3d3);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 20px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -15,5 +16,38 @@ calendar-day {
     align-items: center;
     justify-content: center;
     padding: 13px 0;
+  }
+}
+
+calendar-date {
+  display: flex;
+  background: var(--off-white-color);
+  border: 1px solid var(--line-color);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-size: var(--bold-small-size);
+  color: var(--label-color);
+
+  table {
+    width: 100%;
+  }
+
+  tr {
+    display: flex;
+    td {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      height: 120px;
+      padding: 10px;
+      flex: 1;
+    }
+  }
+
+  tr:not(:last-child) {
+    border-bottom: 1px solid var(--line-color);
+  }
+  tr > td:not(:last-child) {
+    border-right: 1px solid var(--line-color);
   }
 }
