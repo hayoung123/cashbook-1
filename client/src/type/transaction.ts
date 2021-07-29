@@ -1,9 +1,9 @@
-export type PaymentType = {
+export interface PaymentType {
   category: string;
   title: string;
   method: string;
   price: number;
-};
+}
 
 export type DayTransactionType = {
   date: string;
