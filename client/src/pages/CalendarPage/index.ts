@@ -1,5 +1,7 @@
 import Component from 'src/lib/component';
 
+import Calendar from 'src/components/Calendar';
+
 export default class CalendarPage extends Component {
   constructor() {
     super();
@@ -8,8 +10,15 @@ export default class CalendarPage extends Component {
 
   setTemplate(): string {
     return `
-      <div id='calendar_page__list'>달력페이지</div>
+      <div class="container column">
+        <div id='calendar'></div>
+      </div>
     `;
+  }
+  setComponents(): { [key: string]: HTMLElement } {
+    return {
+      calendar: new Calendar(),
+    };
   }
 }
 
