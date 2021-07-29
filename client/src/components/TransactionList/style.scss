@@ -19,14 +19,28 @@
   }
 }
 
+.divider {
+  width: 100%;
+  height: 0.5px;
+  background-color: var(--line-color);
+}
+
+.transaction__record-container {
+  font-size: var(--body-medium-size);
+  color: var(--title-color);
+  border-bottom: 1px solid var(--line-color);
+  .transaction__form-container {
+    border: none;
+    & > div:last-child {
+      margin-bottom: 30px;
+    }
+  }
+}
 .transaction__record {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 24px 16px;
-  font-size: var(--body-medium-size);
-  color: var(--title-color);
-  border-bottom: 1px solid var(--line-color);
 
   & > div:first-child {
     flex: 1.3;
