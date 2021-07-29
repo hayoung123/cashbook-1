@@ -20,11 +20,13 @@ export default class TransactionRecord extends Component<StateType, PaymentType>
 
     const { title, method, price } = this.props;
     return `
-        <div>
+        <div class="transaction__record">
+          <div class="transaction__record-main">
             <div id="category-badge"></div>
-            <div class="">${title}</div>
-            <div class="">${method}</div>
-            <div class="">${price}</div>
+            <div class="transaction__record-title">${title}</div>
+          </div>
+          <div class="transaction__record-method">${method}</div>
+          <div class="transaction__record-price">${price}</div>
         </div>
         `;
   }
