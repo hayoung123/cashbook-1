@@ -1,4 +1,7 @@
+import TransactionFrom from 'src/components/TransactionForm';
+import TransactionList from 'src/components/TransactionList';
 import Component from 'src/lib/component';
+import { objType } from 'src/type/type';
 
 export default class MainPage extends Component {
   constructor() {
@@ -8,8 +11,17 @@ export default class MainPage extends Component {
 
   setTemplate(): string {
     return `
-      <div id='main_page__list'>메인페이지</div>
+      <div class=" container column">
+        <div id='main_page__input'></div>
+        <div id='main_page__list'></div>
+      </div>
     `;
+  }
+  setComponents(): objType {
+    return {
+      main_page__list: new TransactionList(),
+      main_page__input: new TransactionFrom(),
+    };
   }
 }
 
