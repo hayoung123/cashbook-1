@@ -1,0 +1,11 @@
+.category__badge {
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    width: 92px;
+    padding: 4px 8px;
+    border-radius: 999px;
+  }
+}
