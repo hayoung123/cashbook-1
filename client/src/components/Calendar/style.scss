@@ -25,8 +25,6 @@ calendar-date {
   border: 1px solid var(--line-color);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 20px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  font-size: var(--bold-small-size);
-  color: var(--label-color);
 
   table {
     width: 100%;
@@ -36,8 +34,7 @@ calendar-date {
     display: flex;
     td {
       display: flex;
-      align-items: flex-end;
-      justify-content: flex-end;
+      justify-content: space-between;
       height: 120px;
       padding: 10px;
       flex: 1;
@@ -49,5 +46,27 @@ calendar-date {
   }
   tr > td:not(:last-child) {
     border-right: 1px solid var(--line-color);
+  }
+
+  .calendar-date__date {
+    align-self: flex-end;
+    color: var(--label-color);
+    font-size: var(--bold-small-size);
+  }
+
+  .calendar__price-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: var(--bold-medium-size);
+    .calendar__price-income {
+      color: var(--primary-dark-color);
+    }
+    .calendar__price-expenditure {
+      color: var(--error-color);
+    }
+    .calendar__price-total {
+      color: var(--title-color);
+    }
   }
 }
