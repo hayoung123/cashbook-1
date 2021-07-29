@@ -44,12 +44,12 @@ export default class DayTransaction extends Component<StateType, DayTransactionT
   setComponents(): ComponentType | objType {
     if (!this.props) return {};
 
-    const { transaction } = this.props;
+    const { date, transaction } = this.props;
 
     const components: ComponentType = {};
     transaction.forEach((record, idx) => {
       const key = `transaction-record-${idx}`;
-      components[key] = new TransactionRecord({ ...record });
+      components[key] = new TransactionRecord({ date, ...record });
     });
 
     return components;
