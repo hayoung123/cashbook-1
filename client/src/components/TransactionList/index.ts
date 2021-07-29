@@ -5,6 +5,8 @@ import DayTransaction from './DayTransaction';
 import { objType } from 'src/type/type';
 import { TransactionType } from 'src/type/transaction';
 
+import './style.scss';
+
 export default class TransationList extends Component {
   constructor() {
     super();
@@ -36,13 +38,13 @@ const sampleData: TransactionType = [
     date: '2021.07.28',
     transaction: [
       {
-        category: '문화/여가',
+        category: 'culture',
         title: '스트리밍서비스 정기 결제',
         method: '현대카드',
         price: -10900,
       },
       {
-        category: '교통',
+        category: 'transport',
         title: '후불 교통비 결제',
         method: '현대카드',
         price: -45340,
@@ -53,13 +55,13 @@ const sampleData: TransactionType = [
     date: '2021.07.27',
     transaction: [
       {
-        category: '미분류',
+        category: 'etc',
         title: '온라인 세미나 신청',
         method: '현대카드',
         price: -10000,
       },
       {
-        category: '월급',
+        category: 'salary',
         title: '7월 급여',
         method: '현금',
         price: 1000000,

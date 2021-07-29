@@ -1,4 +1,4 @@
-type PaymentType = {
+export type PaymentType = {
   category: string;
   title: string;
   method: string;

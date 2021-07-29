@@ -8,8 +8,6 @@ import { getNumberWithComma } from 'src/utils/price';
 import { objType } from 'src/type/type';
 import { DayTransactionType, PaymentType } from 'src/type/transaction';
 
-import './style.scss';
-
 type StateType = void;
 
 type ComponentType = { [key: string]: HTMLElement };
