@@ -1,5 +1,5 @@
-function drawCoordinatePlane(canvasID: string): void {
-  const canvas: HTMLCanvasElement = document.getElementById(canvasID);
+function drawCoordinatePlane(element: HTMLElement, canvasID: string): void {
+  const canvas: HTMLCanvasElement = element.querySelector(`#${canvasID}`);
 
   if (!canvas) {
     return;

@@ -1,5 +1,5 @@
-function drawPieChart(canvasID: string): void {
-  const canvas: HTMLCanvasElement | void = document.getElementById(canvasID);
+function drawPieChart(element: HTMLElement, canvasID: string): void {
+  const canvas: HTMLCanvasElement = element.querySelector(`#${canvasID}`);
 
   if (!canvas) {
     return;

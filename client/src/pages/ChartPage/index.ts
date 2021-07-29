@@ -9,16 +9,11 @@ export default class ChartPage extends Component {
   constructor() {
     super();
     this.addClass('page');
+    this.drawChart();
   }
 
   addEvent(): void {
     this.addEventListener('click', this.handleClick.bind(this));
-    setTimeout(() => {
-      drawPieChart('pie-chart');
-    }, 0);
-    setTimeout(() => {
-      drawCoordinatePlane('line-chart');
-    }, 0);
   }
 
   setTemplate(): string {
@@ -64,6 +59,11 @@ export default class ChartPage extends Component {
     const button: HTMLTableRowElement | null = target.closest('tr');
     if (!button) return;
     console.log(button);
+  }
+
+  drawChart(): void {
+    drawPieChart(this, 'pie-chart');
+    drawCoordinatePlane(this, 'line-chart');
   }
 }
 
