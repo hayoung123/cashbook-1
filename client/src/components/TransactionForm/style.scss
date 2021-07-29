@@ -1,0 +1,55 @@
+.transaction__form {
+  margin-top: 1rem;
+  display: flex;
+  background-color: var(--off-white-color);
+  border: 1px solid var(--placeholder-color);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+
+  & > div {
+    padding: 0 24px;
+    & > div:first-child,
+    & > label:first-child {
+      color: var(--primary-dark-color);
+      font-size: var(--bold-small-size);
+    }
+  }
+
+  & > div:not(:last-child) {
+    border-right: 1px solid var(--placeholder-color);
+  }
+
+  .transaction__form-column {
+    font-size: var(--bold-medium-size);
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+
+    .empty,
+    input::placeholder {
+      color: var(--label-color);
+    }
+  }
+
+  .transaction__date,
+  .transaction__price {
+    input {
+      width: 70px;
+    }
+  }
+
+  .transaction__type {
+    color: var(--label-color);
+    .transaction__type-select {
+      display: flex;
+      gap: 8px;
+      & > label {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+  }
+}
