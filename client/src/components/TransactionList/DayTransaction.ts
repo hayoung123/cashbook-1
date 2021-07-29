@@ -18,8 +18,6 @@ export default class DayTransaction extends Component<StateType, DayTransactionT
   }
 
   setTemplate(): string {
-    if (!this.props) return '';
-
     const { date: transactionDate, transaction } = this.props;
     const { month, date, day } = getDate(transactionDate);
     const totalPrice = this.getTotalPrice(transaction);

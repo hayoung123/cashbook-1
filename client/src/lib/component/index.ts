@@ -3,12 +3,12 @@ import { objType, Partial } from './type';
 
 export default class Component<S = void, T = void> extends HTMLElement {
   public state: S | void;
-  public props?: T;
+  public props: T;
   public keys: Array<string>;
   public reRender: () => void;
   public components: objType;
 
-  constructor(props?: T) {
+  constructor(props: T) {
     super();
     this.props = props;
     this.state = this.initState();

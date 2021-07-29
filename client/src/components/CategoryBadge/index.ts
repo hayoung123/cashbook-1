@@ -14,8 +14,6 @@ export default class CategoryBadge extends Component<void, CategoryType> {
     this.addClass('category__badge');
   }
   setTemplate(): string {
-    if (!this.props) return '';
-
     const { category } = this.props;
 
     const categoryInfo: { name: string; color: string } = CATEGORY__INFO[category]

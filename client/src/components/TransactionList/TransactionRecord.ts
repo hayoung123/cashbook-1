@@ -16,8 +16,6 @@ export default class TransactionRecord extends Component<StateType, PaymentType>
   }
 
   setTemplate(): string {
-    if (!this.props) return '';
-
     const { title, method, price } = this.props;
     return `
         <div class="transaction__record">
