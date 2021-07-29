@@ -1,20 +1,9 @@
 import Component from 'src/lib/component';
+import { DayTransactionType } from 'src/type/transaction';
 import { getDate } from 'src/utils/date';
 import { getNumberWithComma } from 'src/utils/price';
 
 import './style.scss';
-
-type PaymentType = {
-  category: string;
-  title: string;
-  method: string;
-  price: number;
-};
-
-type DayTransactionType = {
-  date: string;
-  transaction: Array<PaymentType>;
-};
 
 type StateType = {
   isEdit: boolean;

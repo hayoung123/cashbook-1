@@ -1,13 +1,9 @@
-import { objType } from 'src/type/type';
 import Component from 'src/lib/component';
+
 import DayTransaction from './DayTransaction';
 
-type PaymentType = {
-  category: string;
-  title: string;
-  method: string;
-  price: number;
-};
+import { objType } from 'src/type/type';
+import { TransactionType } from 'src/type/transaction';
 
 export default class TransationList extends Component {
   constructor() {
@@ -35,12 +31,7 @@ export default class TransationList extends Component {
 
 customElements.define('transaction-list', TransationList);
 
-type DayTransactionType = {
-  date: string;
-  transaction: Array<PaymentType>;
-};
-
-const sampleData: Array<DayTransactionType> = [
+const sampleData: TransactionType = [
   {
     date: '2021.07.28',
     transaction: [
