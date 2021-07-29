@@ -47,8 +47,8 @@ export default class Component<S = void, T = void> extends HTMLElement {
   //컴포넌트를 각 위치에 맞게 replace
   setLayout(): void {
     for (const [key, Comp] of Object.entries(this.components)) {
-      const $$ = this.querySelector(`#${key}`) as HTMLElement;
-      this.replaceChild(Comp, $$);
+      const $$ = this.querySelector(`#${key}`);
+      $$?.replaceWith(Comp);
     }
   }
 
