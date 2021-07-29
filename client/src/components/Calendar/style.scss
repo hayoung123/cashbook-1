@@ -1,0 +1,19 @@
+woowa-calendar {
+  margin-top: 32px;
+}
+
+calendar-day {
+  border: 1px solid var(#ccd3d3);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  display: flex;
+  color: var(--label-color);
+
+  & > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 0;
+  }
+}
