@@ -1,0 +1,90 @@
+woowa-calendar {
+  margin-top: 32px;
+}
+
+calendar-day {
+  margin-bottom: 16px;
+  border: 1px solid var(#ccd3d3);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  display: flex;
+  color: var(--label-color);
+
+  & > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 0;
+  }
+}
+
+calendar-date {
+  display: flex;
+  background: var(--off-white-color);
+  border: 1px solid var(--line-color);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 24px;
+
+  table {
+    width: 100%;
+  }
+
+  tr {
+    display: flex;
+    td {
+      display: flex;
+      justify-content: space-between;
+      height: 120px;
+      padding: 10px;
+      flex: 1;
+    }
+
+    .today-date {
+      background-color: var(--background-color);
+    }
+  }
+
+  tr:not(:last-child) {
+    border-bottom: 1px solid var(--line-color);
+  }
+  tr > td:not(:last-child) {
+    border-right: 1px solid var(--line-color);
+  }
+
+  .calendar-date__date {
+    align-self: flex-end;
+    color: var(--label-color);
+    font-size: var(--bold-small-size);
+  }
+
+  .calendar__price-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: var(--bold-medium-size);
+    .calendar__price-income {
+      color: var(--primary-dark-color);
+    }
+    .calendar__price-expenditure {
+      color: var(--error-color);
+    }
+    .calendar__price-total {
+      color: var(--title-color);
+    }
+  }
+}
+
+total-price-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  color: var(--body-color);
+  font-size: var(--bold-medium-size);
+  font-weight: 500;
+  & > div:first-child {
+    display: flex;
+    gap: 8px;
+  }
+}
