@@ -36,7 +36,7 @@ export default class CalendarDate extends Component {
         const tdClass = this.isToday({ year: date.year, month: date.month, date: day ?? 0 })
           ? 'today-date'
           : '';
-        console.log(tdClass);
+
         const priceTemplate = this.priceTemplate(priceInfo[day ? day : '']);
 
         return (
