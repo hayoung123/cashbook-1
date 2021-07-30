@@ -9,5 +9,8 @@ export default merge(common, {
   devtool: 'source-map',
   devServer: {
     port: PORT,
+    proxy: {
+      '/': 'http://localhost:3000',
+    },
   },
 });
