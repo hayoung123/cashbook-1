@@ -1,7 +1,8 @@
 import Component from 'src/lib/component';
 
 import { router } from '../../../index';
-
+import { setState } from 'src/lib/observer';
+import { isLoggedInState } from 'src/store/page';
 import githubIcon from 'public/assets/icon/github.svg';
 
 import './style.scss';
@@ -26,7 +27,7 @@ export default class SignInPage extends Component {
           <div class="sub-buttons">
             <button id="signup">회원가입</button>
           </div>
-          <button class="oauth-button demo">
+          <button id="signin-demo" class="oauth-button demo">
           데모용 샘플 계정으로 로그인
           </button>
           <button class="oauth-button github">
@@ -48,9 +49,13 @@ export default class SignInPage extends Component {
     const target = e.target as HTMLElement;
     const button: HTMLButtonElement | null = target.closest('button');
     if (!button) return;
-    console.log(button);
+
     if (button.id === 'signup') {
       router.push('/signup');
+    }
+    if (button.id === 'signin-demo') {
+      setState(isLoggedInState)(true);
+      router.push('/');
     }
   }
 
