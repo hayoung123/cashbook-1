@@ -25,6 +25,10 @@ export default class Router {
     this.handlePopstate();
   }
 
+  setRoutes(routes: { [key: string]: Object }): void {
+    this.routes = routes;
+  }
+
   // 브라우저 뒤로, 앞으로가기
   handlePopstate() {
     const path = location.pathname;
