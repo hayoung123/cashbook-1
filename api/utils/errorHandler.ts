@@ -18,7 +18,9 @@ function errorHandler(errCode: string): ErrorType {
     case 'auth/existing-email':
       return { statusCode: 409, errorMessage: '이미 가입된 이메일입니다.' };
     case 'payment/nonexistent-payment':
-      return { statusCode: 409, errorMessage: '등록할 수 없는 결제수단입니다.' };
+      return { statusCode: 409, errorMessage: '존재하지 않은 결제수단입니다.' };
+    case 'payment/payment/unowned-payment':
+      return { statusCode: 409, errorMessage: '등록되지 않은 결제수단입니다.' };
     case 'payment/owned-payment':
       return { statusCode: 409, errorMessage: '이미 등록된 결제수단입니다.' };
     default:
