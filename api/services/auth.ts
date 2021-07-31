@@ -1,6 +1,8 @@
+import { VerifyErrors } from 'jsonwebtoken';
+
 import sequelize, { db } from 'models/db';
 import errorGenerator from 'utils/errorGenerator';
-import { createToken } from 'utils/jwt';
+import { createToken, verifyToken } from 'utils/jwt';
 import { hashPassword, checkPassword } from 'utils/encryption';
 
 interface TokenType {
@@ -57,6 +59,42 @@ async function signUp(email: string, password: string): Promise<TokenType> {
   return { accessToken, refreshToken };
 }
 
+async function verifyAuth(token: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    verifyToken(token, (err: VerifyErrors | null) => {
+      if (!err) {
+        resolve();
+        return;
+      }
+
+      switch (err.name) {
+        case 'ToeknExpiredError':
+          reject(
+            errorGenerator({
+              message: err.message,
+              code: 'auth/token-expired',
+            }),
+          );
+          break;
+        case 'JsonWebTokenError':
+          reject(
+            errorGenerator({
+              message: err.message,
+              code: 'auth/invalid-token',
+            }),
+          );
+          break;
+        default:
+          reject(
+            errorGenerator({
+              message: err.message,
+              code: 'auth/invalid-token',
+            }),
+          );
+      }
+    });
+  });
+
 async function signIn(email: string, password: string): Promise<TokenType> {
   const userSnapshot = await db.User.findOne({
     attributes: ['id', 'password'],
@@ -110,4 +148,5 @@ async function signIn(email: string, password: string): Promise<TokenType> {
 export default {
   signIn,
   signUp,
+  verifyAuth,
 };
