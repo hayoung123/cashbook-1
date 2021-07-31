@@ -12,6 +12,11 @@ interface TransactionDataType {
   price: number;
 }
 
+interface EditTransactionDataType extends TransactionDataType {
+  transactionId: string;
+}
+
+//거래내역 추가
 async function createTransaction({
   userId,
   date,
@@ -20,7 +25,7 @@ async function createTransaction({
   payment,
   price,
 }: TransactionDataType): Promise<boolean> {
-  const isUserPayment = checkUserPayment(userId, payment);
+  const isUserPayment = await checkUserPayment(userId, payment);
 
   if (!isUserPayment) {
     throw errorGenerator({
@@ -41,6 +46,7 @@ async function createTransaction({
   return true;
 }
 
+//거래내역 삭제
 async function deleteTransaction(userId: string, transactionId: string): Promise<boolean> {
   const isUserTransaction = await checkUserTransaction(userId, transactionId);
 
@@ -60,6 +66,48 @@ async function deleteTransaction(userId: string, transactionId: string): Promise
   return true;
 }
 
+//거래내역 수정
+async function editTransaction(editTransactionData: EditTransactionDataType): Promise<boolean> {
+  const { userId, transactionId, date, category, title, payment, price } = editTransactionData;
+
+  const isUserTransaction = await checkUserTransaction(userId, transactionId);
+
+  if (!isUserTransaction) {
+    throw errorGenerator({
+      message: 'unowned transaction',
+      code: 'transaction/unowned-transaction',
+    });
+  }
+
+  const isUserPayment = await checkUserPayment(userId, payment);
+
+  if (!isUserPayment) {
+    throw errorGenerator({
+      message: 'unowned payment',
+      code: 'payment/unowned-payment',
+    });
+  }
+
+  await db.Transaction.update(
+    {
+      USERId: userId,
+      date: new Date(date),
+      category,
+      title,
+      payment,
+      price,
+    },
+    {
+      where: {
+        id: transactionId,
+      },
+    },
+  );
+
+  return true;
+}
+
+//유저의 거래수단인지 확인
 async function checkUserPayment(userId: string, payment: string): Promise<boolean> {
   const paymentId = await paymentService.getPaymentId(payment);
   if (!paymentId) return false;
@@ -70,6 +118,7 @@ async function checkUserPayment(userId: string, payment: string): Promise<boolea
   return true;
 }
 
+//유저의 거래내역인지 확인
 async function checkUserTransaction(userId: string, transactionId: string): Promise<boolean> {
   const isUserTransaction = await db.Transaction.count({
     where: {
@@ -81,4 +130,4 @@ async function checkUserTransaction(userId: string, transactionId: string): Prom
   return !!isUserTransaction;
 }
 
-export default { createTransaction, deleteTransaction };
+export default { createTransaction, deleteTransaction, editTransaction };
