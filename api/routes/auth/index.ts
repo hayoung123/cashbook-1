@@ -4,47 +4,28 @@ import signin from './signin';
 import signup from './signup';
 import signout from './signout';
 
-import { verifyToken } from '../../utils/jwt.js';
-import errorHandler from '../../utils/errorHandler.js';
-import errorGenerator from '../../utils/errorGenerator.js';
+import authService from 'services/auth';
+
+import errorHandler from 'utils/errorHandler';
+import errorGenerator from 'utils/errorGenerator';
+import { getAccessToken } from 'utils/jwt';
 
 const router = express.Router();
 
 router.head('/', async (req, res) => {
   try {
-    const token = req.headers.authorization?.split('Bearer ')[1];
+    const token = getAccessToken(req.headers.authorization);
 
     if (!token) {
       throw errorGenerator({
-        message: 'Unable to find token',
-        code: 'auth/no-token',
+        message: 'No token',
+        code: 'req/no-token',
       });
     }
 
-    verifyToken(token, (err) => {
-      if (!err) {
-        res.status(200).json({});
-        return;
-      }
+    await authService.verifyAuth(token);
 
-      switch (err.name) {
-        case 'ToeknExpiredError':
-          throw errorGenerator({
-            message: err.message,
-            code: 'auth/token-expired',
-          });
-        case 'JsonWebTokenError':
-          throw errorGenerator({
-            message: err.message,
-            code: 'auth/invalid-token',
-          });
-        default:
-          throw errorGenerator({
-            message: err.message,
-            code: 'auth/invalid-token',
-          });
-      }
-    });
+    res.status(200).end();
   } catch (err) {
     console.log(err.code);
     const { statusCode, errorMessage } = errorHandler(err.code);
