@@ -3,8 +3,14 @@ import errorGenerator from 'utils/errorGenerator';
 
 import paymentService from './payment';
 
+interface getTransactionDataType {
+  year: string;
+  month: string;
+  isIncome: boolean;
+  isExpenditure: boolean;
+}
+
 interface TransactionDataType {
-  userId: string;
   date: string;
   category: string;
   title: string;
@@ -12,9 +18,16 @@ interface TransactionDataType {
   price: number;
 }
 
+interface PostTransactionDataType extends TransactionDataType {
+  userId: string;
+}
+
 interface EditTransactionDataType extends TransactionDataType {
+  userId: string;
   transactionId: string;
 }
+
+async function getTransaction({ year, month, isIncome, isExpenditure }: getTransactionDataType):Promise< {}
 
 //거래내역 추가
 async function createTransaction({
@@ -24,7 +37,7 @@ async function createTransaction({
   title,
   payment,
   price,
-}: TransactionDataType): Promise<boolean> {
+}: PostTransactionDataType): Promise<boolean> {
   const isUserPayment = await checkUserPayment(userId, payment);
 
   if (!isUserPayment) {

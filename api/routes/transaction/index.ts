@@ -26,6 +26,15 @@ router.get('/', async (req, res, next) => {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
     const userId = process.env.TEST_ID as string;
+    const { year, month, isIncome = true, isExpenditure = true } = req.params;
+    const result = await transactionService.getTransaction({
+      year,
+      month,
+      isIncome,
+      isExpenditure,
+    });
+
+    res.status.json({ data: result });
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
