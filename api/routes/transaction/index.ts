@@ -23,24 +23,45 @@ const router = express.Router();
 // 결제내역 불러오기
 router.get('/', async (req, res, next) => {
   try {
+    // const accessToken = getAccessToken(req.headers.authorization);
+    // const { uid: userId } = decodeToken(accessToken);
+    const userId = process.env.TEST_ID as string;
   } catch (err) {
     console.log(err);
+    const { statusCode, errorMessage } = errorHandler(err.code);
+    res.status(statusCode).json({ errorMessage });
   }
 });
 
 // 결제내역 삭제하기
 router.delete('/:id', async (req, res, next) => {
   try {
+    // const accessToken = getAccessToken(req.headers.authorization);
+    // const { uid: userId } = decodeToken(accessToken);
+    const userId = process.env.TEST_ID as string;
+
+    const { id: transactionId } = req.params;
+
+    const result = await transactionService.deleteTransaction(userId, transactionId);
+
+    res.status(200).json({ success: result });
   } catch (err) {
     console.log(err);
+    const { statusCode, errorMessage } = errorHandler(err.code);
+    res.status(statusCode).json({ errorMessage });
   }
 });
 
 // 결제내역 수정하기
 router.put('/:id', async (req, res, next) => {
   try {
+    // const accessToken = getAccessToken(req.headers.authorization);
+    // const { uid: userId } = decodeToken(accessToken);
+    const userId = process.env.TEST_ID as string;
   } catch (err) {
     console.log(err);
+    const { statusCode, errorMessage } = errorHandler(err.code);
+    res.status(statusCode).json({ errorMessage });
   }
 });
 
@@ -50,9 +71,7 @@ router.post('/', async (req, res, next) => {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
     const userId = process.env.TEST_ID as string;
-    console.log(req.body);
-    const { date, category, title, payment, price } = req.body;
-    const transactionData = { userId, date, category, title, payment, price };
+    const transactionData = { userId, ...req.body };
     const result = await transactionService.createTransaction(transactionData);
 
     res.status(200).json({ success: result });
