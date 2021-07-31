@@ -1,4 +1,5 @@
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
+import errorGenerator from './errorGenerator';
 
 interface OptionType {
   uid: string;
@@ -23,9 +24,20 @@ export const createToken = (type: 'access' | 'refresh', option: OptionType): str
   return token;
 };
 
-export const decodeToken = (token: string): string | JwtPayload => {
-  const decoded = jwt.verify(token, secret);
+// export const decodeToken = (token: string): string | JwtPayload => {
+//   const decoded = jwt.verify(token, secret);
+//   return decoded;
 
+// };
+
+export const decodeToken = (token: string): JwtPayload => {
+  const decoded = jwt.verify(token, secret);
+  if (typeof decoded === 'string') {
+    throw errorGenerator({
+      code: 'auth/invalid-token',
+      message: 'Invalid token',
+    });
+  }
   return decoded;
 };
 
@@ -36,4 +48,9 @@ export const verifyToken = (
   jwt.verify(token, secret, (err) => {
     errCallback(err);
   });
+};
+
+//TODO: 위치가 여기가 맞을까..?
+export const getAccessToken = (authorization: string): string => {
+  return authorization.split('Bearer ')[1];
 };
