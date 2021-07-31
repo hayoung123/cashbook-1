@@ -4,7 +4,8 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    // 로그아웃
+    res.clearCookie('_rt');
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
   }
