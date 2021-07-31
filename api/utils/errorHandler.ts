@@ -23,7 +23,7 @@ function errorHandler(errCode: string): ErrorType {
       return { statusCode: 409, errorMessage: '재로그인이 필요합니다.' };
     case 'payment/nonexistent-payment':
       return { statusCode: 409, errorMessage: '존재하지 않은 결제수단입니다.' };
-    case 'payment/payment/unowned-payment':
+    case 'payment/unowned-payment':
       return { statusCode: 409, errorMessage: '등록되지 않은 결제수단입니다.' };
     case 'payment/owned-payment':
       return { statusCode: 409, errorMessage: '이미 등록된 결제수단입니다.' };

@@ -1,5 +1,5 @@
-import { db } from '../models/db';
-import errorGenerator from '../utils/errorGenerator';
+import { db } from 'models/db';
+import errorGenerator from 'utils/errorGenerator';
 
 //TODO: 있는지 확인하는 사이에 누가 넣거나 하면 어떻게 해결해야될까? 트랜젝션??
 //중복은 알아서 검사할텐데 아래처럼 따로 처리를 해줘야되나?
@@ -59,7 +59,6 @@ async function getPaymentId(paymentName: string): Promise<string | null> {
       name: paymentName,
     },
   });
-  console.log(paymentSnapshot);
   if (!paymentSnapshot) return null;
 
   const paymentId = paymentSnapshot.getDataValue('id');
@@ -93,4 +92,6 @@ async function checkUserHasPayment(userId: string, paymentId: string): Promise<b
 export default {
   createUserPayment,
   deleteUserPayment,
+  checkUserHasPayment,
+  getPaymentId,
 };
