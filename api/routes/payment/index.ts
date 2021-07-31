@@ -1,6 +1,6 @@
 import errorHandler from '../../utils/errorHandler';
 import express, { Request, Response } from 'express';
-import { decodeToken, getAccessToken, JwtDecodeType } from './../../utils/jwt';
+import { decodeToken, getAccessToken } from './../../utils/jwt';
 import paymentService from '../../services/payment';
 
 const router = express.Router();
@@ -29,7 +29,6 @@ router.post('/', async (req: Request, res: Response, next) => {
 
     try {
       const result = await paymentService.createPayment(userId, payment);
-
       res.status(200).json({ success: result });
     } catch (err) {
       console.log(err);

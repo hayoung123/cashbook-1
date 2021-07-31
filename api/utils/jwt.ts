@@ -45,6 +45,7 @@ export const verifyToken = (
 };
 
 //TODO: 위치가 여기가 맞을까..?
-export const getAccessToken = (authorization: string): string => {
+export const getAccessToken = (authorization: string | void): string => {
+  if (!authorization) return '';
   return authorization.split('Bearer ')[1];
 };
