@@ -23,9 +23,9 @@ router.delete('/', async (req, res, next) => {
 
 router.post('/', async (req: Request, res: Response, next) => {
   try {
-    const accessToken = getAccessToken(req.headers.authorization);
+    // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
-    const { uid: userId } = decodeToken(process.env.TEST_TOKEN as string);
+    const userId = process.env.TEST_ID as string;
     const { payment } = req.body;
 
     const result = await paymentService.createUserPayment(userId, payment);
