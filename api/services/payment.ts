@@ -23,6 +23,35 @@ async function createUserPayment(userId: string, paymentName: string): Promise<b
   return true;
 }
 
+async function deleteUserPayment(userId: string, paymentName: string): Promise<boolean> {
+  const paymentId = await getPaymentId(paymentName);
+
+  if (!paymentId) {
+    throw errorGenerator({
+      message: 'nonexistent payment',
+      code: 'payment/nonexistent-payment',
+    });
+  }
+
+  const isUserHasPayment = await checkUserHasPayment(userId, paymentId);
+
+  if (!isUserHasPayment) {
+    throw errorGenerator({
+      message: 'unowned payment',
+      code: 'payment/unowned-payment',
+    });
+  }
+
+  await db.USER_has_PAYMENT.destroy({
+    where: {
+      USERId: userId,
+      PAYMENTId: paymentId,
+    },
+  });
+
+  return true;
+}
+
 async function getPaymentId(paymentName: string): Promise<string | null> {
   const paymentSnapshot = await db.Payment.findOne({
     attributes: ['id', 'name'],
@@ -63,4 +92,5 @@ async function checkUserHasPayment(userId: string, paymentId: string): Promise<b
 
 export default {
   createUserPayment,
+  deleteUserPayment,
 };
