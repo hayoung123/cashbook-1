@@ -1,6 +1,17 @@
-function errorGenerator({ message, code }) {
-  const error = new Error(message);
-  error.code = code;
+interface ErrorType extends Error {
+  code: string;
+}
+
+interface ParamType {
+  message: string;
+  code: string;
+}
+
+function errorGenerator({ message, code }: ParamType): ErrorType {
+  const error = {
+    ...new Error(message),
+    code,
+  };
 
   return error;
 }
