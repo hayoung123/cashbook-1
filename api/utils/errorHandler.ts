@@ -27,8 +27,8 @@ function errorHandler(errCode: string): ErrorType {
       return { statusCode: 409, errorMessage: '등록되지 않은 결제수단입니다.' };
     case 'payment/owned-payment':
       return { statusCode: 409, errorMessage: '이미 등록된 결제수단입니다.' };
-    case 'payment/owned-payment':
-      return { statusCode: 409, errorMessage: '이미 등록된 결제수단입니다.' };
+    case 'transaction/unowned-transaction':
+      return { statusCode: 409, errorMessage: '본인의 결제내역이 아닙니다.' };
 
     default:
       return { statusCode: 500, errorMessage: '다시 시도해주세요.' };
