@@ -24,10 +24,11 @@ router.delete('/', async (req, res, next) => {
 router.post('/', async (req: Request, res: Response, next) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
-    const { uid: userId } = decodeToken(accessToken);
+    // const { uid: userId } = decodeToken(accessToken);
+    const { uid: userId } = decodeToken(process.env.TEST_TOKEN as string);
     const { payment } = req.body;
 
-    const result = await paymentService.createPayment(userId, payment);
+    const result = await paymentService.createUserPayment(userId, payment);
     res.status(200).json({ success: result });
   } catch (err) {
     console.log(err);
