@@ -12,7 +12,14 @@ const router = express.Router();
 
 router.head('/', async (req, res) => {
   try {
-    const token = req.headers.authorization.split('Bearer ')[1];
+    const token = req.headers.authorization?.split('Bearer ')[1];
+
+    if (!token) {
+      throw errorGenerator({
+        message: 'Unable to find token',
+        code: 'auth/no-token',
+      });
+    }
 
     verifyToken(token, (err) => {
       if (!err) {
