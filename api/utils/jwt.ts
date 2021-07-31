@@ -37,3 +37,8 @@ export const verifyToken = (
     errCallback(err);
   });
 };
+
+export const getAccessToken = (authorization: string | void): string | void => {
+  if (!authorization) return;
+  return authorization.split('Bearer ')[1];
+};

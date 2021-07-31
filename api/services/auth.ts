@@ -1,6 +1,8 @@
+import { VerifyErrors } from 'jsonwebtoken';
+
 import sequelize, { db } from 'models/db';
 import errorGenerator from 'utils/errorGenerator';
-import { createToken } from 'utils/jwt';
+import { createToken, verifyToken } from 'utils/jwt';
 import { hashPassword } from 'utils/encryption';
 
 interface SignUpType {
@@ -57,6 +59,44 @@ async function signUp(email: string, password: string): Promise<SignUpType> {
   return { accessToken, refreshToken };
 }
 
+async function verifyAuth(token: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    verifyToken(token, (err: VerifyErrors | null) => {
+      if (!err) {
+        resolve();
+        return;
+      }
+
+      switch (err.name) {
+        case 'ToeknExpiredError':
+          reject(
+            errorGenerator({
+              message: err.message,
+              code: 'auth/token-expired',
+            }),
+          );
+          break;
+        case 'JsonWebTokenError':
+          reject(
+            errorGenerator({
+              message: err.message,
+              code: 'auth/invalid-token',
+            }),
+          );
+          break;
+        default:
+          reject(
+            errorGenerator({
+              message: err.message,
+              code: 'auth/invalid-token',
+            }),
+          );
+      }
+    });
+  });
+}
+
 export default {
   signUp,
+  verifyAuth,
 };
