@@ -17,6 +17,10 @@ function errorHandler(errCode: string): ErrorType {
       return { statusCode: 401, errorMessage: '유효하지 않은 토큰입니다.' };
     case 'auth/existing-email':
       return { statusCode: 409, errorMessage: '이미 가입된 이메일입니다.' };
+    case 'payment/nonexistent-payment':
+      return { statusCode: 409, errorMessage: '등록할 수 없는 결제수단입니다.' };
+    case 'payment/owned-payment':
+      return { statusCode: 409, errorMessage: '이미 등록된 결제수단입니다.' };
     default:
       return { statusCode: 500, errorMessage: '다시 시도해주세요.' };
   }
