@@ -1,19 +1,24 @@
-interface ErrorType extends Error {
-  code: string;
-}
-
 interface ParamType {
   message: string;
   code: string;
 }
 
-function errorGenerator({ message, code }: ParamType): ErrorType {
-  const error = {
-    ...new Error(message),
-    code,
-  };
+class CustomError extends Error {
+  code: string;
 
-  return error;
+  constructor(code: string, message: string) {
+    super(message);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, CustomError);
+    }
+
+    this.code = code;
+  }
+}
+
+function errorGenerator({ message, code }: ParamType): CustomError {
+  return new CustomError(code, message);
 }
 
 export default errorGenerator;
