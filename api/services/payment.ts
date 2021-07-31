@@ -16,10 +16,19 @@ async function createPayment(userId: string, payment: string): Promise<boolean> 
     });
   }
 
+  const paymentSnapshot = await db.Payment.findOne({
+    attributes: ['id'],
+    where: {
+      name: payment,
+    },
+  });
+
+  const paymentId = paymentSnapshot?.getDataValue('id');
+
   const isUserHasPayment = await db.USER_has_PAYMENT.count({
     where: {
       USERId: userId,
-      PAYMENTId: payment,
+      PAYMENTId: paymentId,
     },
   });
   if (isUserHasPayment) {
@@ -31,7 +40,7 @@ async function createPayment(userId: string, payment: string): Promise<boolean> 
 
   await db.USER_has_PAYMENT.create({
     USERId: userId,
-    PAYMENTId: payment,
+    PAYMENTId: paymentId,
   });
 
   return true;
