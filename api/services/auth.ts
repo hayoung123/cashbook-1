@@ -1,7 +1,7 @@
 import sequelize, { db } from 'models/db';
 import errorGenerator from 'utils/errorGenerator';
 import { createToken } from 'utils/jwt';
-import hashPassword from 'utils/hashPassword';
+import { hashPassword } from 'utils/encryption';
 
 interface SignUpType {
   accessToken: string;
