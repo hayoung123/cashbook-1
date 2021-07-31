@@ -1,46 +1,74 @@
-import { verifyToken } from '../utils/jwt.js';
-import errorGenerator from '../utils/errorGenerator.js';
+import { Request, Response, NextFunction } from 'express';
 
-async function validateToken(req, res, next): Promise<void> {
+import { db } from 'models/db';
+import { createToken, getAccessToken, checkTokenExpiration, getUIDFromToken } from 'utils/jwt';
+import errorGenerator from 'utils/errorGenerator';
+import errorHandler from 'utils/errorHandler';
+
+async function validateToken(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const token = req.headers.authorization.split('Bearer ')[1];
+    const refreshToken = req.cookies['_rt'];
+    const accessToken = getAccessToken(req.headers.authorization);
 
-    verifyToken(token, (err) => {
-      if (!err) {
-        next();
-        return;
-      }
-
-      switch (err.name) {
-        case 'ToeknExpiredError':
-          throw errorGenerator({
-            message: err.message,
-            code: 'auth/token-expired',
-          });
-        case 'JsonWebTokenError':
-          throw errorGenerator({
-            message: err.message,
-            code: 'auth/invalid-token',
-          });
-        default:
-          throw errorGenerator({
-            message: err.message,
-            code: 'auth/invalid-token',
-          });
-      }
-    });
-  } catch (err) {
-    console.log(err.code);
-    switch (err.code) {
-      case 'auth/token-expired':
-        res.status(400).json({});
-        break;
-      case 'auth/invalid-token':
-        res.status(400).json({});
-        break;
-      default:
-        res.status(500).json({});
+    if (!accessToken || !refreshToken) {
+      throw errorGenerator({
+        message: 'No token',
+        code: 'no-token',
+      });
     }
+
+    const isAccessTokenExpired = await checkTokenExpiration(accessToken);
+
+    let newAccessToken = '';
+
+    if (isAccessTokenExpired) {
+      const isRefreshTokenExpired = await checkTokenExpiration(refreshToken);
+      const uid = getUIDFromToken(refreshToken);
+      console.log(isRefreshTokenExpired);
+
+      const userSnapshot = await db.User.findOne({
+        attributes: ['refresh_token'],
+        where: {
+          id: uid,
+        },
+      });
+
+      const refreshTokenOnDB = userSnapshot?.getDataValue('refresh_token');
+
+      if (refreshToken !== refreshTokenOnDB) {
+        res.clearCookie('_rt');
+        throw errorGenerator({
+          code: 'auth/unauthorized-token',
+          message: 'Unauthorized refresh token',
+        });
+      }
+
+      if (isRefreshTokenExpired) {
+        const newRefreshToken = createToken('refresh', { uid });
+        console.log('new: ' + newRefreshToken);
+        await db.User.update(
+          {
+            refresh_token: newRefreshToken,
+          },
+          {
+            where: {
+              id: uid,
+            },
+          },
+        );
+        res.cookie('_rt', newRefreshToken, { httpOnly: true });
+      }
+
+      newAccessToken = createToken('access', { uid });
+    }
+
+    console.log(newAccessToken);
+
+    next();
+  } catch (err) {
+    console.log(err);
+    const { statusCode, errorMessage } = errorHandler(err.code);
+    res.status(statusCode).json({ errorMessage });
   }
 }
 
