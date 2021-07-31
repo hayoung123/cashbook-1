@@ -1,14 +1,14 @@
 import sequelize, { db } from 'models/db';
 import errorGenerator from 'utils/errorGenerator';
 import { createToken } from 'utils/jwt';
-import { hashPassword } from 'utils/encryption';
+import { hashPassword, checkPassword } from 'utils/encryption';
 
-interface SignUpType {
+interface TokenType {
   accessToken: string;
   refreshToken: string;
 }
 
-async function signUp(email: string, password: string): Promise<SignUpType> {
+async function signUp(email: string, password: string): Promise<TokenType> {
   const userCount = await db.User.count({
     where: {
       email,
@@ -57,6 +57,57 @@ async function signUp(email: string, password: string): Promise<SignUpType> {
   return { accessToken, refreshToken };
 }
 
+async function signIn(email: string, password: string): Promise<TokenType> {
+  const userSnapshot = await db.User.findOne({
+    attributes: ['id', 'password'],
+    where: {
+      email,
+    },
+  });
+
+  if (!userSnapshot) {
+    throw errorGenerator({
+      message: 'Account not found',
+      code: 'auth/account-not-found',
+    });
+  }
+
+  const uid = userSnapshot.getDataValue('id');
+
+  const passwordOnDB = userSnapshot.getDataValue('password');
+
+  const isCorrectPassword = await checkPassword(password, passwordOnDB);
+
+  if (!isCorrectPassword) {
+    throw errorGenerator({
+      message: 'Wrong password',
+      code: 'auth/wrong-password',
+    });
+  }
+
+  const transaction = await sequelize.transaction();
+
+  const accessToken = createToken('access', { uid });
+  const refreshToken = createToken('refresh', { uid });
+
+  await db.User.update(
+    {
+      refresh_token: refreshToken,
+    },
+    {
+      where: {
+        id: uid,
+      },
+      transaction,
+    },
+  );
+
+  await transaction.commit();
+
+  return { accessToken, refreshToken };
+}
+
 export default {
+  signIn,
   signUp,
 };

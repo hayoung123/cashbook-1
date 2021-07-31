@@ -7,6 +7,10 @@ function errorHandler(errCode: string): ErrorType {
   switch (errCode) {
     case 'req/invalid-body':
       return { statusCode: 400, errorMessage: '잘못된 요청입니다.' };
+    case 'auth/account-not-found':
+      return { statusCode: 404, errorMessage: '없는 계정입니다.' };
+    case 'auth/wrong-password':
+      return { statusCode: 401, errorMessage: '비밀번호를 확인해주세요.' };
     case 'auth/token-expired':
       return { statusCode: 403, errorMessage: '토큰이 만료됐습니다.' };
     case 'auth/invalid-token':
