@@ -24,12 +24,6 @@ export const createToken = (type: 'access' | 'refresh', option: OptionType): str
   return token;
 };
 
-// export const decodeToken = (token: string): string | JwtPayload => {
-//   const decoded = jwt.verify(token, secret);
-//   return decoded;
-
-// };
-
 export const decodeToken = (token: string): JwtPayload => {
   const decoded = jwt.verify(token, secret);
   if (typeof decoded === 'string') {
