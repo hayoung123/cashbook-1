@@ -7,9 +7,8 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    // const accessToken = getAccessToken(req.headers.authorization);
-    // const { uid: userId } = decodeToken(accessToken);
-    const userId = process.env.TEST_ID as string;
+    const accessToken = getAccessToken(req.headers.authorization);
+    const { uid: userId } = decodeToken(accessToken);
 
     const result = await paymentService.getUserPayment(userId);
     res.status(200).json({ data: result });
@@ -23,9 +22,9 @@ router.get('/', async (req: Request, res: Response) => {
 //결제수단 삭제
 router.delete('/', async (req: Request, res: Response) => {
   try {
-    // const accessToken = getAccessToken(req.headers.authorization);
-    // const { uid: userId } = decodeToken(accessToken);
-    const userId = process.env.TEST_ID as string;
+    const accessToken = getAccessToken(req.headers.authorization);
+    const { uid: userId } = decodeToken(accessToken);
+
     const { payment } = req.body;
 
     const result = await paymentService.deleteUserPayment(userId, payment);
@@ -40,9 +39,9 @@ router.delete('/', async (req: Request, res: Response) => {
 // 결제수단 추가
 router.post('/', async (req: Request, res: Response) => {
   try {
-    // const accessToken = getAccessToken(req.headers.authorization);
-    // const { uid: userId } = decodeToken(accessToken);
-    const userId = process.env.TEST_ID as string;
+    const accessToken = getAccessToken(req.headers.authorization);
+    const { uid: userId } = decodeToken(accessToken);
+
     const { payment } = req.body;
 
     const result = await paymentService.createUserPayment(userId, payment);
