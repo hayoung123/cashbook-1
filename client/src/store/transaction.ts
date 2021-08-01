@@ -5,7 +5,11 @@ export const dateState = initState({
   defaultValue: { year: new Date().getFullYear(), month: new Date().getMonth() + 1 },
 });
 
-export const transactionTypeState = initState({
+export interface transactionPriceType {
+  isIncome: boolean;
+  isExpenditure: boolean;
+}
+export const transactionPriceTypeState = initState({
   key: 'transactionTypeState-isIncome/isExpenditure',
   defaultValue: { isIncome: true, isExpenditure: true },
 });
