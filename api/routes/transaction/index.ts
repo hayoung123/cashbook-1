@@ -1,8 +1,9 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import errorHandler from 'utils/errorHandler';
 
 import transactionService from 'services/transaction';
 import statistics from './statistics';
+import { getTransactionParamType } from 'types/transaction';
 
 const router = express.Router();
 
@@ -21,11 +22,21 @@ const router = express.Router();
  */
 
 // 결제내역 불러오기
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
     const userId = process.env.TEST_ID as string;
+    const { year, month, isIncome, isExpenditure } = req.query;
+    const result = await transactionService.getTransaction({
+      userId,
+      year,
+      month,
+      isIncome: isIncome === 'true',
+      isExpenditure: isExpenditure === 'true',
+    } as getTransactionParamType);
+
+    res.status(200).json({ data: result });
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -34,7 +45,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // 결제내역 삭제하기
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', async (req: Request, res: Response) => {
   try {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
@@ -53,7 +64,7 @@ router.delete('/:id', async (req, res, next) => {
 });
 
 // 결제내역 수정하기
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', async (req: Request, res: Response) => {
   try {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
@@ -71,7 +82,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 // 결제내역 추가하기
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);

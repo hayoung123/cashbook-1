@@ -1,21 +1,70 @@
 import { Op } from 'sequelize';
-
 import { db } from 'models/db';
 import errorGenerator from 'utils/errorGenerator';
+import {
+  PostTransactionParamType,
+  EditTransactionParamType,
+  getTransactionParamType,
+  TransactionRecordType,
+  DayTransactionType,
+  TransactionDataType,
+} from 'types/transaction';
 
 import paymentService from './payment';
+/**
+ * {
+ * totalIncome:0000,
+ * totalExpenditure:0000,
+ * transaction: [
+ *    {
+ *       date:string,
+ *       transaction ;[{...},{...},{...}],
+ *    },
+ *    {
+ *       ...
+ *    }
+ *  ]
+ * }
+ *
+ */
+//거래내역 조회
+async function getTransaction({
+  userId,
+  year,
+  month,
+  isIncome,
+  isExpenditure,
+}: getTransactionParamType): Promise<any> {
+  const { startDate, endDate } = getSideDate(+year, +month);
 
-interface TransactionDataType {
-  userId: string;
-  date: string;
-  category: string;
-  title: string;
-  payment: string;
-  price: number;
-}
+  const transactionSnapshot = await db.Transaction.findAll({
+    attributes: ['id', 'date', 'category', 'title', 'payment', 'price'],
+    where: {
+      USERId: userId,
+      date: {
+        [Op.between]: [startDate, endDate],
+      },
+    },
+    order: [['date', 'DESC']],
+  });
 
-interface EditTransactionDataType extends TransactionDataType {
-  transactionId: string;
+  let transactions: TransactionRecordType[] = transactionSnapshot.map((item) => {
+    return {
+      id: item.getDataValue('id'),
+      date: item.getDataValue('date'),
+      category: item.getDataValue('category'),
+      title: item.getDataValue('title'),
+      payment: item.getDataValue('payment'),
+      price: item.getDataValue('price'),
+    };
+  });
+
+  if (!isIncome) transactions = transactions.filter(({ price }) => price < 0);
+  if (!isExpenditure) transactions = transactions.filter(({ price }) => price > 0);
+
+  const parsedTransaction = parseTransactionByDate(transactions);
+
+  return parsedTransaction;
 }
 
 type Category = 'life' | 'food' | 'transport' | 'shop' | 'health' | 'culture' | 'etc';
@@ -32,7 +81,7 @@ async function createTransaction({
   title,
   payment,
   price,
-}: TransactionDataType): Promise<boolean> {
+}: PostTransactionParamType): Promise<boolean> {
   const isUserPayment = await checkUserPayment(userId, payment);
 
   if (!isUserPayment) {
@@ -75,7 +124,7 @@ async function deleteTransaction(userId: string, transactionId: string): Promise
 }
 
 //거래내역 수정
-async function editTransaction(editTransactionData: EditTransactionDataType): Promise<boolean> {
+async function editTransaction(editTransactionData: EditTransactionParamType): Promise<boolean> {
   const { userId, transactionId, date, category, title, payment, price } = editTransactionData;
 
   const isUserTransaction = await checkUserTransaction(userId, transactionId);
@@ -137,6 +186,51 @@ async function checkUserTransaction(userId: string, transactionId: string): Prom
 
   return !!isUserTransaction;
 }
+
+// TODO: 날짜 validation 추가
+// function checkValidDate(date: string): boolean {}
+
+//날짜 시작한날 끝날 구하기 - util로 이동
+function getSideDate(year: number, month: number): { startDate: Date; endDate: Date } {
+  const lastDate = new Date(year, month, 0).getDate();
+  return {
+    startDate: new Date(year, month - 1, 1),
+    endDate: new Date(year, month - 1, lastDate),
+  };
+}
+//거래내역 파싱 - util로 이동
+const parseTransactionByDate = (
+  transactions: Array<TransactionRecordType>,
+): TransactionDataType => {
+  const result: Array<DayTransactionType> = [];
+  let totalIncome = 0;
+  let totalExpenditure = 0;
+  let dayRecord: any = {};
+
+  transactions.forEach((record) => {
+    if (record.price > 0) totalIncome += +record.price;
+    else totalExpenditure += +record.price;
+
+    if (dayRecord.date === record.date) {
+      dayRecord.transaction.push(record);
+      return;
+    }
+    if (dayRecord.date) {
+      result.push(dayRecord);
+      dayRecord = {};
+    }
+    dayRecord.date = record.date;
+    dayRecord.transaction = [record];
+  });
+
+  result.push(dayRecord);
+
+  return {
+    totalIncome,
+    totalExpenditure,
+    transaction: result,
+  };
+};
 
 async function getStatistics(
   uid: string,
@@ -225,4 +319,10 @@ async function getStatistics(
   return;
 }
 
-export default { createTransaction, deleteTransaction, editTransaction, getStatistics };
+export default {
+  getTransaction,
+  createTransaction,
+  deleteTransaction,
+  editTransaction,
+  getStatistics,
+};
