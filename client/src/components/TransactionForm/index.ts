@@ -7,18 +7,11 @@ import trashIcon from 'public/assets/icon/trashIcon.svg';
 
 import './style.scss';
 import _ from 'src/utils/dom';
-
-interface FormType {
-  date: string;
-  category: string;
-  title: string;
-  method: string;
-  price: number;
-}
+import { RecordType } from 'src/store/transaction';
 
 interface PropsType {
   isEdit: boolean;
-  data: FormType;
+  data: RecordType;
 }
 
 interface StateType {
@@ -29,10 +22,11 @@ interface StateType {
 const INIT_FORM = {
   isEdit: false,
   data: {
+    id: '',
     date: '',
     category: '',
     title: '',
-    method: '',
+    payment: '',
     price: 0,
   },
 };
@@ -55,7 +49,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   setTemplate(): string {
     if (!this.state) return '';
 
-    const { date, category, title, method, price } = this.props.data;
+    const { date, category, title, payment, price } = this.props.data;
     const { isIncome, isAbleSubmit } = this.state;
 
     return `
@@ -91,7 +85,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       <div class="transaction__form-column transaction__method" >
         <div>결제수단</div>
         <div>
-          <div class="${method ? '' : 'empty'}">${method ? method : '선택하세요'}</div>
+          <div class="${payment ? '' : 'empty'}">${payment ? payment : '선택하세요'}</div>
           <img class="form-dropdown-btn" src=${downArrow} alt='펼쳐보기' />
         </div>
       </div>

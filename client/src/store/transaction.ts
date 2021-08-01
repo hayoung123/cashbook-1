@@ -19,7 +19,7 @@ export const transactionPriceTypeState = initState({
   defaultValue: { isIncome: true, isExpenditure: true },
 });
 
-interface RecordType {
+export interface RecordType {
   id: string;
   date: string;
   category: string;
@@ -27,7 +27,7 @@ interface RecordType {
   payment: string;
   price: number;
 }
-interface DayRecordsType {
+export interface DayRecordsType {
   date: string;
   transaction: Array<RecordType>;
 }
