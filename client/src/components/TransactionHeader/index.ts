@@ -1,7 +1,7 @@
 import Component from 'src/lib/component';
 import { getState, setState } from 'src/lib/observer';
 
-import { transactionPriceType, transactionPriceTypeState } from 'src/store/transaction';
+import { transactionPriceType, transactionPriceTypeState, dateState } from 'src/store/transaction';
 
 import activePicker from 'public/assets/icon/activePicker.svg';
 import inActivePicker from 'public/assets/icon/inActivePicker.svg';
@@ -21,10 +21,10 @@ interface TransactionInfoType {
 
 export default class TransactionHeader extends Component {
   //TODO: 리팩토링 - setState타입을 설정해주기
-  setType: (newState: any) => void;
+  setType: (newState: (arg: transactionPriceType) => transactionPriceType) => void;
   constructor() {
     super();
-    this.keys = [transactionPriceTypeState];
+    this.keys = [transactionPriceTypeState, dateState];
     this.setType = setState(transactionPriceTypeState);
     this.subscribe();
   }
@@ -53,15 +53,15 @@ export default class TransactionHeader extends Component {
     `;
   }
 
-  handleClick(e: Event) {
+  handleClick(e: Event): void {
     const target = e.target as HTMLElement;
 
     if (this.isIncomeBtn(target)) {
-      this.setType((type: transactionPriceType) => ({ ...type, isIncome: !type.isIncome }));
+      this.setType((type) => ({ ...type, isIncome: !type.isIncome }));
     }
 
     if (this.isExpenditureBtn(target)) {
-      this.setType((type: transactionPriceType) => ({
+      this.setType((type) => ({
         ...type,
         isExpenditure: !type.isExpenditure,
       }));
