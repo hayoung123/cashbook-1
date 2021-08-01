@@ -1,8 +1,33 @@
+import { Op } from 'sequelize';
+
 import { db } from 'models/db';
 import errorGenerator from 'utils/errorGenerator';
 
+async function getUserPayment(userId: string): Promise<string[]> {
+  const userHasPaymentSnapshot = await db.USER_has_PAYMENT.findAll({
+    attributes: ['PAYMENTId'],
+    where: {
+      USERId: userId,
+    },
+  });
+
+  const paymentIds = userHasPaymentSnapshot.map((item) => item.getDataValue('PAYMENTId'));
+
+  const paymentSnapshot = await db.Payment.findAll({
+    attributes: ['name'],
+    where: {
+      id: {
+        [Op.or]: paymentIds,
+      },
+    },
+  });
+
+  const paymentNames = paymentSnapshot.map((item) => item.getDataValue('name'));
+
+  return paymentNames;
+}
+
 //TODO: 있는지 확인하는 사이에 누가 넣거나 하면 어떻게 해결해야될까? 트랜젝션??
-//중복은 알아서 검사할텐데 아래처럼 따로 처리를 해줘야되나?
 async function createUserPayment(userId: string, paymentName: string): Promise<boolean> {
   const paymentId = await createPayment(paymentName);
 
@@ -90,6 +115,7 @@ async function checkUserHasPayment(userId: string, paymentId: string): Promise<b
 }
 
 export default {
+  getUserPayment,
   createUserPayment,
   deleteUserPayment,
   checkUserHasPayment,
