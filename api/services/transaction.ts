@@ -231,7 +231,7 @@ const parseTransactionByDate = (
     dayRecord.transaction = [record];
   });
 
-  result.push(dayRecord);
+  if (dayRecord.date) result.push(dayRecord);
 
   return result;
 };
