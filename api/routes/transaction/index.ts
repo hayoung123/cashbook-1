@@ -58,6 +58,11 @@ router.put('/:id', async (req, res, next) => {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
     const userId = process.env.TEST_ID as string;
+    const { id: transactionId } = req.params;
+    const transactionData = { userId, transactionId, ...req.body };
+    const result = await transactionService.editTransaction(transactionData);
+
+    res.status(200).json({ success: result });
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
