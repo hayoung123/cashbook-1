@@ -5,6 +5,7 @@ import {
   PostTransactionParamType,
   EditTransactionParamType,
   getTransactionParamType,
+  TransactionRecordType,
 } from 'types/transaction';
 
 import paymentService from './payment';
@@ -17,9 +18,8 @@ async function getTransaction({
   isIncome,
   isExpenditure,
 }: getTransactionParamType): Promise<any> {
-  const conditions = [];
-
   const { startDate, endDate } = getSideDate(+year, +month);
+
   const transactionSnapshot = await db.Transaction.findAll({
     attributes: ['date', 'category', 'title', 'payment', 'price'],
     where: {
@@ -30,7 +30,7 @@ async function getTransaction({
     },
   });
 
-  const transactions = transactionSnapshot.map((item) => {
+  let transactions: TransactionRecordType[] = transactionSnapshot.map((item) => {
     return {
       date: item.getDataValue('date'),
       category: item.getDataValue('category'),
@@ -39,6 +39,9 @@ async function getTransaction({
       price: item.getDataValue('price'),
     };
   });
+
+  if (isIncome) transactions = transactions.filter(({ price }) => price > 0);
+  if (isExpenditure) transactions = transactions.filter(({ price }) => price < 0);
 
   return transactions;
 }
