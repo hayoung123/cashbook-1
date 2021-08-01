@@ -37,6 +37,8 @@ async function getTransaction({
   isExpenditure,
 }: getTransactionParamType): Promise<any> {
   const { startDate, endDate } = getSideDate(+year, +month);
+  let totalIncome = 0;
+  let totalExpenditure = 0;
 
   const transactionSnapshot = await db.Transaction.findAll({
     attributes: ['id', 'date', 'category', 'title', 'payment', 'price'],
@@ -56,8 +58,13 @@ async function getTransaction({
       category: item.getDataValue('category'),
       title: item.getDataValue('title'),
       payment: item.getDataValue('payment'),
-      price: item.getDataValue('price'),
+      price: +item.getDataValue('price'),
     };
+  });
+
+  transactions.forEach((record) => {
+    if (record.price > 0) totalIncome += record.price;
+    else totalExpenditure += record.price;
   });
 
   if (!isIncome) transactions = transactions.filter(({ price }) => price < 0);
@@ -65,7 +72,12 @@ async function getTransaction({
 
   const parsedTransaction = parseTransactionByDate(transactions);
 
-  return parsedTransaction;
+  return {
+    totalCount: transactions.length,
+    totalIncome,
+    totalExpenditure,
+    transaction: parsedTransaction,
+  };
 }
 
 type Category = 'life' | 'food' | 'transport' | 'shop' | 'health' | 'culture' | 'etc';
@@ -202,16 +214,11 @@ function getSideDate(year: number, month: number): { startDate: Date; endDate: D
 //거래내역 파싱 - util로 이동
 const parseTransactionByDate = (
   transactions: Array<TransactionRecordType>,
-): TransactionDataType => {
+): Array<DayTransactionType> => {
   const result: Array<DayTransactionType> = [];
-  let totalIncome = 0;
-  let totalExpenditure = 0;
   let dayRecord: any = {};
 
   transactions.forEach((record) => {
-    if (record.price > 0) totalIncome += +record.price;
-    else totalExpenditure += +record.price;
-
     if (dayRecord.date === record.date) {
       dayRecord.transaction.push(record);
       return;
@@ -226,11 +233,7 @@ const parseTransactionByDate = (
 
   result.push(dayRecord);
 
-  return {
-    totalIncome,
-    totalExpenditure,
-    transaction: result,
-  };
+  return result;
 };
 
 async function getStatistics(
