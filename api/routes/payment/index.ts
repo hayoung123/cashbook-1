@@ -5,16 +5,23 @@ import paymentService from 'services/payment';
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
-    // 결제수단 불러오기
+    // const accessToken = getAccessToken(req.headers.authorization);
+    // const { uid: userId } = decodeToken(accessToken);
+    const userId = process.env.TEST_ID as string;
+
+    const result = await paymentService.getUserPayment(userId);
+    res.status(200).json({ data: result });
   } catch (err) {
     console.log(err);
+    const { statusCode, errorMessage } = errorHandler(err.code);
+    res.status(statusCode).json({ errorMessage });
   }
 });
 
 //결제수단 삭제
-router.delete('/', async (req, res, next) => {
+router.delete('/', async (req: Request, res: Response) => {
   try {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
@@ -31,7 +38,7 @@ router.delete('/', async (req, res, next) => {
 });
 
 // 결제수단 추가
-router.post('/', async (req: Request, res: Response, next) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
