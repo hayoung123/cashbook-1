@@ -14,6 +14,7 @@ import { dateState, DateType } from 'src/store/transaction';
 import { router } from '../../../index';
 
 import './style.scss';
+import { getTransaction } from 'src/api/transaction';
 
 export default class Header extends Component {
   setDate: (newState: DateType) => void;
@@ -71,8 +72,14 @@ export default class Header extends Component {
     const target = e.target as HTMLElement;
     const currentDate = getState(dateState);
 
-    if (this.isLeftArrow(target)) this.setDate(getPrevMonth(currentDate));
-    if (this.isRightArrow(target)) this.setDate(getNextMonth(currentDate));
+    if (this.isLeftArrow(target)) {
+      this.setDate(getPrevMonth(currentDate));
+      getTransaction();
+    }
+    if (this.isRightArrow(target)) {
+      this.setDate(getNextMonth(currentDate));
+      getTransaction();
+    }
 
     const button: HTMLButtonElement | null = target.closest('.navigator>button');
     if (!button) return;
