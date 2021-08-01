@@ -8,6 +8,7 @@ import {
   TransactionRecordType,
   DayTransactionType,
   TransactionDataType,
+  CalendarStatisticsType,
 } from 'types/transaction';
 
 import paymentService from './payment';
@@ -238,7 +239,7 @@ async function getStatistics(
   year: string,
   month: string,
   category: string,
-): Promise<C | any[] | void> {
+): Promise<C | any[] | void | CalendarStatisticsType> {
   if (type === 'category') {
     if (!year || !month) {
       throw errorGenerator({
@@ -316,7 +317,66 @@ async function getStatistics(
 
     return trendStatistics;
   }
+  if (type === 'calendar') {
+    return await getCalendarStatistics(uid, year, month);
+  }
   return;
+}
+
+//todo 반환값 바꾸기
+async function getCalendarStatistics(
+  uid: string,
+  year: string,
+  month: string,
+): Promise<CalendarStatisticsType> {
+  if (!year || !month) {
+    throw errorGenerator({
+      code: 'req/query-not-found',
+      message: 'Required query not found',
+    });
+  }
+  const result: CalendarStatisticsType = {
+    totalIncome: 0,
+    totalExpenditure: 0,
+    statistics: {},
+  };
+
+  const { startDate, endDate } = getSideDate(+year, +month);
+  const transactionSnapshot = await db.Transaction.findAll({
+    attributes: ['date', 'price'],
+    where: {
+      USERId: uid,
+      date: {
+        [Op.between]: [startDate, endDate],
+      },
+    },
+    order: [['date', 'DESC']],
+  });
+
+  transactionSnapshot.forEach((record) => {
+    const date = new Date(record.getDataValue('date')).getDate();
+    const price = +record.getDataValue('price');
+
+    if (price > 0) {
+      result.totalIncome += price;
+      if (date in result.statistics) {
+        result.statistics[date].income += price;
+        result.statistics[date].total += price;
+      } else {
+        result.statistics[date] = { income: price, expenditure: 0, total: price };
+      }
+    } else {
+      result.totalExpenditure += +price;
+      if (date in result.statistics) {
+        result.statistics[date].expenditure += price;
+        result.statistics[date].total += price;
+      } else {
+        result.statistics[date] = { income: 0, expenditure: price, total: price };
+      }
+    }
+  });
+
+  return result;
 }
 
 export default {
