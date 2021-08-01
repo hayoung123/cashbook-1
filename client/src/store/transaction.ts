@@ -18,3 +18,33 @@ export const transactionPriceTypeState = initState({
   key: 'transactionTypeState-isIncome/isExpenditure',
   defaultValue: { isIncome: true, isExpenditure: true },
 });
+
+interface RecordType {
+  id: string;
+  date: string;
+  category: string;
+  title: string;
+  payment: string;
+  price: number;
+}
+interface DayRecordsType {
+  date: string;
+  transaction: Array<RecordType>;
+}
+
+export interface transactionType {
+  totalCount: number;
+  totalIncome: number;
+  totalExpenditure: number;
+  transaction: Array<DayRecordsType>;
+}
+
+export const transactionState = initState({
+  key: 'transactionState',
+  defaultValue: {
+    totalCount: 0,
+    totalIncome: 0,
+    totalExpenditure: 0,
+    transaction: [],
+  },
+});
