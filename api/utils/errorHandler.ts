@@ -7,6 +7,8 @@ function errorHandler(errCode: string): ErrorType {
   switch (errCode) {
     case 'req/invalid-body':
       return { statusCode: 400, errorMessage: '잘못된 요청입니다.' };
+    case 'req/query-not-found':
+      return { statusCode: 400, errorMessage: '잘못된 요청입니다.' };
     case 'auth/account-not-found':
       return { statusCode: 404, errorMessage: '없는 계정입니다.' };
     case 'auth/wrong-password':
@@ -27,9 +29,6 @@ function errorHandler(errCode: string): ErrorType {
       return { statusCode: 409, errorMessage: '등록되지 않은 결제수단입니다.' };
     case 'payment/owned-payment':
       return { statusCode: 409, errorMessage: '이미 등록된 결제수단입니다.' };
-    case 'payment/owned-payment':
-      return { statusCode: 409, errorMessage: '이미 등록된 결제수단입니다.' };
-
     default:
       return { statusCode: 500, errorMessage: '다시 시도해주세요.' };
   }
