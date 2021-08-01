@@ -1,13 +1,18 @@
 import Component from 'src/lib/component';
 import { getState, setState } from 'src/lib/observer';
 
-import { transactionPriceType, transactionPriceTypeState, dateState } from 'src/store/transaction';
+import {
+  transactionPriceType,
+  transactionPriceTypeState,
+  transactionState,
+} from 'src/store/transaction';
 
 import activePicker from 'public/assets/icon/activePicker.svg';
 import inActivePicker from 'public/assets/icon/inActivePicker.svg';
 
 import _ from 'src/utils/dom';
 import { getNumberWithComma } from 'src/utils/price';
+import { getTransaction } from 'src/api/transaction';
 
 import './style.scss';
 
@@ -24,30 +29,28 @@ export default class TransactionHeader extends Component {
   setType: (newState: (arg: transactionPriceType) => transactionPriceType) => void;
   constructor() {
     super();
-    this.keys = [transactionPriceTypeState, dateState];
+    this.keys = [transactionPriceTypeState, transactionState];
     this.setType = setState(transactionPriceTypeState);
     this.subscribe();
+    getTransaction();
   }
   addEvent(): void {
     _.onEvent(this, 'click', this.handleClick.bind(this));
   }
   setTemplate(): string {
     const { isIncome, isExpenditure } = getState(transactionPriceTypeState);
+    const { totalCount, totalIncome, totalExpenditure } = getState(transactionState);
 
-    const {
-      total,
-      price: { income, expenditure },
-    } = this.getTransactionInfo();
     return `
-      <h2 class="transaction__total" >전체 내역 ${total}건</h2>
+      <h2 class="transaction__total" >전체 내역 ${totalCount}건</h2>
       <div class="transaciton__price-info" >
         <div id="transaction__income-btn">
           <img src=${isIncome ? activePicker : inActivePicker} alt="수입 버튼" />
-          <div>수입 ${getNumberWithComma(income)}</div>
+          <div>수입 ${getNumberWithComma(totalIncome)}</div>
         </div>
         <div id="transaction__expenditure-btn">
           <img src=${isExpenditure ? activePicker : inActivePicker} alt="수입 버튼" />
-          <div>지출 ${getNumberWithComma(expenditure)}</div>
+          <div>지출 ${getNumberWithComma(totalExpenditure)}</div>
         </div>
       </div>  
     `;
@@ -58,6 +61,7 @@ export default class TransactionHeader extends Component {
 
     if (this.isIncomeBtn(target)) {
       this.setType((type) => ({ ...type, isIncome: !type.isIncome }));
+      getTransaction();
     }
 
     if (this.isExpenditureBtn(target)) {
@@ -65,11 +69,8 @@ export default class TransactionHeader extends Component {
         ...type,
         isExpenditure: !type.isExpenditure,
       }));
+      getTransaction();
     }
-  }
-
-  getTransactionInfo(): TransactionInfoType {
-    return sampleData;
   }
 
   isIncomeBtn(target: HTMLElement): boolean {
@@ -81,11 +82,3 @@ export default class TransactionHeader extends Component {
 }
 
 customElements.define('transaction-header', TransactionHeader);
-
-const sampleData: TransactionInfoType = {
-  total: 13,
-  price: {
-    income: 1822480,
-    expenditure: 700000,
-  },
-};
