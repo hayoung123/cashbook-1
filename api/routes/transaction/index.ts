@@ -1,5 +1,7 @@
 import express from 'express';
+import errorHandler from 'utils/errorHandler';
 
+import transactionService from 'services/transaction';
 import statistics from './statistics';
 
 const router = express.Router();
@@ -18,35 +20,46 @@ const router = express.Router();
  *  /transaction/sum?type=trend&year=2021&category=food
  */
 
+// 결제내역 불러오기
 router.get('/', async (req, res, next) => {
   try {
-    // 결제내역 불러오기
   } catch (err) {
     console.log(err);
   }
 });
 
+// 결제내역 삭제하기
 router.delete('/:id', async (req, res, next) => {
   try {
-    // 결제내역 삭제하기
   } catch (err) {
     console.log(err);
   }
 });
 
+// 결제내역 수정하기
 router.put('/:id', async (req, res, next) => {
   try {
-    // 결제내역 수정하기
   } catch (err) {
     console.log(err);
   }
 });
 
+// 결제내역 추가하기
 router.post('/', async (req, res, next) => {
   try {
-    // 결제내역 추가하기
+    // const accessToken = getAccessToken(req.headers.authorization);
+    // const { uid: userId } = decodeToken(accessToken);
+    const userId = process.env.TEST_ID as string;
+    console.log(req.body);
+    const { date, category, title, payment, price } = req.body;
+    const transactionData = { userId, date, category, title, payment, price };
+    const result = await transactionService.createTransaction(transactionData);
+
+    res.status(200).json({ success: result });
   } catch (err) {
     console.log(err);
+    const { statusCode, errorMessage } = errorHandler(err.code);
+    res.status(statusCode).json({ errorMessage });
   }
 });
 

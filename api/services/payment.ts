@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
-import { db } from '../models/db';
-import errorGenerator from '../utils/errorGenerator';
+
+import { db } from 'models/db';
+import errorGenerator from 'utils/errorGenerator';
 
 async function getUserPayment(userId: string): Promise<string[]> {
   const userHasPaymentSnapshot = await db.USER_has_PAYMENT.findAll({
@@ -83,7 +84,6 @@ async function getPaymentId(paymentName: string): Promise<string | null> {
       name: paymentName,
     },
   });
-  console.log(paymentSnapshot);
   if (!paymentSnapshot) return null;
 
   const paymentId = paymentSnapshot.getDataValue('id');
@@ -118,4 +118,6 @@ export default {
   getUserPayment,
   createUserPayment,
   deleteUserPayment,
+  checkUserHasPayment,
+  getPaymentId,
 };
