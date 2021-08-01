@@ -1,33 +1,47 @@
+import { Op } from 'sequelize';
 import { db } from 'models/db';
 import errorGenerator from 'utils/errorGenerator';
+import {
+  PostTransactionParamType,
+  EditTransactionParamType,
+  getTransactionParamType,
+} from 'types/transaction';
 
 import paymentService from './payment';
 
-interface getTransactionDataType {
-  year: string;
-  month: string;
-  isIncome: boolean;
-  isExpenditure: boolean;
-}
+//거래내역 조회
+async function getTransaction({
+  userId,
+  year,
+  month,
+  isIncome,
+  isExpenditure,
+}: getTransactionParamType): Promise<any> {
+  const conditions = [];
 
-interface TransactionDataType {
-  date: string;
-  category: string;
-  title: string;
-  payment: string;
-  price: number;
-}
+  const { startDate, endDate } = getSideDate(+year, +month);
+  const transactionSnapshot = await db.Transaction.findAll({
+    attributes: ['date', 'category', 'title', 'payment', 'price'],
+    where: {
+      USERId: userId,
+      date: {
+        [Op.between]: [startDate, endDate],
+      },
+    },
+  });
 
-interface PostTransactionDataType extends TransactionDataType {
-  userId: string;
-}
+  const transactions = transactionSnapshot.map((item) => {
+    return {
+      date: item.getDataValue('date'),
+      category: item.getDataValue('category'),
+      title: item.getDataValue('title'),
+      payment: item.getDataValue('payment'),
+      price: item.getDataValue('price'),
+    };
+  });
 
-interface EditTransactionDataType extends TransactionDataType {
-  userId: string;
-  transactionId: string;
+  return transactions;
 }
-
-async function getTransaction({ year, month, isIncome, isExpenditure }: getTransactionDataType):Promise< {}
 
 //거래내역 추가
 async function createTransaction({
@@ -37,7 +51,7 @@ async function createTransaction({
   title,
   payment,
   price,
-}: PostTransactionDataType): Promise<boolean> {
+}: PostTransactionParamType): Promise<boolean> {
   const isUserPayment = await checkUserPayment(userId, payment);
 
   if (!isUserPayment) {
@@ -80,7 +94,7 @@ async function deleteTransaction(userId: string, transactionId: string): Promise
 }
 
 //거래내역 수정
-async function editTransaction(editTransactionData: EditTransactionDataType): Promise<boolean> {
+async function editTransaction(editTransactionData: EditTransactionParamType): Promise<boolean> {
   const { userId, transactionId, date, category, title, payment, price } = editTransactionData;
 
   const isUserTransaction = await checkUserTransaction(userId, transactionId);
@@ -143,4 +157,17 @@ async function checkUserTransaction(userId: string, transactionId: string): Prom
   return !!isUserTransaction;
 }
 
-export default { createTransaction, deleteTransaction, editTransaction };
+// function checkValidDate(date: string): boolean {}
+
+function getSideDate(year: number, month: number): { startDate: Date; endDate: Date } {
+  const lastDate = new Date(year, month, 0).getDate();
+  console.log(year);
+  console.log(month);
+  console.log(lastDate);
+  return {
+    startDate: new Date(year, month - 1, 1),
+    endDate: new Date(year, month - 1, lastDate),
+  };
+}
+
+export default { getTransaction, createTransaction, deleteTransaction, editTransaction };

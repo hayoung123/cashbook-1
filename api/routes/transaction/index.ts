@@ -3,6 +3,7 @@ import errorHandler from 'utils/errorHandler';
 
 import transactionService from 'services/transaction';
 import statistics from './statistics';
+import { getTransactionParamType } from 'types/transaction';
 
 const router = express.Router();
 
@@ -26,15 +27,17 @@ router.get('/', async (req, res, next) => {
     // const accessToken = getAccessToken(req.headers.authorization);
     // const { uid: userId } = decodeToken(accessToken);
     const userId = process.env.TEST_ID as string;
-    const { year, month, isIncome = true, isExpenditure = true } = req.params;
+    console.log(req.query);
+    const { year, month, isIncome = true, isExpenditure = true } = req.query;
     const result = await transactionService.getTransaction({
+      userId,
       year,
       month,
       isIncome,
       isExpenditure,
-    });
+    } as getTransactionParamType);
 
-    res.status.json({ data: result });
+    res.status(200).json({ data: result });
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
