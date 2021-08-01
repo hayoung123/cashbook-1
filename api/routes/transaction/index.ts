@@ -4,6 +4,7 @@ import errorHandler from 'utils/errorHandler';
 import transactionService from 'services/transaction';
 import statistics from './statistics';
 import { getTransactionParamType } from 'types/transaction';
+import { decodeToken, getAccessToken } from 'utils/jwt';
 
 const router = express.Router();
 
@@ -24,9 +25,9 @@ const router = express.Router();
 // 결제내역 불러오기
 router.get('/', async (req: Request, res: Response) => {
   try {
-    // const accessToken = getAccessToken(req.headers.authorization);
-    // const { uid: userId } = decodeToken(accessToken);
-    const userId = process.env.TEST_ID as string;
+    const accessToken = getAccessToken(req.headers.authorization);
+    const { uid: userId } = decodeToken(accessToken);
+
     const { year, month, isIncome, isExpenditure } = req.query;
     const result = await transactionService.getTransaction({
       userId,
@@ -47,9 +48,8 @@ router.get('/', async (req: Request, res: Response) => {
 // 결제내역 삭제하기
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
-    // const accessToken = getAccessToken(req.headers.authorization);
-    // const { uid: userId } = decodeToken(accessToken);
-    const userId = process.env.TEST_ID as string;
+    const accessToken = getAccessToken(req.headers.authorization);
+    const { uid: userId } = decodeToken(accessToken);
 
     const { id: transactionId } = req.params;
 
@@ -66,9 +66,9 @@ router.delete('/:id', async (req: Request, res: Response) => {
 // 결제내역 수정하기
 router.put('/:id', async (req: Request, res: Response) => {
   try {
-    // const accessToken = getAccessToken(req.headers.authorization);
-    // const { uid: userId } = decodeToken(accessToken);
-    const userId = process.env.TEST_ID as string;
+    const accessToken = getAccessToken(req.headers.authorization);
+    const { uid: userId } = decodeToken(accessToken);
+
     const { id: transactionId } = req.params;
     const transactionData = { userId, transactionId, ...req.body };
     const result = await transactionService.editTransaction(transactionData);
@@ -84,9 +84,8 @@ router.put('/:id', async (req: Request, res: Response) => {
 // 결제내역 추가하기
 router.post('/', async (req: Request, res: Response) => {
   try {
-    // const accessToken = getAccessToken(req.headers.authorization);
-    // const { uid: userId } = decodeToken(accessToken);
-    const userId = process.env.TEST_ID as string;
+    const accessToken = getAccessToken(req.headers.authorization);
+    const { uid: userId } = decodeToken(accessToken);
     const transactionData = { userId, ...req.body };
     const result = await transactionService.createTransaction(transactionData);
 
