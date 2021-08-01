@@ -34,3 +34,15 @@ export interface TransactionDataType {
   totalExpenditure: number;
   transaction: Array<DayTransactionType>;
 }
+
+export interface CalendarStatisticsType {
+  totalIncome: number;
+  totalExpenditure: number;
+  statistics: {
+    [key: number]: {
+      income: number;
+      expenditure: number;
+      total: number;
+    };
+  };
+}
