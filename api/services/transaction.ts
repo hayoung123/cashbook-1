@@ -41,6 +41,25 @@ async function createTransaction({
   return true;
 }
 
+async function deleteTransaction(userId: string, transactionId: string): Promise<boolean> {
+  const isUserTransaction = await checkUserTransaction(userId, transactionId);
+
+  if (!isUserTransaction) {
+    throw errorGenerator({
+      message: 'unowned transaction',
+      code: 'transaction/unowned-transaction',
+    });
+  }
+
+  await db.Transaction.destroy({
+    where: {
+      id: transactionId,
+    },
+  });
+
+  return true;
+}
+
 async function checkUserPayment(userId: string, payment: string): Promise<boolean> {
   const paymentId = await paymentService.getPaymentId(payment);
   if (!paymentId) return false;
@@ -51,4 +70,15 @@ async function checkUserPayment(userId: string, payment: string): Promise<boolea
   return true;
 }
 
-export default { createTransaction };
+async function checkUserTransaction(userId: string, transactionId: string): Promise<boolean> {
+  const isUserTransaction = await db.Transaction.count({
+    where: {
+      USERId: userId,
+      id: transactionId,
+    },
+  });
+
+  return !!isUserTransaction;
+}
+
+export default { createTransaction, deleteTransaction };
