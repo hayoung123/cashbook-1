@@ -24,7 +24,7 @@ async function fetchWrapper(url: string, method: MethodType, body: ObjectType): 
 
     const response = await res.json();
 
-    return response;
+    return { success: true, ...response };
   } catch (err) {
     console.log(err);
   }
