@@ -6,10 +6,24 @@ import {
   EditTransactionParamType,
   getTransactionParamType,
   TransactionRecordType,
+  DayTransactionType,
 } from 'types/transaction';
 
 import paymentService from './payment';
-
+/**
+ * [
+ *   {
+ *      date:string,
+ *      transaction ;[{...},{...},{...}],
+ *      totalIncome: 0000,
+ *      totalExpenditure:0000
+ *   },
+ *   {
+ *      ...
+ *   }
+ * ]
+ *
+ */
 //거래내역 조회
 async function getTransaction({
   userId,
@@ -21,17 +35,19 @@ async function getTransaction({
   const { startDate, endDate } = getSideDate(+year, +month);
 
   const transactionSnapshot = await db.Transaction.findAll({
-    attributes: ['date', 'category', 'title', 'payment', 'price'],
+    attributes: ['id', 'date', 'category', 'title', 'payment', 'price'],
     where: {
       USERId: userId,
       date: {
         [Op.between]: [startDate, endDate],
       },
     },
+    order: [['date', 'DESC']],
   });
 
   let transactions: TransactionRecordType[] = transactionSnapshot.map((item) => {
     return {
+      id: item.getDataValue('id'),
       date: item.getDataValue('date'),
       category: item.getDataValue('category'),
       title: item.getDataValue('title'),
@@ -40,10 +56,12 @@ async function getTransaction({
     };
   });
 
-  if (isIncome) transactions = transactions.filter(({ price }) => price > 0);
-  if (isExpenditure) transactions = transactions.filter(({ price }) => price < 0);
+  if (!isIncome) transactions = transactions.filter(({ price }) => price < 0);
+  if (!isExpenditure) transactions = transactions.filter(({ price }) => price > 0);
 
-  return transactions;
+  const parsedTransaction = parseTransactionByDate(transactions);
+
+  return parsedTransaction;
 }
 
 //거래내역 추가
@@ -162,15 +180,37 @@ async function checkUserTransaction(userId: string, transactionId: string): Prom
 
 // function checkValidDate(date: string): boolean {}
 
+//날짜 시작한날 끝날 구하기 - util로 이동
 function getSideDate(year: number, month: number): { startDate: Date; endDate: Date } {
   const lastDate = new Date(year, month, 0).getDate();
-  console.log(year);
-  console.log(month);
-  console.log(lastDate);
   return {
     startDate: new Date(year, month - 1, 1),
     endDate: new Date(year, month - 1, lastDate),
   };
 }
+//거래내역 파싱 - util로 이동
+const parseTransactionByDate = (
+  transactions: Array<TransactionRecordType>,
+): Array<DayTransactionType> => {
+  const result: Array<DayTransactionType> = [];
+  let dayRecord: any = {};
+
+  transactions.forEach((record) => {
+    if (dayRecord.date === record.date) {
+      dayRecord.transaction.push(record);
+      return;
+    }
+    if (dayRecord.date) {
+      result.push(dayRecord);
+      dayRecord = {};
+    }
+    dayRecord.date = record.date;
+    dayRecord.transaction = [record];
+  });
+
+  result.push(dayRecord);
+
+  return result;
+};
 
 export default { getTransaction, createTransaction, deleteTransaction, editTransaction };

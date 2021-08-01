@@ -6,7 +6,8 @@ export interface getTransactionParamType {
   isExpenditure: boolean;
 }
 
-interface TransactionRecordType {
+export interface TransactionRecordType {
+  id: string;
   date: string;
   category: string;
   title: string;
@@ -23,8 +24,7 @@ export interface EditTransactionParamType extends TransactionRecordType {
   transactionId: string;
 }
 
-// export interface DayTransactionListType {
-//   date: string;
-//   transaction: Array<TransactionRecordType>;
-// }
-export type DayTransactionListType = Array<TransactionRecordType>;
+export interface DayTransactionType {
+  date: string;
+  transaction: Array<TransactionRecordType>;
+}
