@@ -28,3 +28,9 @@ export interface DayTransactionType {
   date: string;
   transaction: Array<TransactionRecordType>;
 }
+
+export interface TransactionDataType {
+  totalIncome: number;
+  totalExpenditure: number;
+  transaction: Array<DayTransactionType>;
+}

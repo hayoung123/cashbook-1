@@ -7,21 +7,24 @@ import {
   getTransactionParamType,
   TransactionRecordType,
   DayTransactionType,
+  TransactionDataType,
 } from 'types/transaction';
 
 import paymentService from './payment';
 /**
- * [
- *   {
- *      date:string,
- *      transaction ;[{...},{...},{...}],
- *      totalIncome: 0000,
- *      totalExpenditure:0000
- *   },
- *   {
- *      ...
- *   }
- * ]
+ * {
+ * totalIncome:0000,
+ * totalExpenditure:0000,
+ * transaction: [
+ *    {
+ *       date:string,
+ *       transaction ;[{...},{...},{...}],
+ *    },
+ *    {
+ *       ...
+ *    }
+ *  ]
+ * }
  *
  */
 //거래내역 조회
@@ -191,11 +194,16 @@ function getSideDate(year: number, month: number): { startDate: Date; endDate: D
 //거래내역 파싱 - util로 이동
 const parseTransactionByDate = (
   transactions: Array<TransactionRecordType>,
-): Array<DayTransactionType> => {
+): TransactionDataType => {
   const result: Array<DayTransactionType> = [];
+  let totalIncome = 0;
+  let totalExpenditure = 0;
   let dayRecord: any = {};
 
   transactions.forEach((record) => {
+    if (record.price > 0) totalIncome += +record.price;
+    else totalExpenditure += +record.price;
+
     if (dayRecord.date === record.date) {
       dayRecord.transaction.push(record);
       return;
@@ -210,7 +218,11 @@ const parseTransactionByDate = (
 
   result.push(dayRecord);
 
-  return result;
+  return {
+    totalIncome,
+    totalExpenditure,
+    transaction: result,
+  };
 };
 
 export default { getTransaction, createTransaction, deleteTransaction, editTransaction };
