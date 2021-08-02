@@ -159,10 +159,9 @@ async function getStatistics(
       attributes: ['category', 'price'],
       where: {
         USERId: uid,
-        // TODO: 수입 지출 구분방법에 따라 달라져야 함
-        // price: {
-        //   [Op.lte]: 0,
-        // },
+        price: {
+          [Op.lte]: 0,
+        },
         date: {
           [Op.lt]: new Date(currentMonthEnd),
           [Op.gte]: new Date(currentMonthStart),
@@ -202,6 +201,9 @@ async function getStatistics(
       attributes: ['date', 'price'],
       where: {
         USERId: uid,
+        price: {
+          [Op.lte]: 0,
+        },
         category,
         date: {
           [Op.lte]: new Date(`${year}-12-31`),
@@ -210,14 +212,14 @@ async function getStatistics(
       },
     });
 
-    const trendStatistics = new Array(13).fill(0);
+    const trendStatistics = new Array(12).fill(0);
 
     transactionSnapshot.forEach((t) => {
       const price = t.getDataValue('price');
       const date = t.getDataValue('date');
       const month = new Date(date).getMonth();
 
-      trendStatistics[month] += +price;
+      trendStatistics[month - 1] += +price;
     });
 
     return trendStatistics;
