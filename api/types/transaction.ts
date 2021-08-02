@@ -38,6 +38,7 @@ export interface TransactionDataType {
 export interface CalendarStatisticsType {
   totalIncome: number;
   totalExpenditure: number;
+  totalPrice: number;
   statistics: {
     [key: number]: {
       income: number;

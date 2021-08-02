@@ -1,15 +1,17 @@
 import Component from 'src/lib/component';
-import { getNumberWithComma } from 'src/utils/price';
+import { getState } from 'src/lib/observer';
 
-interface TotalPriceInfoType {
-  totalIncome: number;
-  totalExpenditure: number;
-  totalPrice: number;
-}
+import { getNumberWithComma } from 'src/utils/price';
+import { calendarDataState } from 'src/store/calendar';
 
 export default class TotalPriceInfo extends Component {
+  constructor() {
+    super();
+    this.keys = [calendarDataState];
+    this.subscribe();
+  }
   setTemplate(): string {
-    const { totalIncome, totalExpenditure, totalPrice } = this.getTotalPriceInfo();
+    const { totalIncome, totalExpenditure, totalPrice } = getState(calendarDataState);
 
     return `
       <div>
@@ -19,17 +21,6 @@ export default class TotalPriceInfo extends Component {
       <div>총계 ${getNumberWithComma(totalPrice)}</div>
     `;
   }
-
-  getTotalPriceInfo(): TotalPriceInfoType {
-    //fetch
-    return sample;
-  }
 }
 
 customElements.define('total-price-info', TotalPriceInfo);
-
-const sample: TotalPriceInfoType = {
-  totalIncome: 1000000,
-  totalExpenditure: -157400,
-  totalPrice: 864200,
-};

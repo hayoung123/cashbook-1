@@ -11,7 +11,6 @@ export default merge(common, {
     port: PORT,
     proxy: {
       '/': 'http://localhost:3000',
-      '/': 'http://localhost:4000',
     },
   },
 });
