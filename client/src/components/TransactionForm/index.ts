@@ -4,10 +4,14 @@ import inActiveSubmitBtn from 'public/assets/icon/inActiveSubmitBtn.svg';
 import activeSubmitBtn from 'public/assets/icon/activeSubmitBtn.svg';
 import downArrow from 'public/assets/icon/downArrow.svg';
 import trashIcon from 'public/assets/icon/trashIcon.svg';
+import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
+import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
 
-import './style.scss';
 import _ from 'src/utils/dom';
 import { RecordType } from 'src/store/transaction';
+import { objType } from 'src/type/type';
+
+import './style.scss';
 
 interface PropsType {
   isEdit: boolean;
@@ -77,6 +81,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
           <div class="${category ? '' : 'empty'}">${category ? category : '선택하세요'}</div>
           <img class="form-dropdown-btn" src=${downArrow} alt='펼쳐보기' />
         </div>
+        <div id="form__category-dropdown"></div>
       </div>
       <div class="transaction__form-column transaction__title" >
         <label for='title'>내용</label>
@@ -88,6 +93,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
           <div class="${payment ? '' : 'empty'}">${payment ? payment : '선택하세요'}</div>
           <img class="form-dropdown-btn" src=${downArrow} alt='펼쳐보기' />
         </div>
+        <div id="form__payment-dropdown"></div>
       </div>
       <div class="transaction__form-column transaction__price" >
         <label for='price'>금액</label>
@@ -101,6 +107,13 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       </div>
     </div>
     `;
+  }
+
+  setComponents(): objType {
+    return {
+      'form__category-dropdown': new CategoryDropdown(),
+      'form__payment-dropdown': new PaymentDropdown(),
+    };
   }
 
   handleClick(e: Event): void {

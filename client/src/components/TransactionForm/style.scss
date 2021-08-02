@@ -47,8 +47,8 @@
     padding-right: 0;
   }
 
-  .transaction__method > div:last-child,
-  .transaction__category > div:last-child {
+  .transaction__method > div:nth-child(2),
+  .transaction__category > div:nth-child(2) {
     display: flex;
     gap: 8px;
     .form-dropdown-btn {
@@ -86,5 +86,28 @@
   .selected {
     background-color: var(--primary-color);
     color: var(--off-white-color);
+  }
+}
+
+.transaction__category {
+  position: relative;
+  category-dropdown {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    width: fit-content;
+  }
+}
+.transaction__method {
+  position: relative;
+  payment-dropdown {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    width: fit-content;
+    & > div {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
