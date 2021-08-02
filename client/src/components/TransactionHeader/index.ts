@@ -11,8 +11,8 @@ import activePicker from 'public/assets/icon/activePicker.svg';
 import inActivePicker from 'public/assets/icon/inActivePicker.svg';
 
 import _ from 'src/utils/dom';
+import { setTransactionData } from 'src/utils/transaction';
 import { getNumberWithComma } from 'src/utils/price';
-import { getTransaction } from 'src/api/transaction';
 
 import './style.scss';
 
@@ -32,7 +32,6 @@ export default class TransactionHeader extends Component {
     this.keys = [transactionPriceTypeState, transactionState];
     this.setType = setState(transactionPriceTypeState);
     this.subscribe();
-    getTransaction();
   }
   addEvent(): void {
     _.onEvent(this, 'click', this.handleClick.bind(this));
@@ -61,7 +60,7 @@ export default class TransactionHeader extends Component {
 
     if (this.isIncomeBtn(target)) {
       this.setType((type) => ({ ...type, isIncome: !type.isIncome }));
-      getTransaction();
+      setTransactionData();
     }
 
     if (this.isExpenditureBtn(target)) {
@@ -69,7 +68,7 @@ export default class TransactionHeader extends Component {
         ...type,
         isExpenditure: !type.isExpenditure,
       }));
-      getTransaction();
+      setTransactionData();
     }
   }
 

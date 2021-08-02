@@ -8,13 +8,13 @@ import leftArrow from 'public/assets/icon/leftArrow.svg';
 import rightArrow from 'public/assets/icon/rightArrow.svg';
 
 import _ from 'src/utils/dom';
+import { setTransactionData } from 'src/utils/transaction';
 import { getNextMonth, getPrevMonth } from 'src/utils/date';
 import { dateState, DateType } from 'src/store/transaction';
 
 import { router } from '../../../index';
 
 import './style.scss';
-import { getTransaction } from 'src/api/transaction';
 
 export default class Header extends Component {
   setDate: (newState: DateType) => void;
@@ -74,11 +74,11 @@ export default class Header extends Component {
 
     if (this.isLeftArrow(target)) {
       this.setDate(getPrevMonth(currentDate));
-      getTransaction();
+      setTransactionData();
     }
     if (this.isRightArrow(target)) {
       this.setDate(getNextMonth(currentDate));
-      getTransaction();
+      setTransactionData();
     }
 
     const button: HTMLButtonElement | null = target.closest('.navigator>button');
