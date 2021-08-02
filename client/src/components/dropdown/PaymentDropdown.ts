@@ -47,7 +47,7 @@ export default class PaymentDropdown extends Component<void, PropsType> {
     const paymentItem = target.closest('.payment-item');
 
     if (paymentItem) {
-      const payment = _.$('.payment-item>div:first-child', target)?.textContent || '';
+      const payment = paymentItem.firstElementChild?.textContent || '';
       this.props.setPayment(payment);
     }
 

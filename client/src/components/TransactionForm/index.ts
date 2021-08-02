@@ -9,7 +9,11 @@ import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
 import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
 
 import _ from 'src/utils/dom';
+import { getInsertedDotDate } from 'src/utils/date';
+import { getCategoryKey } from 'src/utils/category';
+import { setTransactionData } from 'src/utils/dataSetting';
 
+import { createTransaction } from 'src/api/transaction';
 import { getUserPayment } from 'src/api/payment';
 import { userPaymentState } from 'src/store/payment';
 import { RecordType } from 'src/store/transaction';
@@ -27,12 +31,8 @@ interface StateType {
   isAbleSubmit: boolean;
   isOpenPayment: boolean;
   isOpenCategory: boolean;
-  id: string;
-  date: string;
   category: string;
-  title: string;
   payment: string;
-  price: number;
 }
 
 const INIT_FORM = {
@@ -48,27 +48,37 @@ const INIT_FORM = {
 };
 
 export default class TransactionFrom extends Component<StateType, PropsType> {
+  date: string;
+  title: string;
+  price: number;
   constructor(props: PropsType = INIT_FORM) {
     super(props);
+    this.date = this.props.data.date;
+    this.title = this.props.data.title || '';
+    this.price = this.props.data.price < 0 ? this.props.data.price * -1 : this.props.data.price;
+
+    this.render();
     this.addClass('transaction__form-container');
   }
   initState(): StateType {
     return {
-      isIncome: true,
+      isIncome: this.props.data.price >= 0 ? true : false,
       isAbleSubmit: false,
-      ...this.props.data,
       isOpenPayment: false,
       isOpenCategory: false,
+      category: this.props.data.category,
+      payment: this.props.data.payment,
     };
   }
 
   addEvent(): void {
     _.onEvent(this, 'click', this.handleClick.bind(this));
+    _.onEvent(this, 'input', this.handleDateInput.bind(this));
   }
   setTemplate(): string {
     if (!this.state) return '';
 
-    const { date, category, title, payment, price } = this.state;
+    const { category, payment } = this.state;
     const { isIncome, isAbleSubmit, isOpenPayment, isOpenCategory } = this.state;
 
     return `
@@ -88,7 +98,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     <div class="transaction__form">
       <div class="transaction__form-column transaction__date" >
         <label for='date'>일자</label>
-        <input name='date' id='date' value='${date}' placeholder="입력하세요"/>
+        <input name='date' id='date' value='${this.date || ''}' placeholder="예) 2020.08.01"/>
       </div>
       <div class="transaction__form-column transaction__category" >
         <div>분류</div>
@@ -100,7 +110,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       </div>
       <div class="transaction__form-column transaction__title" >
         <label for='title'>내용</label>
-        <input name='title' value='${title}' placeholder="입력하세요"/>
+        <input name='title' value='${this.title}' placeholder="입력하세요"/>
       </div>
       <div class="transaction__form-column transaction__method" >
         <div>결제수단</div>
@@ -113,12 +123,12 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       <div class="transaction__form-column transaction__price" >
         <label for='price'>금액</label>
         <div>
-          <input type='number' name='price' value='${price ? price : ''}' placeholder="입력하세요">
+          <input type='number' name='price' value='${this.price || ''}' placeholder="입력하세요">
           <span>원</span>
         </div>
       </div>
       <div class="transaction__form-submit-btn">
-        <img src=${isAbleSubmit ? activeSubmitBtn : inActiveSubmitBtn} alt='제출 버튼' />
+        <img src=${activeSubmitBtn} alt='제출 버튼' />
       </div>
     </div>
     `;
@@ -135,7 +145,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     const target = e.target as HTMLElement;
     //제출 버튼
     if (this.isSubmitBtn(target)) {
-      //서버요청
+      this.submitForm();
       //성공시 set Data
       return;
     }
@@ -155,6 +165,29 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (this.isPaymentDropdownBtn(target)) {
       this.setUserPayment();
       this.togglePaymentDropdown();
+    }
+  }
+
+  //폼 제출
+  async submitForm(): Promise<void> {
+    const category: string = this.state?.category || '';
+    const payment: string = this.state?.payment || '';
+    const price = this.state?.isIncome ? this.price : this.price * -1;
+    console.log(this.date || category || this.title || payment || price);
+    //TODO 경고창
+    if (!this.date || !category || !this.title || !payment || !price) return;
+
+    const { success } = await createTransaction({
+      date: this.date,
+      title: this.title,
+      category: getCategoryKey(category),
+      payment,
+      price,
+    });
+
+    if (success) {
+      this.clearState();
+      setTransactionData();
     }
   }
 
@@ -209,12 +242,36 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     this.setState({ isOpenPayment: false });
   }
 
+  handleDateInput(e: Event): void {
+    const target = e.target as HTMLElement;
+    const dateInput = target.closest('.transaction__date input') as HTMLInputElement;
+    const titleInput = _.$('.transaction__title input') as HTMLInputElement;
+    const priceInput = _.$('.transaction__price input') as HTMLInputElement;
+
+    if (dateInput) {
+      const dashedDate = getInsertedDotDate(dateInput.value);
+      this.date = dashedDate;
+      dateInput.value = dashedDate;
+    }
+
+    if (titleInput) this.title = titleInput.value;
+    if (priceInput) this.price = Math.abs(+priceInput.value);
+  }
+
+  clearState() {
+    this.price = 0;
+    this.title = '';
+    this.date = '';
+    this.setState({ isIncome: true, category: '', payment: '' });
+  }
+
   isSubmitBtn(target: HTMLElement): boolean {
     return !!target.closest('.transaction__form-submit-btn');
   }
   isTransactionTypeBtn(target: HTMLElement): boolean {
     return !!target.closest('.transaction__type-btn');
   }
+
   isCategoryDropdownBtn(target: HTMLElement): boolean {
     return !!target.closest('.category__dropdown-btn');
   }
