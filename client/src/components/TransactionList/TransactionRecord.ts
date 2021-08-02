@@ -1,9 +1,13 @@
 import Component from 'src/lib/component';
 import { ComponentType, objType } from 'src/lib/component/type';
-import { RecordType } from 'src/store/transaction';
+
 import _ from 'src/utils/dom';
-import CategoryBadge from '../CategoryBadge';
-import TransactionFrom from '../TransactionForm';
+import { getNumberWithComma } from 'src/utils/price';
+
+import CategoryBadge from 'src/components/CategoryBadge';
+import TransactionFrom from 'src/components/TransactionForm';
+
+import { RecordType } from 'src/store/transaction';
 
 type StateType = {
   isEdit: boolean;
@@ -34,7 +38,7 @@ export default class TransactionRecord extends Component<StateType, RecordType> 
             <div class="transaction__record-title">${title}</div>
           </div>
           <div class="transaction__record-method">${payment}</div>
-          <div class="transaction__record-price">${price}</div>
+          <div class="transaction__record-price">${getNumberWithComma(price)}</div>
         </div>
         ${
           isEdit
