@@ -37,6 +37,7 @@ export default class Component<S = void, T = void> extends HTMLElement {
     this.components = this.setComponents();
     this.innerHTML = this.setTemplate();
     this.setLayout();
+    this.componentDidMount();
   }
 
   //innerHTML
@@ -50,6 +51,10 @@ export default class Component<S = void, T = void> extends HTMLElement {
       const $$ = this.querySelector(`#${key}`);
       $$?.replaceWith(Comp);
     }
+  }
+
+  componentDidMount(): void {
+    return;
   }
 
   //사용하는 컴포넌트 init
