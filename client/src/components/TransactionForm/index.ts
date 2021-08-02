@@ -14,7 +14,7 @@ import { getInsertedDotDate } from 'src/utils/date';
 import { getCategoryKey } from 'src/utils/category';
 import { setTransactionData } from 'src/utils/dataSetting';
 
-import { createTransaction, editTransaction } from 'src/api/transaction';
+import { createTransaction, deleteTransaction, editTransaction } from 'src/api/transaction';
 import { getUserPayment } from 'src/api/payment';
 import { userPaymentState } from 'src/store/payment';
 import { RecordType } from 'src/store/transaction';
@@ -167,6 +167,11 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       this.setUserPayment();
       this.togglePaymentDropdown();
     }
+
+    //결제수단 삭제 버튼
+    if (this.isDeleteBtn(target)) {
+      this.deleteRecord();
+    }
   }
 
   //폼 제출
@@ -194,6 +199,11 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       this.clearState();
       setTransactionData();
     }
+  }
+
+  async deleteRecord(): Promise<void> {
+    const { success } = await deleteTransaction(this.props.data.id);
+    if (success) setTransactionData();
   }
 
   //TODO 에러처리
@@ -282,6 +292,9 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   }
   isPaymentDropdownBtn(target: HTMLElement): boolean {
     return !!target.closest('.payment__dropdown-btn');
+  }
+  isDeleteBtn(target: HTMLElement): boolean {
+    return !!target.closest('.transaction__delete-btn');
   }
 }
 
