@@ -1,4 +1,5 @@
 import Component from 'src/lib/component';
+import { setState } from 'src/lib/observer';
 
 import inActiveSubmitBtn from 'public/assets/icon/inActiveSubmitBtn.svg';
 import activeSubmitBtn from 'public/assets/icon/activeSubmitBtn.svg';
@@ -8,6 +9,9 @@ import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
 import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
 
 import _ from 'src/utils/dom';
+
+import { getUserPayment } from 'src/api/payment';
+import { userPaymentState } from 'src/store/payment';
 import { RecordType } from 'src/store/transaction';
 import { objType } from 'src/type/type';
 
@@ -79,7 +83,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
         <div>분류</div>
         <div>
           <div class="${category ? '' : 'empty'}">${category ? category : '선택하세요'}</div>
-          <img class="form-dropdown-btn" src=${downArrow} alt='펼쳐보기' />
+          <img class="category__dropdown-btn" src=${downArrow} alt='펼쳐보기' />
         </div>
         <div id="form__category-dropdown"></div>
       </div>
@@ -91,7 +95,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
         <div>결제수단</div>
         <div>
           <div class="${payment ? '' : 'empty'}">${payment ? payment : '선택하세요'}</div>
-          <img class="form-dropdown-btn" src=${downArrow} alt='펼쳐보기' />
+          <img class="payment__dropdown-btn" src=${downArrow} alt='펼쳐보기' />
         </div>
         <div id="form__payment-dropdown"></div>
       </div>
@@ -130,10 +134,21 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       this.setState({ isIncome });
     }
 
-    //드롭다운 버튼
-    if (this.isDropdownBtn(target)) {
-      //category, method dropdown 관련 버튼
+    //카테고리 드롭다운 버튼
+    if (this.isCategoryDropdownBtn(target)) {
+      console.log('카테고리 드롭다운');
     }
+
+    //결제수단 드롭다운 버튼
+    if (this.isPaymentDropdownBtn(target)) {
+      this.setUserPayment();
+    }
+  }
+
+  //TODO 에러처리
+  async setUserPayment(): Promise<void> {
+    const { success, response } = await getUserPayment();
+    if (success) setState(userPaymentState)(response.data);
   }
 
   isSubmitBtn(target: HTMLElement): boolean {
@@ -142,8 +157,11 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   isTransactionTypeBtn(target: HTMLElement): boolean {
     return !!target.closest('.transaction__type-btn');
   }
-  isDropdownBtn(target: HTMLElement): boolean {
-    return !!target.closest('.form-dropdown-btn');
+  isCategoryDropdownBtn(target: HTMLElement): boolean {
+    return !!target.closest('.category__dropdown-btn');
+  }
+  isPaymentDropdownBtn(target: HTMLElement): boolean {
+    return !!target.closest('.payment__dropdown-btn');
   }
 }
 

@@ -7,3 +7,5 @@ export const SIGNOUT_URL = `${BASE_URL}/auth/signout`;
 export const TRANSACTION_URL = `${BASE_URL}/transaction`;
 
 export const STATISTICS_URL = `${TRANSACTION_URL}/statistics`;
+
+export const PAYMENT_URL = `${BASE_URL}/payment`;
