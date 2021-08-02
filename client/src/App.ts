@@ -6,6 +6,7 @@ import Header from 'src/components/Header';
 import { pageState, isLoggedInState } from 'src/store/page';
 import { router } from '..';
 import { authorizedRoutes, unauthorizedRoutes } from './configs/routes';
+import { setTransactionData } from './utils/dataSetting';
 
 type objType = {
   [key: string]: any;
@@ -22,7 +23,8 @@ export default class App extends Component<StateType, void> {
   }
 
   setTemplate(): string {
-    const isLoggedIn = getState(isLoggedInState);
+    // const isLoggedIn = getState(isLoggedInState);
+    const isLoggedIn = true;
     return `
       ${isLoggedIn ? `<div id="app_header"></div>` : ''}
       <div id="page"></div>
@@ -33,13 +35,16 @@ export default class App extends Component<StateType, void> {
     const { Page } = getState(pageState);
     const isLoggedIn = getState(isLoggedInState);
 
-    if (isLoggedIn) router.setRoutes(authorizedRoutes);
-    else router.setRoutes(unauthorizedRoutes);
+    // if (isLoggedIn) router.setRoutes(authorizedRoutes);
+    // else router.setRoutes(unauthorizedRoutes);
 
     return {
       page: new Page(),
       app_header: new Header(),
     };
+  }
+  componentDidMount() {
+    setTransactionData();
   }
 }
 
