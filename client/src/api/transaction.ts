@@ -21,19 +21,25 @@ interface TransactionType {
   price: number;
 }
 
-export const createTransaction = async ({
-  date,
-  category,
-  title,
-  payment,
-  price,
-}: TransactionType): Promise<{ success: boolean; response: any }> => {
-  const res = await fetchWrapper(TRANSACTION_URL, 'POST', {
-    date,
-    category,
-    title,
-    payment,
-    price,
-  });
+export const createTransaction = async (
+  transactionInfo: TransactionType,
+): Promise<{ success: boolean; response: any }> => {
+  const res = await fetchWrapper(TRANSACTION_URL, 'POST', transactionInfo);
+  return res;
+};
+
+interface EditTransactionType extends TransactionType {
+  id: string;
+}
+
+export const editTransaction = async (
+  transactionInfo: EditTransactionType,
+): Promise<{ success: boolean; response: any }> => {
+  const res = await fetchWrapper(
+    `${TRANSACTION_URL}/${transactionInfo.id}`,
+    'PUT',
+    transactionInfo,
+  );
+
   return res;
 };

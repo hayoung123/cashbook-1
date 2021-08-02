@@ -9,11 +9,12 @@ import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
 import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
 
 import _ from 'src/utils/dom';
+import { CATEGORY__INFO } from 'src/constant/category';
 import { getInsertedDotDate } from 'src/utils/date';
 import { getCategoryKey } from 'src/utils/category';
 import { setTransactionData } from 'src/utils/dataSetting';
 
-import { createTransaction } from 'src/api/transaction';
+import { createTransaction, editTransaction } from 'src/api/transaction';
 import { getUserPayment } from 'src/api/payment';
 import { userPaymentState } from 'src/store/payment';
 import { RecordType } from 'src/store/transaction';
@@ -54,8 +55,8 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   constructor(props: PropsType = INIT_FORM) {
     super(props);
     this.date = this.props.data.date;
-    this.title = this.props.data.title || '';
-    this.price = this.props.data.price < 0 ? this.props.data.price * -1 : this.props.data.price;
+    this.title = this.props.data.title;
+    this.price = Math.abs(this.props.data.price);
 
     this.render();
     this.addClass('transaction__form-container');
@@ -66,7 +67,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       isAbleSubmit: false,
       isOpenPayment: false,
       isOpenCategory: false,
-      category: this.props.data.category,
+      category: CATEGORY__INFO[this.props.data.category]?.name,
       payment: this.props.data.payment,
     };
   }
@@ -173,17 +174,21 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     const category: string = this.state?.category || '';
     const payment: string = this.state?.payment || '';
     const price = this.state?.isIncome ? this.price : this.price * -1;
-    console.log(this.date || category || this.title || payment || price);
+
     //TODO 경고창
     if (!this.date || !category || !this.title || !payment || !price) return;
 
-    const { success } = await createTransaction({
+    const reqBody = {
       date: this.date,
       title: this.title,
       category: getCategoryKey(category),
       payment,
       price,
-    });
+    };
+
+    const { success } = this.props.isEdit
+      ? await editTransaction({ id: this.props.data.id, ...reqBody })
+      : await createTransaction(reqBody);
 
     if (success) {
       this.clearState();
@@ -245,8 +250,8 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   handleDateInput(e: Event): void {
     const target = e.target as HTMLElement;
     const dateInput = target.closest('.transaction__date input') as HTMLInputElement;
-    const titleInput = _.$('.transaction__title input') as HTMLInputElement;
-    const priceInput = _.$('.transaction__price input') as HTMLInputElement;
+    const titleInput = target.closest('.transaction__title input') as HTMLInputElement;
+    const priceInput = target.closest('.transaction__price input') as HTMLInputElement;
 
     if (dateInput) {
       const dashedDate = getInsertedDotDate(dateInput.value);
@@ -258,7 +263,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (priceInput) this.price = Math.abs(+priceInput.value);
   }
 
-  clearState() {
+  clearState(): void {
     this.price = 0;
     this.title = '';
     this.date = '';
