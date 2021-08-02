@@ -7,7 +7,6 @@ import {
   getTransactionParamType,
   TransactionRecordType,
   DayTransactionType,
-  TransactionDataType,
   CalendarStatisticsType,
 } from 'types/transaction';
 
@@ -341,6 +340,7 @@ async function getCalendarStatistics(
   const result: CalendarStatisticsType = {
     totalIncome: 0,
     totalExpenditure: 0,
+    totalPrice: 0,
     statistics: {},
   };
 
@@ -378,6 +378,8 @@ async function getCalendarStatistics(
       }
     }
   });
+
+  result.totalPrice = result.totalIncome + result.totalExpenditure;
 
   return result;
 }
