@@ -116,7 +116,7 @@ export default class SignUpPage extends Component {
         return;
       }
 
-      const { accessToken } = res;
+      const { accessToken } = res.response;
 
       localStorage.setItem('_at', accessToken);
 

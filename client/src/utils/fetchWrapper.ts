@@ -4,7 +4,7 @@ type ObjectType = {
   [key in string]: any;
 };
 
-async function fetchWrapper(url: string, method: MethodType, body: ObjectType): Promise<any> {
+async function fetchWrapper(url: string, method: MethodType, body?: ObjectType): Promise<any> {
   try {
     const token = window.localStorage.getItem('_at') || '';
 
@@ -18,13 +18,20 @@ async function fetchWrapper(url: string, method: MethodType, body: ObjectType): 
     });
 
     if (!res.ok) {
+      if (method === 'HEAD') {
+        return { success: false };
+      }
       const { errorMessage } = await res.json();
       return { success: false, errorMessage };
     }
 
+    if (method === 'HEAD') {
+      return { success: true };
+    }
+
     const response = await res.json();
 
-    return { success: true, ...response };
+    return { success: true, response };
   } catch (err) {
     console.log(err);
   }
