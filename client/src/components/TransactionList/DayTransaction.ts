@@ -6,14 +6,14 @@ import { getDate } from 'src/utils/date';
 import { getNumberWithComma } from 'src/utils/price';
 
 import { objType } from 'src/type/type';
-import { DayTransactionType, PaymentType } from 'src/type/transaction';
+import { DayRecordsType, RecordType } from 'src/store/transaction';
 
 type StateType = void;
 
 type ComponentType = { [key: string]: HTMLElement };
 
-export default class DayTransaction extends Component<StateType, DayTransactionType> {
-  constructor(props: DayTransactionType) {
+export default class DayTransaction extends Component<StateType, DayRecordsType> {
+  constructor(props: DayRecordsType) {
     super(props);
   }
 
@@ -44,18 +44,18 @@ export default class DayTransaction extends Component<StateType, DayTransactionT
   setComponents(): ComponentType | objType {
     if (!this.props) return {};
 
-    const { date, transaction } = this.props;
+    const { transaction } = this.props;
 
     const components: ComponentType = {};
     transaction.forEach((record, idx) => {
       const key = `transaction-record-${idx}`;
-      components[key] = new TransactionRecord({ date, ...record });
+      components[key] = new TransactionRecord({ ...record });
     });
 
     return components;
   }
 
-  getTotalPrice(transaction: Array<PaymentType>): number {
+  getTotalPrice(transaction: Array<RecordType>): number {
     const totalPrice = transaction.reduce((acc, record) => (acc += record.price), 0);
     return totalPrice;
   }

@@ -14,3 +14,17 @@ export const getDate = (date: string): DateType => {
     day: DAYS[dateObj.getDay()],
   };
 };
+
+interface YearMonthType {
+  year: number;
+  month: number;
+}
+
+export const getNextMonth = ({ year, month }: YearMonthType): YearMonthType => {
+  if (month === 12) return { year: year + 1, month: 1 };
+  return { year, month: month + 1 };
+};
+export const getPrevMonth = ({ year, month }: YearMonthType): YearMonthType => {
+  if (month === 1) return { year: year - 1, month: 12 };
+  return { year, month: month - 1 };
+};

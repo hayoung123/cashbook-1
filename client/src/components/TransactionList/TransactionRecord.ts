@@ -1,6 +1,6 @@
 import Component from 'src/lib/component';
 import { ComponentType, objType } from 'src/lib/component/type';
-import { PaymentType } from 'src/type/transaction';
+import { RecordType } from 'src/store/transaction';
 import CategoryBadge from '../CategoryBadge';
 import TransactionFrom from '../TransactionForm';
 
@@ -8,12 +8,8 @@ type StateType = {
   isEdit: boolean;
 };
 
-interface PropsType extends PaymentType {
-  date: string;
-}
-
-export default class TransactionRecord extends Component<StateType, PropsType> {
-  constructor(props: PropsType) {
+export default class TransactionRecord extends Component<StateType, RecordType> {
+  constructor(props: RecordType) {
     super(props);
   }
   initState(): StateType {
@@ -23,7 +19,7 @@ export default class TransactionRecord extends Component<StateType, PropsType> {
   setTemplate(): string {
     if (!this.state) return '';
 
-    const { title, method, price } = this.props;
+    const { title, payment, price } = this.props;
     const { isEdit } = this.state;
     return `
       <div class="transaction__record-container">
@@ -32,7 +28,7 @@ export default class TransactionRecord extends Component<StateType, PropsType> {
             <div id="category-badge"></div>
             <div class="transaction__record-title">${title}</div>
           </div>
-          <div class="transaction__record-method">${method}</div>
+          <div class="transaction__record-method">${payment}</div>
           <div class="transaction__record-price">${price}</div>
         </div>
         ${

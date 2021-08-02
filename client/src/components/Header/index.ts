@@ -1,3 +1,4 @@
+import { getState, setState } from 'src/lib/observer';
 import Component from 'src/lib/component';
 
 import calendarIcon from 'public/assets/icon/calendarIcon.svg';
@@ -6,15 +7,22 @@ import historyIcon from 'public/assets/icon/historyIcon.svg';
 import leftArrow from 'public/assets/icon/leftArrow.svg';
 import rightArrow from 'public/assets/icon/rightArrow.svg';
 
+import _ from 'src/utils/dom';
+import { getNextMonth, getPrevMonth } from 'src/utils/date';
+import { dateState, DateType } from 'src/store/transaction';
+
 import { router } from '../../../index';
 
-import _ from 'src/utils/dom';
-
 import './style.scss';
+import { getTransaction } from 'src/api/transaction';
 
 export default class Header extends Component {
+  setDate: (newState: DateType) => void;
   constructor() {
     super();
+    this.setDate = setState(dateState);
+    this.keys = [dateState];
+    this.subscribe();
     this.addClass('header');
   }
 
@@ -23,6 +31,7 @@ export default class Header extends Component {
   }
 
   setTemplate(): string {
+    const { year, month } = getState(dateState);
     const path = location.pathname;
     const isHistory = path === '/';
     const isCalendar = path === '/calendar';
@@ -32,14 +41,14 @@ export default class Header extends Component {
       <div class="header__content container row">
         <h2 class="title">우아한 가계부</h2>
         <div class="month-picker">
-          <button>
+          <button id="left-arrow">
             <img src=${leftArrow} alt='다음달'/>
           </button>
           <div class="month-display" >
-            <div class="month">7월</div>
-            <div class="year">2021</div>
+            <div class="month">${month}월</div>
+            <div class="year">${year}</div>
           </div>
-          <button>
+          <button id="right-arrow">
             <img src=${rightArrow} alt='이전달'/>
           </button>
         </div>
@@ -61,11 +70,29 @@ export default class Header extends Component {
   //TODO: 해결되지 않는 타입 무한굴래... as를 안쓰고 어떤식으로 해결해야될까...??
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
+    const currentDate = getState(dateState);
+
+    if (this.isLeftArrow(target)) {
+      this.setDate(getPrevMonth(currentDate));
+      getTransaction();
+    }
+    if (this.isRightArrow(target)) {
+      this.setDate(getNextMonth(currentDate));
+      getTransaction();
+    }
+
     const button: HTMLButtonElement | null = target.closest('.navigator>button');
     if (!button) return;
 
     const path: string | void = button.dataset?.path;
     if (path) router.push(path);
+  }
+
+  isLeftArrow(target: HTMLElement): boolean {
+    return !!target.closest('#left-arrow');
+  }
+  isRightArrow(target: HTMLElement): boolean {
+    return !!target.closest('#right-arrow');
   }
 }
 
