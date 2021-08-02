@@ -5,20 +5,29 @@ import xBtn from 'public/assets/icon/xBtn.svg';
 import './style.scss';
 import { getState } from 'src/lib/observer';
 import { userPaymentState } from 'src/store/payment';
+import _ from 'src/utils/dom';
 
-export default class PaymentDropdown extends Component<void, void> {
-  constructor() {
-    super();
+interface PropsType {
+  setPayment: (payment: string) => void;
+}
+
+export default class PaymentDropdown extends Component<void, PropsType> {
+  constructor(props: PropsType) {
+    super(props);
     this.keys = [userPaymentState];
     this.subscribe();
     this.addClass('dropdown');
+  }
+
+  addEvent() {
+    _.onEvent(this, 'click', this.handleClick.bind(this));
   }
 
   setTemplate(): string {
     const userPayment: Array<string> = getState(userPaymentState);
     const paymentTemplate = userPayment.reduce((acc, cur) => {
       return (acc += `
-            <div>
+            <div class='payment-item'>
               <div>${cur}</div>
               <button class='payment-dropdown__delete-btn'>
                 <img src=${xBtn} alt=결제수단 삭제 />
@@ -29,8 +38,26 @@ export default class PaymentDropdown extends Component<void, void> {
 
     return `
       ${paymentTemplate}
-      <div>추가하기</div>
+      <div class='payment-add-btn'>추가하기</div>
     `;
+  }
+
+  handleClick(e: Event): void {
+    const target = e.target as HTMLElement;
+    const paymentItem = target.closest('.payment-item');
+
+    if (paymentItem) {
+      const payment = _.$('.payment-item>div:first-child', target)?.textContent || '';
+      this.props.setPayment(payment);
+    }
+
+    if (this.isAddBtn(target)) {
+      //모달창
+    }
+  }
+
+  isAddBtn(target: HTMLElement): boolean {
+    return !!target.closest('.payment-add-bnt');
   }
 }
 
