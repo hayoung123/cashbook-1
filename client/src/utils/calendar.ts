@@ -2,6 +2,11 @@ export interface calendarDateType {
   year: number;
   month: number;
 }
+interface DateType {
+  year: number;
+  month: number;
+  date: number;
+}
 
 export const getMonthData = ({ year, month }: calendarDateType): (number | null)[][] => {
   const monthArr: (number | null)[][] = [];
@@ -25,4 +30,16 @@ export const getMonthData = ({ year, month }: calendarDateType): (number | null)
   monthArr.push(weekArr); //마지막 weekArr도 추가
 
   return monthArr;
+};
+
+export const isToday = ({ year, month, date }: DateType): boolean => {
+  const dateObj = new Date();
+
+  const todayYear = dateObj.getFullYear();
+  const todayMonth = dateObj.getMonth() + 1;
+  const todayDate = dateObj.getDate();
+
+  if (todayYear === year && todayMonth === month && todayDate === date) return true;
+
+  return false;
 };
