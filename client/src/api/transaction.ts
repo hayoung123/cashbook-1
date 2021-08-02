@@ -43,3 +43,11 @@ export const editTransaction = async (
 
   return res;
 };
+
+export const deleteTransaction = async (
+  id: string,
+): Promise<{ success: boolean; response: any }> => {
+  const res = await fetchWrapper(`${TRANSACTION_URL}/${id}`, 'DELETE');
+
+  return res;
+};
