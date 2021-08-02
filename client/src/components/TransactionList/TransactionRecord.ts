@@ -1,6 +1,7 @@
 import Component from 'src/lib/component';
 import { ComponentType, objType } from 'src/lib/component/type';
 import { RecordType } from 'src/store/transaction';
+import _ from 'src/utils/dom';
 import CategoryBadge from '../CategoryBadge';
 import TransactionFrom from '../TransactionForm';
 
@@ -14,6 +15,10 @@ export default class TransactionRecord extends Component<StateType, RecordType> 
   }
   initState(): StateType {
     return { isEdit: false };
+  }
+
+  addEvent() {
+    _.onEvent(this, 'click', this.handleClick.bind(this));
   }
 
   setTemplate(): string {
@@ -50,6 +55,10 @@ export default class TransactionRecord extends Component<StateType, RecordType> 
       'category-badge': new CategoryBadge({ category }),
       'transaction__edit-form': new TransactionFrom({ isEdit: true, data: this.props }),
     };
+  }
+
+  handleClick(e: Event): void {
+    this.setState((state) => ({ isEdit: !state?.isEdit }));
   }
 }
 
