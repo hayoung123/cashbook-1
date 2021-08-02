@@ -4,17 +4,14 @@ import { getState } from 'src/lib/observer';
 import Header from 'src/components/Header';
 
 import { pageState, isLoggedInState } from 'src/store/page';
-import { router } from '..';
-import { authorizedRoutes, unauthorizedRoutes } from './configs/routes';
+
 import { setTransactionData } from './utils/dataSetting';
 
 type objType = {
   [key: string]: any;
 };
 
-type StateType = {};
-
-export default class App extends Component<StateType, void> {
+export default class App extends Component<void, void> {
   constructor() {
     super();
     this.addClass('app');
@@ -33,17 +30,12 @@ export default class App extends Component<StateType, void> {
 
   setComponents(): objType {
     const { Page } = getState(pageState);
-    const isLoggedIn = getState(isLoggedInState);
-
-    // if (isLoggedIn) router.setRoutes(authorizedRoutes);
-    // else router.setRoutes(unauthorizedRoutes);
-
     return {
       page: new Page(),
       app_header: new Header(),
     };
   }
-  componentDidMount() {
+  componentDidMount(): void {
     setTransactionData();
   }
 }

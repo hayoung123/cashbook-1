@@ -1,22 +1,45 @@
-// index.ts
-import './index.scss';
-
-import Router from './src/lib/router';
-import { pageState } from './src/store/page';
 import App from './src/App';
+import Router from './src/lib/router';
 
-import { unauthorizedRoutes, authorizedRoutes } from './src/configs/routes';
-import { setTransactionData } from 'src/utils/dataSetting';
+import { pageState, isLoggedInState } from 'src/store/page';
+import { authorizedRoutes, unauthorizedRoutes } from 'src/configs/routes';
+import fetchWrapper from 'src/utils/fetchWrapper';
+import { AUTH_URL } from 'src/configs/urls';
+import { subscribe, setState, getState } from 'src/lib/observer';
+
+import './index.scss';
 
 const root: HTMLElement | null = document.querySelector('#root');
 
-//TODO: 로그인 체크 후 값 넣어주기
-const routes = authorizedRoutes;
-// const routes = unauthorizedRoutes;
+const defaultRoutes = unauthorizedRoutes;
 
-export const router = new Router({ routes, pageState });
+// TODO: '/'외의 경로에서 로그인 상태가 바뀔 경우 새로고침 하면 흰 화면이 나타나는 현상 해결
+export const router = new Router({ routes: defaultRoutes, pageState });
 
-const app: HTMLElement = new App();
-root?.append(app);
+const setRoute = () => {
+  const isAuthorized = getState(isLoggedInState);
+  const routes = isAuthorized ? authorizedRoutes : unauthorizedRoutes;
+  router.setRoutes(routes);
+};
 
-// setTransactionData();
+subscribe(isLoggedInState, setRoute);
+
+async function init() {
+  try {
+    const res = await fetchWrapper(AUTH_URL, 'HEAD');
+    if (res.success) {
+      setState(isLoggedInState)(true);
+      setRoute();
+    } else {
+      setState(isLoggedInState)(false);
+      setRoute();
+    }
+
+    const app: HTMLElement = new App();
+    root?.append(app);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+init();
