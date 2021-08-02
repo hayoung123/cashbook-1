@@ -1,69 +1,59 @@
 import Component from 'src/lib/component';
+import { getState } from 'src/lib/observer';
 
-import drawPieChart from './drawPieChart';
-import drawCoordinatePlane from './drawCoordinatePlane';
+import CategoryStatistics from 'src/components/CategoryStatistics';
+import Trend from 'src/components/Trend';
+import { currentCategoryState } from 'src/store/statistics';
+
+import fetchWrapper from 'src/utils/fetchWrapper';
+import { objType } from 'src/type/type';
+
+import { STATISTICS_URL } from 'src/configs/urls';
 
 import './style.scss';
 
-export default class ChartPage extends Component {
+interface StateType {
+  current: string | null;
+  trends: number[] | null;
+}
+
+export default class ChartPage extends Component<StateType, void> {
   constructor() {
     super();
+    this.keys = [currentCategoryState];
+    this.subscribe();
     this.addClass('page');
-    this.drawChart();
-  }
-
-  addEvent(): void {
-    this.addEventListener('click', this.handleClick.bind(this));
   }
 
   setTemplate(): string {
     return `
-      <section class="container box row">
-        <div class="pie-chart-container">
-          <canvas id="pie-chart" width="254" height="254"></canvas>
-        </div>
-        <div class="statistic-container">
-          <h3>이번 달 지출 금액 244,600원</h3>
-          <table>
-            <colgroup>
-              <col>
-              <col>
-              <col width="50%">
-            </colgruop>
-            <tbody>
-              <tr class="selected">
-                <td class="category">생활</td>
-                <td class="percentage">64%</td>
-                <td class="money">534,600원</td>
-              </tr>
-              <tr>
-                <td class="category">생활</td>
-                <td class="percentage">64%</td>
-                <td class="money">534,600원</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-      <section class="container box">
-        <h3>생활 카테고리 소비 추이</h3>
-        <canvas id="line-chart" width="750" height="310"></canvas>
-      </section>
-      <section class="container">
-      </section>
+      <div id="chart__category-statistics"></div>
+      <div id="chart__trend"></div>
     `;
   }
 
-  handleClick(e: Event): void {
-    const target = e.target as HTMLElement;
-    const button: HTMLTableRowElement | null = target.closest('tr');
-    if (!button) return;
-    console.log(button);
+  setComponents(): objType {
+    const { currentCategory } = getState(currentCategoryState);
+
+    return {
+      'chart__category-statistics': new CategoryStatistics(),
+      chart__trend: new Trend(),
+    };
   }
 
-  drawChart(): void {
-    drawPieChart(this, 'pie-chart');
-    drawCoordinatePlane(this, 'line-chart');
+  async getTrend(): Promise<void> {
+    try {
+      const ENDPOINT = `${STATISTICS_URL}?type=trend&year=2021&category=${`life`}`;
+      const res = await fetchWrapper(ENDPOINT, 'GET');
+      if (!res.success) {
+        console.log(res.errorMessage);
+        return;
+      }
+      const { result } = res;
+      console.log(result);
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 
