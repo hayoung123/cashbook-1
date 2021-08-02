@@ -28,3 +28,10 @@ export const getPrevMonth = ({ year, month }: YearMonthType): YearMonthType => {
   if (month === 1) return { year: year - 1, month: 12 };
   return { year, month: month - 1 };
 };
+
+export const getInsertedDotDate = (date: string): string => {
+  date = date.replace(/-/g, '');
+  if (date.length < 5) return date;
+  if (date.length < 7) return date.slice(0, 4) + '-' + date.slice(4);
+  return date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6);
+};

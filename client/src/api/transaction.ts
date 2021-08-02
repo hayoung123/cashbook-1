@@ -13,4 +13,27 @@ export const getTransaction = async (): Promise<{ success: boolean; response: an
   return data;
 };
 
-export const createTransaction = async () => {};
+interface TransactionType {
+  date: string;
+  category: string;
+  title: string;
+  payment: string;
+  price: number;
+}
+
+export const createTransaction = async ({
+  date,
+  category,
+  title,
+  payment,
+  price,
+}: TransactionType): Promise<{ success: boolean; response: any }> => {
+  const res = await fetchWrapper(TRANSACTION_URL, 'POST', {
+    date,
+    category,
+    title,
+    payment,
+    price,
+  });
+  return res;
+};

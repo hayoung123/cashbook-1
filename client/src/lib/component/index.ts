@@ -37,6 +37,7 @@ export default class Component<S = void, T = void> extends HTMLElement {
     this.components = this.setComponents();
     this.innerHTML = this.setTemplate();
     this.setLayout();
+    this.componentDidMount();
   }
 
   //innerHTML
@@ -50,6 +51,10 @@ export default class Component<S = void, T = void> extends HTMLElement {
       const $$ = this.querySelector(`#${key}`);
       $$?.replaceWith(Comp);
     }
+  }
+
+  componentDidMount(): void {
+    return;
   }
 
   //사용하는 컴포넌트 init
@@ -87,7 +92,7 @@ export default class Component<S = void, T = void> extends HTMLElement {
 
   //TODO: 하위 전부다 렌더링 되는 것 해결
   //TODO: throw Error를 에러처리를 따로 해놓지 않는다면 배포 당시에 삭제해야되나??
-  setState(newState: ((arg?: S) => Partial<S>) | Partial<S>): void {
+  setState(newState: ((arg?: S) => Partial<S> | void) | Partial<S>): void {
     if (!this.state) throw Error('변경할 상태가 없습니다!');
 
     if (typeof newState === 'function') {

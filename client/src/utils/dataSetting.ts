@@ -15,10 +15,10 @@ import { statisticsState, CategoryStatisticsType } from 'src/store/statistics';
 export async function setTransactionData(): Promise<any> {
   const { Page } = getState(pageState);
   const pageName = Page.name;
+  //TODO에러처리
 
   if (pageName === 'MainPage') {
     const { success, response } = await getTransaction();
-    //TODO에러처리
     if (success) setState(transactionState)(response.data);
   }
   if (pageName === 'CalendarPage') {
