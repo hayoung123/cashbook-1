@@ -11,7 +11,7 @@
     display: flex;
   }
   .transaction__form-column {
-    padding: 0 24px;
+    padding: 0 20px;
     flex: 1;
     border-right: 1px solid var(--placeholder-color);
     & > div:first-child,
@@ -33,12 +33,18 @@
     input::placeholder {
       color: var(--label-color);
     }
+
+    .category__dropdown-btn,
+    .payment__dropdown-btn {
+      padding: 5px;
+      cursor: pointer;
+    }
   }
 
   .transaction__date,
   .transaction__price {
     input {
-      width: 80px;
+      width: 90px;
     }
   }
   .transaction__price {
@@ -47,8 +53,8 @@
     padding-right: 0;
   }
 
-  .transaction__method > div:last-child,
-  .transaction__category > div:last-child {
+  .transaction__method > div:nth-child(2),
+  .transaction__category > div:nth-child(2) {
     display: flex;
     gap: 8px;
     .form-dropdown-btn {
@@ -86,5 +92,28 @@
   .selected {
     background-color: var(--primary-color);
     color: var(--off-white-color);
+  }
+}
+
+.transaction__category {
+  position: relative;
+  category-dropdown {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    width: fit-content;
+  }
+}
+.transaction__method {
+  position: relative;
+  payment-dropdown {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    width: fit-content;
+    & > div {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
