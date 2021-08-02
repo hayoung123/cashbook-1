@@ -3,7 +3,6 @@ import Component from 'src/lib/component';
 import DayTransaction from './DayTransaction';
 
 import { objType } from 'src/type/type';
-import { TransactionType } from 'src/type/transaction';
 
 import './style.scss';
 import { DayRecordsType, transactionState } from 'src/store/transaction';
@@ -29,7 +28,7 @@ export default class TransationList extends Component {
   //TODO 진짜데이터 props로 받아와서 처리
   setComponents(): { [key: string]: HTMLElement } {
     const { transaction } = getState(transactionState);
-    console.log(transaction);
+
     const components: objType = {};
     transaction.forEach((data: DayRecordsType, idx: number) => {
       const key = `transaction-${idx}`;
