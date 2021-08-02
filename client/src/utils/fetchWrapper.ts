@@ -18,8 +18,15 @@ async function fetchWrapper(url: string, method: MethodType, body?: ObjectType):
     });
 
     if (!res.ok) {
+      if (method === 'HEAD') {
+        return { success: false };
+      }
       const { errorMessage } = await res.json();
       return { success: false, errorMessage };
+    }
+
+    if (method === 'HEAD') {
+      return { success: true };
     }
 
     const response = await res.json();

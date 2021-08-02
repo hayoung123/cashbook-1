@@ -27,6 +27,7 @@ export default class Router {
 
   setRoutes(routes: { [key: string]: Object }): void {
     this.routes = routes;
+    this.handlePopstate();
   }
 
   // 브라우저 뒤로, 앞으로가기
