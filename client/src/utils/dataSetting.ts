@@ -2,10 +2,12 @@ import { getState, setState } from 'src/lib/observer';
 
 import { getTransaction } from 'src/api/transaction';
 import { getCalendarStatistics } from 'src/api/calendar';
+import { getChartStatistics } from 'src/api/chart';
 
 import { pageState } from 'src/store/page';
 import { transactionState } from 'src/store/transaction';
 import { calendarDataState } from 'src/store/calendar';
+import { statisticsState, CategoryStatisticsType } from 'src/store/statistics';
 
 //util안에 있을 애는 아닌 것 같은데 위치를 못잡겠음
 
@@ -24,5 +26,29 @@ export async function setTransactionData(): Promise<any> {
     if (success) setState(calendarDataState)(response.result);
   }
   if (pageName === 'ChartPage') {
+    const { success, response } = await getChartStatistics();
+    if (success) {
+      const state = parseCategoryList(response.result);
+      setState(statisticsState)(state);
+    }
   }
+}
+
+function parseCategoryList(data: { [key: string]: number }) {
+  const a = Object.entries(data).sort((a, b) => +a[1] - +b[1]);
+  let totalExpenditure = 0;
+  const categoryList: CategoryStatisticsType[] = [];
+
+  a.forEach((b) => {
+    const [category, expenditure] = b;
+    totalExpenditure += Math.abs(expenditure);
+    if (Math.abs(expenditure) > 0) {
+      categoryList.push({
+        category,
+        expenditure: Math.abs(expenditure),
+      });
+    }
+  });
+
+  return { totalExpenditure, categoryList };
 }

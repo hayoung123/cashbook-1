@@ -6,3 +6,7 @@ export const getCategoryKey = (category: string): string => {
   }
   return '';
 };
+
+export const getCategoryColor = (category: string): string => {
+  return CATEGORY__INFO[category].color;
+};
