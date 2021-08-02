@@ -4,7 +4,7 @@ type ObjectType = {
   [key in string]: any;
 };
 
-async function fetchWrapper(url: string, method: MethodType, body: ObjectType): Promise<any> {
+async function fetchWrapper(url: string, method: MethodType, body?: ObjectType): Promise<any> {
   try {
     const token = window.localStorage.getItem('_at') || '';
 
