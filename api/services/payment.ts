@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 
 import { db } from 'models/db';
-import errorGenerator from 'utils/errorGenerator';
+import errorGenerator from 'utils/error-generator';
 
 async function getUserPayment(userId: string): Promise<string[]> {
   const userHasPaymentSnapshot = await db.USER_has_PAYMENT.findAll({

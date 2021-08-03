@@ -3,8 +3,8 @@ import express from 'express';
 import transactionService from 'services/transaction';
 
 import { decodeToken, getAccessToken } from 'utils/jwt';
-import errorGenerator from 'utils/errorGenerator';
-import errorHandler from 'utils/errorHandler';
+import errorGenerator from 'utils/error-generator';
+import errorHandler from 'utils/error-handler';
 
 const router = express.Router();
 

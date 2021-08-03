@@ -6,8 +6,8 @@ import signout from './signout';
 
 import authService from 'services/auth';
 
-import errorHandler from 'utils/errorHandler';
-import errorGenerator from 'utils/errorGenerator';
+import errorHandler from 'utils/error-handler';
+import errorGenerator from 'utils/error-generator';
 import { getAccessToken } from 'utils/jwt';
 
 const router = express.Router();

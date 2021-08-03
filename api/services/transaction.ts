@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { db } from 'models/db';
-import errorGenerator from 'utils/errorGenerator';
+import errorGenerator from 'utils/error-generator';
 import {
   PostTransactionParamType,
   EditTransactionParamType,

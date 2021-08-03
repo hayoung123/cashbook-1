@@ -1,4 +1,4 @@
-import errorHandler from 'utils/errorHandler';
+import errorHandler from 'utils/error-handler';
 import express, { Request, Response } from 'express';
 import { decodeToken, getAccessToken } from 'utils/jwt';
 import paymentService from 'services/payment';

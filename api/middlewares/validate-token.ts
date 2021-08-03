@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 
 import { db } from 'models/db';
 import { createToken, getAccessToken, checkTokenExpiration, getUIDFromToken } from 'utils/jwt';
-import errorGenerator from 'utils/errorGenerator';
-import errorHandler from 'utils/errorHandler';
+import errorGenerator from 'utils/error-generator';
+import errorHandler from 'utils/error-handler';
 
 async function validateToken(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {

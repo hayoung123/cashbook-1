@@ -1,10 +1,11 @@
 import express, { Request, Response } from 'express';
-import errorHandler from 'utils/errorHandler';
+import errorHandler from 'utils/error-handler';
 
 import transactionService from 'services/transaction';
 import statistics from './statistics';
 import { getTransactionParamType } from 'types/transaction';
 import { decodeToken, getAccessToken } from 'utils/jwt';
+import validateToken from 'middlewares/validate-token';
 
 const router = express.Router();
 
