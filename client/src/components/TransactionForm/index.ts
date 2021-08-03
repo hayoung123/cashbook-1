@@ -9,11 +9,12 @@ import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
 import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
 
 import _ from 'src/utils/dom';
+import { CATEGORY__INFO } from 'src/constant/category';
 import { getInsertedDotDate } from 'src/utils/date';
 import { getCategoryKey } from 'src/utils/category';
 import { setTransactionData } from 'src/utils/dataSetting';
 
-import { createTransaction } from 'src/api/transaction';
+import { createTransaction, deleteTransaction, editTransaction } from 'src/api/transaction';
 import { getUserPayment } from 'src/api/payment';
 import { userPaymentState } from 'src/store/payment';
 import { RecordType } from 'src/store/transaction';
@@ -54,11 +55,12 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   constructor(props: PropsType = INIT_FORM) {
     super(props);
     this.date = this.props.data.date;
-    this.title = this.props.data.title || '';
-    this.price = this.props.data.price < 0 ? this.props.data.price * -1 : this.props.data.price;
+    this.title = this.props.data.title;
+    this.price = Math.abs(this.props.data.price);
 
     this.render();
     this.addClass('transaction__form-container');
+    if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
   }
   initState(): StateType {
     return {
@@ -66,7 +68,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       isAbleSubmit: false,
       isOpenPayment: false,
       isOpenCategory: false,
-      category: this.props.data.category,
+      category: CATEGORY__INFO[this.props.data.category]?.name,
       payment: this.props.data.payment,
     };
   }
@@ -128,7 +130,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
         </div>
       </div>
       <div class="transaction__form-submit-btn">
-        <img src=${activeSubmitBtn} alt='제출 버튼' />
+        <img src=${isAbleSubmit ? activeSubmitBtn : inActiveSubmitBtn} alt='제출 버튼' />
       </div>
     </div>
     `;
@@ -166,6 +168,11 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       this.setUserPayment();
       this.togglePaymentDropdown();
     }
+
+    //결제수단 삭제 버튼
+    if (this.isDeleteBtn(target)) {
+      this.deleteRecord();
+    }
   }
 
   //폼 제출
@@ -173,22 +180,31 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     const category: string = this.state?.category || '';
     const payment: string = this.state?.payment || '';
     const price = this.state?.isIncome ? this.price : this.price * -1;
-    console.log(this.date || category || this.title || payment || price);
+
     //TODO 경고창
     if (!this.date || !category || !this.title || !payment || !price) return;
 
-    const { success } = await createTransaction({
+    const reqBody = {
       date: this.date,
       title: this.title,
       category: getCategoryKey(category),
       payment,
       price,
-    });
+    };
+
+    const { success } = this.props.isEdit
+      ? await editTransaction({ id: this.props.data.id, ...reqBody })
+      : await createTransaction(reqBody);
 
     if (success) {
       this.clearState();
       setTransactionData();
     }
+  }
+
+  async deleteRecord(): Promise<void> {
+    const { success } = await deleteTransaction(this.props.data.id);
+    if (success) setTransactionData();
   }
 
   //TODO 에러처리
@@ -232,33 +248,49 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       document.addEventListener('mousedown', handleMousedown);
     }
   }
-
+  //카테고리 드롭다운 아이템 클릭 콜백함수
   setCategory(category: string): void {
     this.setState({ category });
     this.setState({ isOpenCategory: false });
+    if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
   }
+  //결제수단 드롭다운 아이템 클릭 콜백함수
   setPayment(payment: string): void {
     this.setState({ payment });
     this.setState({ isOpenPayment: false });
+    if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
   }
 
+  //TODO 리팩토링 (함수분리)
   handleDateInput(e: Event): void {
-    const target = e.target as HTMLElement;
-    const dateInput = target.closest('.transaction__date input') as HTMLInputElement;
-    const titleInput = _.$('.transaction__title input') as HTMLInputElement;
-    const priceInput = _.$('.transaction__price input') as HTMLInputElement;
+    const target = e.target as HTMLInputElement;
 
-    if (dateInput) {
-      const dashedDate = getInsertedDotDate(dateInput.value);
+    if (target.name === 'date') {
+      const dashedDate = getInsertedDotDate(target.value);
       this.date = dashedDate;
-      dateInput.value = dashedDate;
+      target.value = dashedDate;
     }
 
-    if (titleInput) this.title = titleInput.value;
-    if (priceInput) this.price = Math.abs(+priceInput.value);
+    if (target.name === 'title') this.title = target.value;
+    if (target.name === 'price') this.price = Math.abs(+target.value);
+
+    if (this.state?.isAbleSubmit !== this.checkAbleSubmit()) {
+      this.setState({ isAbleSubmit: this.checkAbleSubmit() });
+      const input = _.$(`input[name=${target.name}]`, this) as HTMLInputElement;
+      input.focus();
+      input.type = 'text';
+      input.setSelectionRange(1, 1);
+      input.type = 'number';
+    }
   }
 
-  clearState() {
+  checkAbleSubmit(): boolean {
+    return (
+      !!this.date && !!this.title && !!this.price && !!this.state?.category && !!this.state?.payment
+    );
+  }
+
+  clearState(): void {
     this.price = 0;
     this.title = '';
     this.date = '';
@@ -277,6 +309,9 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   }
   isPaymentDropdownBtn(target: HTMLElement): boolean {
     return !!target.closest('.payment__dropdown-btn');
+  }
+  isDeleteBtn(target: HTMLElement): boolean {
+    return !!target.closest('.transaction__delete-btn');
   }
 }
 
