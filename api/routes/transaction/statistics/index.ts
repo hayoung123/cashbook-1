@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
       result = await transactionService.getCalendarStatistics(uid, year as string, month as string);
     }
 
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);

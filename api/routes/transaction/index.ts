@@ -47,7 +47,7 @@ router.get('/', async (req: Request, res: Response) => {
       isExpenditure: isExpenditure === 'true',
     } as getTransactionParamType);
 
-    res.status(200).json({ data: result });
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -62,9 +62,9 @@ router.delete('/:id', async (req: Request, res: Response) => {
 
     const { id: transactionId } = req.params;
 
-    const result = await transactionService.deleteTransaction(userId, transactionId);
+    await transactionService.deleteTransaction(userId, transactionId);
 
-    res.status(200).json({ success: result });
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -88,9 +88,9 @@ router.put('/:id', async (req: Request, res: Response) => {
 
     const { id: transactionId } = req.params;
     const transactionData = { userId, transactionId, ...req.body };
-    const result = await transactionService.editTransaction(transactionData);
+    await transactionService.editTransaction(transactionData);
 
-    res.status(200).json({ success: result });
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -113,9 +113,9 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     const transactionData = { userId, ...req.body };
-    const result = await transactionService.createTransaction(transactionData);
+    await transactionService.createTransaction(transactionData);
 
-    res.status(200).json({ success: result });
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);

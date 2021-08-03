@@ -22,7 +22,7 @@ router.get('/', async (req: Request, res: Response) => {
     const { uid: userId } = decodeToken(accessToken);
 
     const result = await paymentService.getUserPayment(userId);
-    res.status(200).json({ data: result });
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -45,7 +45,7 @@ router.delete('/', async (req: Request, res: Response) => {
     }
 
     const result = await paymentService.deleteUserPayment(userId, payment);
-    res.status(200).json({ success: result });
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -68,7 +68,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     const result = await paymentService.createUserPayment(userId, payment);
-    res.status(200).json({ success: result });
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
