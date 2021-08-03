@@ -1,13 +1,13 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 
 import authService from 'services/auth';
 
-import errorGenerator from 'utils/errorGenerator';
-import errorHandler from 'utils/errorHandler';
+import errorGenerator from 'utils/error-generator';
+import errorHandler from 'utils/error-handler';
 
 const router = express.Router();
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req, res) => {
   try {
     const { email, password } = req.body;
 

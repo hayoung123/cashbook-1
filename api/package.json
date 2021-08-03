@@ -7,7 +7,8 @@
     "prestart": "tsc --project ./",
     "start": "ts-node -r tsconfig-paths/register dist/app.js",
     "dev": "export NODE_ENV=development && npm start",
-    "deploy": "export NODE_ENV=production && npm start"
+    "predeploy": "export NODE_ENV=production && eslint",
+    "deploy": "npm start"
   },
   "repository": {
     "type": "git",
@@ -49,7 +50,6 @@
     "@typescript-eslint/parser": "^4.28.5",
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",

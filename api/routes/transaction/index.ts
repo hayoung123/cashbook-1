@@ -1,34 +1,44 @@
-import express, { Request, Response } from 'express';
-import errorHandler from 'utils/errorHandler';
+import express from 'express';
+
+import statistics from './statistics';
 
 import transactionService from 'services/transaction';
-import statistics from './statistics';
-import { getTransactionParamType } from 'types/transaction';
+
+import validateToken from 'middlewares/validate-token';
+
 import { decodeToken, getAccessToken } from 'utils/jwt';
+import errorHandler from 'utils/error-handler';
+
+import { getTransactionParamType } from 'types/transaction';
+import errorGenerator from 'utils/error-generator';
 
 const router = express.Router();
 
+router.use('/statistics', statistics);
+
 /**
- * 메인 페이지 (/transaction?year=2021&month=7)
- * 수입 지출 / 연 월 - isIncome isExpenditure / year month
+ * path: /transaction
  *
- * 달력 페이지 (/transaction/sum?type=calendar&year=2021&month=7)
- * 월 + 지출,수입,총합 : {2:{지출: 수입: 총합: }, 18: {지출: 수입: 총합: }}
- *
- * 차트 페이지
- * 월 + category + 지출 총합: {categoryname:price} - 원 그래프
- *  /transaction/sum?type=category&year=2021&month=7
- * 연 + category + 지출 총합: Array - 선 그래프
- *  /transaction/sum?type=trend&year=2021&category=food
+ * get: 결제내역 조회
+ * delete: 결제내역 삭제
+ * put: 결제내역 수정
+ * post: 결제내역 추가
  */
 
-// 결제내역 불러오기
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
 
     const { year, month, isIncome, isExpenditure } = req.query;
+
+    if (!year || !month || !isIncome || !isExpenditure) {
+      throw errorGenerator({
+        code: 'req/query-not-found',
+        message: 'Required query not found',
+      });
+    }
+
     const result = await transactionService.getTransaction({
       userId,
       year,
@@ -37,7 +47,7 @@ router.get('/', async (req: Request, res: Response) => {
       isExpenditure: isExpenditure === 'true',
     } as getTransactionParamType);
 
-    res.status(200).json({ data: result });
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -45,17 +55,16 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-// 결제내역 삭제하기
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
 
     const { id: transactionId } = req.params;
 
-    const result = await transactionService.deleteTransaction(userId, transactionId);
+    await transactionService.deleteTransaction(userId, transactionId);
 
-    res.status(200).json({ success: result });
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -63,17 +72,25 @@ router.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// 결제내역 수정하기
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
+
+    const { date, category, title, payment, price } = req.body;
+
+    if (!date || !category || !title || !payment || !price) {
+      throw errorGenerator({
+        code: 'req/invalid-body',
+        message: 'Required body not found',
+      });
+    }
 
     const { id: transactionId } = req.params;
     const transactionData = { userId, transactionId, ...req.body };
-    const result = await transactionService.editTransaction(transactionData);
+    await transactionService.editTransaction(transactionData);
 
-    res.status(200).json({ success: result });
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
@@ -81,22 +98,29 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// 결제내역 추가하기
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
-    const transactionData = { userId, ...req.body };
-    const result = await transactionService.createTransaction(transactionData);
 
-    res.status(200).json({ success: result });
+    const { date, category, title, payment, price } = req.body;
+
+    if (!date || !category || !title || !payment || !price) {
+      throw errorGenerator({
+        code: 'req/invalid-body',
+        message: 'Required body not found',
+      });
+    }
+
+    const transactionData = { userId, ...req.body };
+    await transactionService.createTransaction(transactionData);
+
+    res.status(200).json({});
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
     res.status(statusCode).json({ errorMessage });
   }
 });
-
-router.use('/statistics', statistics);
 
 export default router;

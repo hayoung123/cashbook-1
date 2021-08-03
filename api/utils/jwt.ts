@@ -1,5 +1,6 @@
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
-import errorGenerator from './errorGenerator';
+
+import errorGenerator from './error-generator';
 
 interface OptionType {
   uid: string;

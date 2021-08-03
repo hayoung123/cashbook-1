@@ -6,11 +6,15 @@ import signout from './signout';
 
 import authService from 'services/auth';
 
-import errorHandler from 'utils/errorHandler';
-import errorGenerator from 'utils/errorGenerator';
 import { getAccessToken } from 'utils/jwt';
+import errorHandler from 'utils/error-handler';
+import errorGenerator from 'utils/error-generator';
 
 const router = express.Router();
+
+router.use('/signin', signin);
+router.use('/signup', signup);
+router.use('/signout', signout);
 
 router.head('/', async (req, res) => {
   try {
@@ -32,9 +36,5 @@ router.head('/', async (req, res) => {
     res.status(statusCode).json({ errorMessage });
   }
 });
-
-router.use('/signin', signin);
-router.use('/signup', signup);
-router.use('/signout', signout);
 
 export default router;

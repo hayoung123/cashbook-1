@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
 import { db } from 'models/db';
+
 import { createToken, getAccessToken, checkTokenExpiration, getUIDFromToken } from 'utils/jwt';
-import errorGenerator from 'utils/errorGenerator';
-import errorHandler from 'utils/errorHandler';
+import errorGenerator from 'utils/error-generator';
+import errorHandler from 'utils/error-handler';
 
 async function validateToken(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
@@ -13,11 +14,13 @@ async function validateToken(req: Request, res: Response, next: NextFunction): P
     if (!accessToken || !refreshToken) {
       throw errorGenerator({
         message: 'No token',
-        code: 'no-token',
+        code: 'req/no-token',
       });
     }
 
     const isAccessTokenExpired = await checkTokenExpiration(accessToken);
+
+    // TODO: 토큰이 만료되었을 때만 재요청을 수행하고, 나머지 토큰 문제 발생 시 로그인 화면으로 리다이렉트
 
     let newAccessToken = '';
 

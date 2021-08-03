@@ -1,7 +1,8 @@
 import { Op } from 'sequelize';
 
 import { db } from 'models/db';
-import errorGenerator from 'utils/errorGenerator';
+
+import errorGenerator from 'utils/error-generator';
 
 async function getUserPayment(userId: string): Promise<string[]> {
   const userHasPaymentSnapshot = await db.USER_has_PAYMENT.findAll({
@@ -17,7 +18,7 @@ async function getUserPayment(userId: string): Promise<string[]> {
     attributes: ['name'],
     where: {
       id: {
-        [Op.or]: paymentIds,
+        [Op.in]: paymentIds,
       },
     },
   });
@@ -28,7 +29,7 @@ async function getUserPayment(userId: string): Promise<string[]> {
 }
 
 //TODO: 있는지 확인하는 사이에 누가 넣거나 하면 어떻게 해결해야될까? 트랜젝션??
-async function createUserPayment(userId: string, paymentName: string): Promise<boolean> {
+async function createUserPayment(userId: string, paymentName: string): Promise<void> {
   const paymentId = await createPayment(paymentName);
 
   const isUserHasPayment = await checkUserHasPayment(userId, paymentId);
@@ -44,11 +45,9 @@ async function createUserPayment(userId: string, paymentName: string): Promise<b
     USERId: userId,
     PAYMENTId: paymentId,
   });
-
-  return true;
 }
 
-async function deleteUserPayment(userId: string, paymentName: string): Promise<boolean> {
+async function deleteUserPayment(userId: string, paymentName: string): Promise<void> {
   const paymentId = await getPaymentId(paymentName);
 
   if (!paymentId) {
@@ -73,8 +72,6 @@ async function deleteUserPayment(userId: string, paymentName: string): Promise<b
       PAYMENTId: paymentId,
     },
   });
-
-  return true;
 }
 
 async function getPaymentId(paymentName: string): Promise<string | null> {
@@ -90,7 +87,6 @@ async function getPaymentId(paymentName: string): Promise<string | null> {
   return paymentId;
 }
 
-//결제 수단 체크 후 삽입 그리고 id 반환 / 이미 존재시 바로 Id 반환
 async function createPayment(paymentName: string): Promise<string> {
   const paymentId = await getPaymentId(paymentName);
 
