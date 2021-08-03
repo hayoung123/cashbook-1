@@ -13,6 +13,7 @@ import {
   TransactionRecordType,
   DayTransactionType,
   CalendarStatisticsType,
+  TransactionDataType,
 } from 'types/transaction';
 import { CategoryType } from 'types/common';
 import { CategoryStatisticsType } from 'types/statistics';
@@ -33,6 +34,7 @@ import { CategoryStatisticsType } from 'types/statistics';
  * }
  *
  */
+
 //거래내역 조회
 async function getTransaction({
   userId,
@@ -40,7 +42,7 @@ async function getTransaction({
   month,
   isIncome,
   isExpenditure,
-}: getTransactionParamType): Promise<any> {
+}: getTransactionParamType): Promise<TransactionDataType> {
   const { startDate, endDate } = getSideDate(+year, +month);
   let totalIncome = 0;
   let totalExpenditure = 0;
@@ -105,7 +107,7 @@ async function createTransaction({
 
   await db.Transaction.create({
     USERId: userId,
-    date: new Date(date),
+    date: new Date(date).toLocaleDateString(),
     category,
     title,
     payment,
@@ -160,7 +162,7 @@ async function editTransaction(editTransactionData: EditTransactionParamType): P
   await db.Transaction.update(
     {
       USERId: userId,
-      date: new Date(date),
+      date: new Date(date).toLocaleDateString(),
       category,
       title,
       payment,
@@ -210,21 +212,22 @@ function getSideDate(year: number, month: number): { startDate: Date; endDate: D
     endDate: new Date(year, month - 1, lastDate),
   };
 }
+
 //거래내역 파싱 - util로 이동
 const parseTransactionByDate = (
   transactions: Array<TransactionRecordType>,
 ): Array<DayTransactionType> => {
   const result: Array<DayTransactionType> = [];
-  let dayRecord: any = {};
+  let dayRecord: DayTransactionType = { date: '', transaction: [] };
 
   transactions.forEach((record) => {
     if (dayRecord.date === record.date) {
-      dayRecord.transaction.push(record);
+      dayRecord.transaction?.push(record);
       return;
     }
     if (dayRecord.date) {
       result.push(dayRecord);
-      dayRecord = {};
+      dayRecord = { date: '', transaction: [] };
     }
     dayRecord.date = record.date;
     dayRecord.transaction = [record];
@@ -241,7 +244,7 @@ async function getStatistics(
   year: string,
   month: string,
   category: string,
-): Promise<CategoryStatisticsType | any[] | void | CalendarStatisticsType> {
+): Promise<CategoryStatisticsType | number[] | void | CalendarStatisticsType> {
   if (type === 'category') {
     if (!year || !month) {
       throw errorGenerator({
