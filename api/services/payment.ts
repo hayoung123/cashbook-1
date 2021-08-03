@@ -18,7 +18,7 @@ async function getUserPayment(userId: string): Promise<string[]> {
     attributes: ['name'],
     where: {
       id: {
-        [Op.or]: paymentIds,
+        [Op.in]: paymentIds,
       },
     },
   });
