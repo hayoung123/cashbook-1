@@ -3,6 +3,7 @@ import express from 'express';
 import signin from './signin';
 import signup from './signup';
 import signout from './signout';
+import githubLogin from './github';
 
 import authService from 'services/auth';
 
@@ -15,6 +16,7 @@ const router = express.Router();
 router.use('/signin', signin);
 router.use('/signup', signup);
 router.use('/signout', signout);
+router.use('/github', githubLogin);
 
 router.head('/', async (req, res) => {
   try {
