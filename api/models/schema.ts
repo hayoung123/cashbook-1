@@ -1,12 +1,39 @@
-import { Sequelize, DataTypes, ModelCtor, Model } from 'sequelize';
+import { Sequelize, DataTypes, ModelCtor, Model, Optional } from 'sequelize';
 
 import { categories } from 'configs/constants';
+import { CategoryType } from 'types/common';
+
+interface UserAttributes {
+  id: string;
+  email: string;
+  password: string;
+  refresh_token?: string;
+  is_OAuth: boolean;
+}
+
+interface TransactionAttributes {
+  id: string;
+  date: string;
+  category: CategoryType;
+  title: string;
+  payment: string;
+  price: number;
+  USERId: string;
+}
+interface PaymentAttributes {
+  id: string;
+  name: string;
+}
+
+type UserCreationAttributes = Optional<UserAttributes, 'id' | 'refresh_token'>;
+type TransactionCreationAttributes = Optional<TransactionAttributes, 'id' | 'USERId'>;
+type PaymentCreationAttributes = Optional<PaymentAttributes, 'id'>;
 
 export interface ModelType {
-  User: ModelCtor<Model<any, any>>;
-  Transaction: ModelCtor<Model<any, any>>;
-  Payment: ModelCtor<Model<any, any>>;
-  USER_has_PAYMENT: ModelCtor<Model<any, any>>;
+  User: ModelCtor<Model<UserAttributes, UserCreationAttributes>>;
+  Transaction: ModelCtor<Model<TransactionAttributes, TransactionCreationAttributes>>;
+  Payment: ModelCtor<Model<PaymentAttributes, PaymentCreationAttributes>>;
+  USER_has_PAYMENT: ModelCtor<Model>;
 }
 
 const schema = (sequelize: Sequelize): ModelType => {
