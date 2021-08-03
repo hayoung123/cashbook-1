@@ -4,6 +4,8 @@ export type CategoryStatisticsType = {
   [key in CategoryType]: number;
 };
 
+export type TrendStatisticsType = number[];
+
 export interface CalendarStatisticsType {
   totalIncome: number;
   totalExpenditure: number;

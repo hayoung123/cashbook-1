@@ -7,7 +7,11 @@ import errorGenerator from 'utils/error-generator';
 import errorHandler from 'utils/error-handler';
 
 import { CategoryType } from 'types/common';
-import { CategoryStatisticsType, CalendarStatisticsType } from 'types/statistics';
+import {
+  CategoryStatisticsType,
+  CalendarStatisticsType,
+  TrendStatisticsType,
+} from 'types/statistics';
 
 const router = express.Router();
 
@@ -34,7 +38,7 @@ router.get('/', async (req, res) => {
     const token = getAccessToken(req.headers.authorization);
     const { uid } = decodeToken(token);
 
-    let result: CategoryStatisticsType | number[] | void | CalendarStatisticsType;
+    let result: CategoryStatisticsType | TrendStatisticsType | CalendarStatisticsType | void;
 
     if (type === 'category') {
       result = await transactionService.getCategoryStatistics(uid, year as string, month as string);
