@@ -2,7 +2,7 @@ import { Sequelize, DataTypes, ModelCtor, Model } from 'sequelize';
 
 import { categories } from 'configs/constants';
 
-interface ModelType {
+export interface ModelType {
   User: ModelCtor<Model<any, any>>;
   Transaction: ModelCtor<Model<any, any>>;
   Payment: ModelCtor<Model<any, any>>;

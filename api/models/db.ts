@@ -1,13 +1,6 @@
-import { Sequelize, ModelCtor, Model } from 'sequelize';
+import { Sequelize } from 'sequelize';
 // import { User, Transaction, Payment, USER_has_PAYMENT } from './schema';
-import schema from './schema';
-
-interface ModelType {
-  User: ModelCtor<Model<any, any>>;
-  Transaction: ModelCtor<Model<any, any>>;
-  Payment: ModelCtor<Model<any, any>>;
-  USER_has_PAYMENT: ModelCtor<Model<any, any>>;
-}
+import schema, { ModelType } from './schema';
 
 const DB_NAME = process.env.DB_NAME || '';
 const DB_HOST = process.env.DB_HOST || '';
