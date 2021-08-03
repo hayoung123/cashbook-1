@@ -187,8 +187,12 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (!this.date || !category || !this.title || !payment || !price) return;
 
     if (!isValidDate(this.date)) {
-      console.log('!?');
       this.setState({ errorState: '올바른 날짜를 입력해주세요!' });
+      return;
+    }
+
+    if (this.price < 0) {
+      this.setState({ errorState: '가격은 음수가 될 수 없습니다.' });
       return;
     }
 
