@@ -14,6 +14,8 @@ import {
   DayTransactionType,
   CalendarStatisticsType,
 } from 'types/transaction';
+import { CategoryType } from 'types/common';
+import { CategoryStatisticsType } from 'types/statistics';
 
 /**
  * {
@@ -82,12 +84,6 @@ async function getTransaction({
     transaction: parsedTransaction,
   };
 }
-
-type Category = 'life' | 'food' | 'transport' | 'shop' | 'health' | 'culture' | 'etc';
-
-type C = {
-  [key in Category]: number;
-};
 
 //거래내역 추가
 async function createTransaction({
@@ -245,7 +241,7 @@ async function getStatistics(
   year: string,
   month: string,
   category: string,
-): Promise<C | any[] | void | CalendarStatisticsType> {
+): Promise<CategoryStatisticsType | any[] | void | CalendarStatisticsType> {
   if (type === 'category') {
     if (!year || !month) {
       throw errorGenerator({
@@ -270,7 +266,7 @@ async function getStatistics(
       },
     });
 
-    const categoryStatistics: C = {
+    const categoryStatistics: CategoryStatisticsType = {
       life: 0,
       food: 0,
       transport: 0,
@@ -281,7 +277,7 @@ async function getStatistics(
     };
 
     transactionSnapshot.forEach((t) => {
-      const category: Category = t.getDataValue('category');
+      const category: CategoryType = t.getDataValue('category');
       const price: number = +t.getDataValue('price');
 
       categoryStatistics[category] += price;

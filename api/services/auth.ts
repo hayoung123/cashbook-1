@@ -6,10 +6,7 @@ import { createToken, verifyToken } from 'utils/jwt';
 import errorGenerator from 'utils/error-generator';
 import { hashPassword, checkPassword } from 'utils/encryption';
 
-interface TokenType {
-  accessToken: string;
-  refreshToken: string;
-}
+import { TokenType } from 'types/auth';
 
 async function signUp(email: string, password: string): Promise<TokenType> {
   const userCount = await db.User.count({
