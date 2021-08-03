@@ -20,6 +20,8 @@ async function validateToken(req: Request, res: Response, next: NextFunction): P
 
     const isAccessTokenExpired = await checkTokenExpiration(accessToken);
 
+    // TODO: 토큰이 만료되었을 때만 재요청을 수행하고, 나머지 토큰 문제 발생 시 로그인 화면으로 리다이렉트
+
     let newAccessToken = '';
 
     if (isAccessTokenExpired) {
