@@ -11,6 +11,12 @@ function errorHandler(errCode: string): ErrorType {
       return { statusCode: 400, errorMessage: '잘못된 요청입니다.' };
     case 'req/no-token':
       return { statusCode: 401, errorMessage: '다시 로그인해주세요.' };
+    case 'req/invalid-date':
+      return { statusCode: 409, errorMessage: '올바른 날짜를 입력해주세요.' };
+    case 'req/invalid-price':
+      return { statusCode: 409, errorMessage: '가격에 올바른 숫자를 입력해주세요.' };
+    case 'req/invalid-category':
+      return { statusCode: 409, errorMessage: '올바른 카테고리를 선택해주세요.' };
     case 'auth/wrong-password':
       return { statusCode: 401, errorMessage: '비밀번호를 확인해주세요.' };
     case 'auth/account-not-found':

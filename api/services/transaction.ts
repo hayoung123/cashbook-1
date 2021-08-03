@@ -6,6 +6,7 @@ import paymentService from './payment';
 
 import errorGenerator from 'utils/error-generator';
 import { getSideDate, parseTransactionByDate } from 'utils/date';
+import { checkInvalidCategory, checkInvalidDate, checkInvalidPrice } from 'utils/handleError';
 
 import {
   PostTransactionParamType,
@@ -78,9 +79,9 @@ async function createTransaction({
 }: PostTransactionParamType): Promise<void> {
   const isUserPayment = await checkUserPayment(userId, payment);
 
-  //TODO : date Validation
-  //TODO : category Validation
-  //TODO : price Validation
+  checkInvalidDate(date);
+  checkInvalidCategory(category);
+  checkInvalidPrice(price);
 
   if (!isUserPayment) {
     throw errorGenerator({
@@ -123,9 +124,9 @@ async function editTransaction(editTransactionData: EditTransactionParamType): P
 
   const isUserTransaction = await checkUserTransaction(userId, transactionId);
 
-  //TODO : date Validation
-  //TODO : category Validation
-  //TODO : price Validation
+  checkInvalidDate(date);
+  checkInvalidCategory(category);
+  checkInvalidPrice(price);
 
   if (!isUserTransaction) {
     throw errorGenerator({
@@ -182,9 +183,6 @@ async function checkUserTransaction(userId: string, transactionId: string): Prom
 
   return !!isUserTransaction;
 }
-
-// TODO: 날짜 validation 추가
-// function checkValidDate(date: string): boolean {}
 
 export default {
   getTransaction,
