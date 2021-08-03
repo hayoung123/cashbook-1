@@ -14,7 +14,7 @@ async function validateToken(req: Request, res: Response, next: NextFunction): P
     if (!accessToken || !refreshToken) {
       throw errorGenerator({
         message: 'No token',
-        code: 'no-token',
+        code: 'req/no-token',
       });
     }
 

@@ -4,6 +4,7 @@ import paymentService from 'services/payment';
 
 import { decodeToken, getAccessToken } from 'utils/jwt';
 import errorHandler from 'utils/error-handler';
+import errorGenerator from 'utils/error-generator';
 
 const router = express.Router();
 
@@ -36,6 +37,13 @@ router.delete('/', async (req: Request, res: Response) => {
 
     const { payment } = req.body;
 
+    if (!payment) {
+      throw errorGenerator({
+        message: 'invalid-body',
+        code: 'req/invalid-body',
+      });
+    }
+
     const result = await paymentService.deleteUserPayment(userId, payment);
     res.status(200).json({ success: result });
   } catch (err) {
@@ -51,6 +59,13 @@ router.post('/', async (req: Request, res: Response) => {
     const { uid: userId } = decodeToken(accessToken);
 
     const { payment } = req.body;
+
+    if (!payment) {
+      throw errorGenerator({
+        message: 'invalid-body',
+        code: 'req/invalid-body',
+      });
+    }
 
     const result = await paymentService.createUserPayment(userId, payment);
     res.status(200).json({ success: result });

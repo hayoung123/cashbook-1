@@ -10,6 +10,7 @@ import { decodeToken, getAccessToken } from 'utils/jwt';
 import errorHandler from 'utils/error-handler';
 
 import { getTransactionParamType } from 'types/transaction';
+import errorGenerator from 'utils/error-generator';
 
 const router = express.Router();
 
@@ -30,6 +31,14 @@ router.get('/', async (req: Request, res: Response) => {
     const { uid: userId } = decodeToken(accessToken);
 
     const { year, month, isIncome, isExpenditure } = req.query;
+
+    if (!year || !month || !isIncome || !isExpenditure) {
+      throw errorGenerator({
+        code: 'req/query-not-found',
+        message: 'Required query not found',
+      });
+    }
+
     const result = await transactionService.getTransaction({
       userId,
       year,
@@ -68,6 +77,15 @@ router.put('/:id', async (req: Request, res: Response) => {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
 
+    const { date, category, title, payment, price } = req.body;
+
+    if (!date || !category || !title || !payment || !price) {
+      throw errorGenerator({
+        code: 'req/invalid-body',
+        message: 'Required body not found',
+      });
+    }
+
     const { id: transactionId } = req.params;
     const transactionData = { userId, transactionId, ...req.body };
     const result = await transactionService.editTransaction(transactionData);
@@ -84,6 +102,16 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
+
+    const { date, category, title, payment, price } = req.body;
+
+    if (!date || !category || !title || !payment || !price) {
+      throw errorGenerator({
+        code: 'req/invalid-body',
+        message: 'Required body not found',
+      });
+    }
+
     const transactionData = { userId, ...req.body };
     const result = await transactionService.createTransaction(transactionData);
 

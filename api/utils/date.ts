@@ -1,6 +1,6 @@
 import { DayTransactionType, TransactionRecordType } from './../types/transaction';
 
-//날짜 시작한날 끝날 구하기
+// 날짜 시작한날 끝날 구하기
 export function getSideDate(year: number, month: number): { startDate: Date; endDate: Date } {
   const lastDate = new Date(year, month, 0).getDate();
   return {
@@ -9,7 +9,6 @@ export function getSideDate(year: number, month: number): { startDate: Date; end
   };
 }
 
-//거래내역 파싱
 export const parseTransactionByDate = (
   transactions: Array<TransactionRecordType>,
 ): Array<DayTransactionType> => {

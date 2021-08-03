@@ -78,6 +78,10 @@ async function createTransaction({
 }: PostTransactionParamType): Promise<boolean> {
   const isUserPayment = await checkUserPayment(userId, payment);
 
+  //TODO : date Validation
+  //TODO : category Validation
+  //TODO : price Validation
+
   if (!isUserPayment) {
     throw errorGenerator({
       message: 'unowned payment',
@@ -122,6 +126,10 @@ async function editTransaction(editTransactionData: EditTransactionParamType): P
   const { userId, transactionId, date, category, title, payment, price } = editTransactionData;
 
   const isUserTransaction = await checkUserTransaction(userId, transactionId);
+
+  //TODO : date Validation
+  //TODO : category Validation
+  //TODO : price Validation
 
   if (!isUserTransaction) {
     throw errorGenerator({

@@ -15,7 +15,7 @@ async function getCategoryStatistics(
 ): Promise<CategoryStatisticsType> {
   if (!year || !month) {
     throw errorGenerator({
-      code: 'req/query-not-found',
+      code: 'req/invalid-query',
       message: 'Required query not found',
     });
   }
@@ -65,7 +65,7 @@ async function getTrendStatistics(
 ): Promise<number[]> {
   if (!year || !category) {
     throw errorGenerator({
-      code: 'req/query-not-found',
+      code: 'req/invalid-query',
       message: 'Required query not found',
     });
   }
@@ -105,7 +105,7 @@ async function getCalendarStatistics(
 ): Promise<CalendarStatisticsType> {
   if (!year || !month) {
     throw errorGenerator({
-      code: 'req/query-not-found',
+      code: 'req/invalid-query',
       message: 'Required query not found',
     });
   }

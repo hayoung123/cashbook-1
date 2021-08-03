@@ -24,16 +24,9 @@ router.get('/', async (req, res) => {
   try {
     const { type, year, month, category } = req.query;
 
-    if (!type) {
-      throw errorGenerator({
-        code: 'req/query-not-found',
-        message: 'Required query not found',
-      });
-    }
-
     if (type !== 'trend' && type !== 'category' && type !== 'calendar') {
       throw errorGenerator({
-        code: 'req/query-not-found',
+        code: 'req/invalid-query',
         message: 'Required query not found',
       });
     }
