@@ -98,10 +98,11 @@ router.post('/', async (req: Request, res: Response) => {
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
-    router.use('/statistics', statistics);
 
     res.status(statusCode).json({ errorMessage });
   }
 });
+
+router.use('/statistics', statistics);
 
 export default router;
