@@ -20,8 +20,8 @@ export default class App extends Component<void, void> {
   }
 
   setTemplate(): string {
-    // const isLoggedIn = getState(isLoggedInState);
-    const isLoggedIn = true;
+    const isLoggedIn = getState(isLoggedInState);
+
     return `
       ${isLoggedIn ? `<div id="app_header"></div>` : ''}
       <div id="page"></div>
