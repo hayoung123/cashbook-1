@@ -29,7 +29,7 @@ async function getUserPayment(userId: string): Promise<string[]> {
 }
 
 //TODO: 있는지 확인하는 사이에 누가 넣거나 하면 어떻게 해결해야될까? 트랜젝션??
-async function createUserPayment(userId: string, paymentName: string): Promise<boolean> {
+async function createUserPayment(userId: string, paymentName: string): Promise<void> {
   const paymentId = await createPayment(paymentName);
 
   const isUserHasPayment = await checkUserHasPayment(userId, paymentId);
@@ -45,11 +45,9 @@ async function createUserPayment(userId: string, paymentName: string): Promise<b
     USERId: userId,
     PAYMENTId: paymentId,
   });
-
-  return true;
 }
 
-async function deleteUserPayment(userId: string, paymentName: string): Promise<boolean> {
+async function deleteUserPayment(userId: string, paymentName: string): Promise<void> {
   const paymentId = await getPaymentId(paymentName);
 
   if (!paymentId) {
@@ -74,8 +72,6 @@ async function deleteUserPayment(userId: string, paymentName: string): Promise<b
       PAYMENTId: paymentId,
     },
   });
-
-  return true;
 }
 
 async function getPaymentId(paymentName: string): Promise<string | null> {

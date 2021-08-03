@@ -75,7 +75,7 @@ async function createTransaction({
   title,
   payment,
   price,
-}: PostTransactionParamType): Promise<boolean> {
+}: PostTransactionParamType): Promise<void> {
   const isUserPayment = await checkUserPayment(userId, payment);
 
   //TODO : date Validation
@@ -97,12 +97,10 @@ async function createTransaction({
     payment,
     price,
   });
-
-  return true;
 }
 
 // 거래내역 삭제
-async function deleteTransaction(userId: string, transactionId: string): Promise<boolean> {
+async function deleteTransaction(userId: string, transactionId: string): Promise<void> {
   const isUserTransaction = await checkUserTransaction(userId, transactionId);
 
   if (!isUserTransaction) {
@@ -117,12 +115,10 @@ async function deleteTransaction(userId: string, transactionId: string): Promise
       id: transactionId,
     },
   });
-
-  return true;
 }
 
 // 거래내역 수정
-async function editTransaction(editTransactionData: EditTransactionParamType): Promise<boolean> {
+async function editTransaction(editTransactionData: EditTransactionParamType): Promise<void> {
   const { userId, transactionId, date, category, title, payment, price } = editTransactionData;
 
   const isUserTransaction = await checkUserTransaction(userId, transactionId);
@@ -162,8 +158,6 @@ async function editTransaction(editTransactionData: EditTransactionParamType): P
       },
     },
   );
-
-  return true;
 }
 
 // 유저의 거래수단인지 확인
