@@ -11,6 +11,15 @@ import { CategoryStatisticsType, CalendarStatisticsType } from 'types/statistics
 
 const router = express.Router();
 
+/**
+ * path: /transaction/statistics
+ *
+ * get: 통계 데이터 조회
+ *     - type: category  : 월별 카테고리별 통계 조회
+ *     - type: trend     : 연도별 지출 통계 조회
+ *     - type: calendar  : 달력 월별 통계 데이터 조회
+ */
+
 router.get('/', async (req, res) => {
   try {
     const { type, year, month, category } = req.query;

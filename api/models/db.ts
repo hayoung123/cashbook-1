@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-// import { User, Transaction, Payment, USER_has_PAYMENT } from './schema';
+
 import schema, { ModelType } from './schema';
 
 const DB_NAME = process.env.DB_NAME || '';

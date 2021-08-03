@@ -91,7 +91,6 @@ async function getPaymentId(paymentName: string): Promise<string | null> {
   return paymentId;
 }
 
-//결제 수단 체크 후 삽입 그리고 id 반환 / 이미 존재시 바로 Id 반환
 async function createPayment(paymentName: string): Promise<string> {
   const paymentId = await getPaymentId(paymentName);
 

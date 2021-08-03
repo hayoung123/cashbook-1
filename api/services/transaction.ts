@@ -15,24 +15,7 @@ import {
   TransactionDataType,
 } from 'types/transaction';
 
-/**
- * {
- * totalIncome:0000,
- * totalExpenditure:0000,
- * transaction: [
- *    {
- *       date:string,
- *       transaction ;[{...},{...},{...}],
- *    },
- *    {
- *       ...
- *    }
- *  ]
- * }
- *
- */
-
-//거래내역 조회
+// 거래내역 조회
 async function getTransaction({
   userId,
   year,
@@ -84,7 +67,7 @@ async function getTransaction({
   };
 }
 
-//거래내역 추가
+// 거래내역 추가
 async function createTransaction({
   userId,
   date,
@@ -114,7 +97,7 @@ async function createTransaction({
   return true;
 }
 
-//거래내역 삭제
+// 거래내역 삭제
 async function deleteTransaction(userId: string, transactionId: string): Promise<boolean> {
   const isUserTransaction = await checkUserTransaction(userId, transactionId);
 
@@ -134,7 +117,7 @@ async function deleteTransaction(userId: string, transactionId: string): Promise
   return true;
 }
 
-//거래내역 수정
+// 거래내역 수정
 async function editTransaction(editTransactionData: EditTransactionParamType): Promise<boolean> {
   const { userId, transactionId, date, category, title, payment, price } = editTransactionData;
 
@@ -175,7 +158,7 @@ async function editTransaction(editTransactionData: EditTransactionParamType): P
   return true;
 }
 
-//유저의 거래수단인지 확인
+// 유저의 거래수단인지 확인
 async function checkUserPayment(userId: string, payment: string): Promise<boolean> {
   const paymentId = await paymentService.getPaymentId(payment);
   if (!paymentId) return false;
@@ -186,7 +169,7 @@ async function checkUserPayment(userId: string, payment: string): Promise<boolea
   return true;
 }
 
-//유저의 거래내역인지 확인
+// 유저의 거래내역인지 확인
 async function checkUserTransaction(userId: string, transactionId: string): Promise<boolean> {
   const isUserTransaction = await db.Transaction.count({
     where: {

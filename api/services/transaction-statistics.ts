@@ -47,7 +47,7 @@ async function getCategoryStatistics(
     etc: 0,
   };
 
-  //TODO-불필요타입제거
+  // TODO: 불필요타입제거
   transactionSnapshot.forEach((t) => {
     const category: CategoryType = t.getDataValue('category');
     const price: number = +t.getDataValue('price');
@@ -98,7 +98,6 @@ async function getTrendStatistics(
   return trendStatistics;
 }
 
-//달력 통계 데이터 조회
 async function getCalendarStatistics(
   uid: string,
   year: string,

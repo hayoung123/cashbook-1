@@ -93,6 +93,7 @@ async function verifyAuth(token: string): Promise<void> {
     });
   });
 }
+
 async function signIn(email: string, password: string): Promise<TokenType> {
   const userSnapshot = await db.User.findOne({
     attributes: ['id', 'password'],

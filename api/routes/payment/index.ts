@@ -7,6 +7,14 @@ import errorHandler from 'utils/error-handler';
 
 const router = express.Router();
 
+/**
+ * path: /payment
+ *
+ * get: 사용자 결제수단 조회
+ * delete: 결제수단 삭제
+ * post: 결제수단 추가
+ */
+
 router.get('/', async (req: Request, res: Response) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
@@ -21,7 +29,6 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-//결제수단 삭제
 router.delete('/', async (req: Request, res: Response) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
@@ -38,7 +45,6 @@ router.delete('/', async (req: Request, res: Response) => {
   }
 });
 
-// 결제수단 추가
 router.post('/', async (req: Request, res: Response) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
