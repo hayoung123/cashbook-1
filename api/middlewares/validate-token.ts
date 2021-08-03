@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 import { db } from 'models/db';
+
 import { createToken, getAccessToken, checkTokenExpiration, getUIDFromToken } from 'utils/jwt';
 import errorGenerator from 'utils/error-generator';
 import errorHandler from 'utils/error-handler';

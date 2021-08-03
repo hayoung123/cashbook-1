@@ -1,8 +1,9 @@
 import { VerifyErrors } from 'jsonwebtoken';
 
 import sequelize, { db } from 'models/db';
-import errorGenerator from 'utils/error-generator';
+
 import { createToken, verifyToken } from 'utils/jwt';
+import errorGenerator from 'utils/error-generator';
 import { hashPassword, checkPassword } from 'utils/encryption';
 
 interface TokenType {

@@ -1,11 +1,15 @@
 import express, { Request, Response } from 'express';
-import errorHandler from 'utils/error-handler';
+
+import statistics from './statistics';
 
 import transactionService from 'services/transaction';
-import statistics from './statistics';
-import { getTransactionParamType } from 'types/transaction';
-import { decodeToken, getAccessToken } from 'utils/jwt';
+
 import validateToken from 'middlewares/validate-token';
+
+import { decodeToken, getAccessToken } from 'utils/jwt';
+import errorHandler from 'utils/error-handler';
+
+import { getTransactionParamType } from 'types/transaction';
 
 const router = express.Router();
 
@@ -94,10 +98,10 @@ router.post('/', async (req: Request, res: Response) => {
   } catch (err) {
     console.log(err);
     const { statusCode, errorMessage } = errorHandler(err.code);
+    router.use('/statistics', statistics);
+
     res.status(statusCode).json({ errorMessage });
   }
 });
-
-router.use('/statistics', statistics);
 
 export default router;

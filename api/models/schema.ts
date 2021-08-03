@@ -1,4 +1,5 @@
 import { Sequelize, DataTypes, ModelCtor, Model } from 'sequelize';
+
 import { categories } from 'configs/constants';
 
 interface ModelType {

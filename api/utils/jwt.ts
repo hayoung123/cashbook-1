@@ -1,4 +1,5 @@
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
+
 import errorGenerator from './error-generator';
 
 interface OptionType {

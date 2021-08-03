@@ -1,6 +1,11 @@
 import { Op } from 'sequelize';
+
 import { db } from 'models/db';
+
+import paymentService from './payment';
+
 import errorGenerator from 'utils/error-generator';
+
 import {
   PostTransactionParamType,
   EditTransactionParamType,
@@ -10,7 +15,6 @@ import {
   CalendarStatisticsType,
 } from 'types/transaction';
 
-import paymentService from './payment';
 /**
  * {
  * totalIncome:0000,

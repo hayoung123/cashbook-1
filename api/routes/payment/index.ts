@@ -1,7 +1,9 @@
-import errorHandler from 'utils/error-handler';
 import express, { Request, Response } from 'express';
-import { decodeToken, getAccessToken } from 'utils/jwt';
+
 import paymentService from 'services/payment';
+
+import { decodeToken, getAccessToken } from 'utils/jwt';
+import errorHandler from 'utils/error-handler';
 
 const router = express.Router();
 

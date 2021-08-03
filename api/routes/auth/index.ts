@@ -6,9 +6,9 @@ import signout from './signout';
 
 import authService from 'services/auth';
 
+import { getAccessToken } from 'utils/jwt';
 import errorHandler from 'utils/error-handler';
 import errorGenerator from 'utils/error-generator';
-import { getAccessToken } from 'utils/jwt';
 
 const router = express.Router();
 
