@@ -12,6 +12,10 @@ import errorGenerator from 'utils/error-generator';
 
 const router = express.Router();
 
+router.use('/signin', signin);
+router.use('/signup', signup);
+router.use('/signout', signout);
+
 router.head('/', async (req, res) => {
   try {
     const token = getAccessToken(req.headers.authorization);
@@ -32,9 +36,5 @@ router.head('/', async (req, res) => {
     res.status(statusCode).json({ errorMessage });
   }
 });
-
-router.use('/signin', signin);
-router.use('/signup', signup);
-router.use('/signout', signout);
 
 export default router;

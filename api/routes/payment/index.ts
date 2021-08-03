@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 
 import paymentService from 'services/payment';
 
@@ -16,7 +16,7 @@ const router = express.Router();
  * post: 결제수단 추가
  */
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
@@ -30,7 +30,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/', async (req: Request, res: Response) => {
+router.delete('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
@@ -44,7 +44,7 @@ router.delete('/', async (req: Request, res: Response) => {
       });
     }
 
-    const result = await paymentService.deleteUserPayment(userId, payment);
+    await paymentService.deleteUserPayment(userId, payment);
     res.status(200).json({});
   } catch (err) {
     console.log(err);
@@ -53,7 +53,7 @@ router.delete('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
@@ -67,7 +67,7 @@ router.post('/', async (req: Request, res: Response) => {
       });
     }
 
-    const result = await paymentService.createUserPayment(userId, payment);
+    await paymentService.createUserPayment(userId, payment);
     res.status(200).json({});
   } catch (err) {
     console.log(err);

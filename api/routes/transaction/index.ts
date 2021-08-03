@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 
 import statistics from './statistics';
 
@@ -25,7 +25,7 @@ router.use('/statistics', statistics);
  * post: 결제내역 추가
  */
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
@@ -55,7 +55,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
@@ -72,7 +72,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);
@@ -98,7 +98,7 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken(accessToken);

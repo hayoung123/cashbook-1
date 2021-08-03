@@ -47,10 +47,9 @@ async function getCategoryStatistics(
     etc: 0,
   };
 
-  // TODO: 불필요타입제거
   transactionSnapshot.forEach((t) => {
     const category: CategoryType = t.getDataValue('category');
-    const price: number = +t.getDataValue('price');
+    const price = +t.getDataValue('price');
 
     categoryStatistics[category] += price;
   });
