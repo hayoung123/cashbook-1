@@ -19,16 +19,16 @@ export async function setTransactionData(): Promise<any> {
 
   if (pageName === 'MainPage') {
     const { success, response } = await getTransaction();
-    if (success) setState(transactionState)(response.data);
+    if (success) setState(transactionState)(response);
   }
   if (pageName === 'CalendarPage') {
     const { success, response } = await getCalendarStatistics();
-    if (success) setState(calendarDataState)(response.result);
+    if (success) setState(calendarDataState)(response);
   }
   if (pageName === 'ChartPage') {
     const { success, response } = await getChartStatistics();
     if (success) {
-      const state = parseCategoryList(response.result);
+      const state = parseCategoryList(response);
       setState(statisticsState)(state);
     }
   }

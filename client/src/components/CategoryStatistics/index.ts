@@ -109,7 +109,7 @@ export default class CategoryStatistics extends Component<void, void> {
         setState(currentCategoryState)({ currentCategory });
         const t = await getTrend(currentCategory);
         if (t.success) {
-          const yearlyTrend = t.response.result.map((v: number) => Math.abs(v));
+          const yearlyTrend = t.response.map((v: number) => Math.abs(v));
           setState(trendState)({ yearlyTrend });
         }
       }
