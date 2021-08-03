@@ -40,21 +40,6 @@ export default class ChartPage extends Component<StateType, void> {
       chart__trend: new Trend(),
     };
   }
-
-  async getTrend(): Promise<void> {
-    try {
-      const ENDPOINT = `${STATISTICS_URL}?type=trend&year=2021&category=${`life`}`;
-      const res = await fetchWrapper(ENDPOINT, 'GET');
-      if (!res.success) {
-        console.log(res.errorMessage);
-        return;
-      }
-      const { result } = res;
-      console.log(result);
-    } catch (err) {
-      console.log(err);
-    }
-  }
 }
 
 customElements.define('chart-page', ChartPage);

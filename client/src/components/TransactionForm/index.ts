@@ -211,7 +211,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   //유저 결제수단 setting
   async setUserPayment(): Promise<void> {
     const { success, response } = await getUserPayment();
-    if (success) setState(userPaymentState)(response.data);
+    if (success) setState(userPaymentState)(response);
   }
 
   //카테고리 드롭다운 토글
