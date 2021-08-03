@@ -10,7 +10,7 @@ import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
 
 import _ from 'src/utils/dom';
 import { CATEGORY__INFO } from 'src/constant/category';
-import { getInsertedDotDate } from 'src/utils/date';
+import { isValidDate, getInsertedDotDate } from 'src/utils/date';
 import { getCategoryKey } from 'src/utils/category';
 import { setTransactionData } from 'src/utils/dataSetting';
 
@@ -32,6 +32,7 @@ interface StateType {
   isAbleSubmit: boolean;
   isOpenPayment: boolean;
   isOpenCategory: boolean;
+  errorState: string;
   category: string;
   payment: string;
 }
@@ -68,6 +69,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       isAbleSubmit: false,
       isOpenPayment: false,
       isOpenCategory: false,
+      errorState: '',
       category: CATEGORY__INFO[this.props.data.category]?.name,
       payment: this.props.data.payment,
     };
@@ -100,7 +102,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     <div class="transaction__form">
       <div class="transaction__form-column transaction__date" >
         <label for='date'>일자</label>
-        <input name='date' id='date' value='${this.date || ''}' placeholder="예) 2020.08.01"/>
+        <input name='date' id='date' value='${this.date || ''}' placeholder="예) 2020-08-01"/>
       </div>
       <div class="transaction__form-column transaction__category" >
         <div>분류</div>
@@ -133,6 +135,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
         <img src=${isAbleSubmit ? activeSubmitBtn : inActiveSubmitBtn} alt='제출 버튼' />
       </div>
     </div>
+    <div class='transaction-form__error'>${this.state.errorState}</div>
     `;
   }
 
@@ -181,8 +184,13 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     const payment: string = this.state?.payment || '';
     const price = this.state?.isIncome ? this.price : this.price * -1;
 
-    //TODO 경고창
     if (!this.date || !category || !this.title || !payment || !price) return;
+
+    if (!isValidDate(this.date)) {
+      console.log('!?');
+      this.setState({ errorState: '올바른 날짜를 입력해주세요!' });
+      return;
+    }
 
     const reqBody = {
       date: this.date,
@@ -192,13 +200,15 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       price,
     };
 
-    const { success } = this.props.isEdit
+    const response = this.props.isEdit
       ? await editTransaction({ id: this.props.data.id, ...reqBody })
       : await createTransaction(reqBody);
 
-    if (success) {
+    if (response.success) {
       this.clearState();
       setTransactionData();
+    } else {
+      //TODO : setState({errorState:response.errorMessage})
     }
   }
 
@@ -294,7 +304,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     this.price = 0;
     this.title = '';
     this.date = '';
-    this.setState({ isIncome: true, category: '', payment: '' });
+    this.setState({ isIncome: true, category: '', payment: '', errorState: '' });
   }
 
   isSubmitBtn(target: HTMLElement): boolean {
