@@ -203,7 +203,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (!this.date || !category || !this.title || !payment || !price) return;
 
     if (!isValidDate(this.date)) {
-      this.setState({ errorState: '올바른 날짜를 입력해주세요!' });
+      this.setState({ errorState: '올바른 날짜를 입력해주세요.' });
       return;
     }
 
@@ -228,7 +228,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       this.clearState();
       setTransactionData();
     } else {
-      // this.setState({ errorState: response.errorMessage });
+      this.setState({ errorState: response.errorMessage });
     }
   }
 
@@ -253,9 +253,11 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       const handleMousedown = (e: Event) => {
         const documentTarget = e.target as HTMLElement;
 
-        if (documentTarget.closest(`.${className}`)) return;
+        if (_.isTarget(documentTarget, `.${className}`) || _.isTarget(documentTarget, `input`))
+          return;
 
         document.removeEventListener('click', handleMousedown);
+
         this.setState({ [stateKey]: false });
       };
       document.addEventListener('click', handleMousedown);
@@ -264,8 +266,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
 
   // 드롭다운 아이템 클릭 콜백함수
   dropdownCallback(type: string, stateKey: string, value: string): void {
-    this.setState({ [type]: value });
-    this.setState({ [stateKey]: false });
+    this.setState({ [type]: value, [stateKey]: false });
     if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
   }
 
@@ -275,6 +276,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
 
   //TODO 리팩토링 (함수분리)
   handleDateInput(e: Event): void {
+    console.log('여기?');
     const target = e.target as HTMLInputElement;
 
     if (target.name === 'date') {
