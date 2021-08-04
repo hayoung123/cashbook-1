@@ -12,7 +12,7 @@ import { TotalPriceType } from 'src/type/statistics';
 export default class CalendarDate extends Component {
   constructor() {
     super();
-    this.keys = [dateState, calendarDataState];
+    this.keys = [calendarDataState];
     this.subscribe();
   }
   setTemplate(): string {
