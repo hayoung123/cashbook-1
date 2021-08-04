@@ -17,10 +17,9 @@ import { setTransactionData } from 'src/utils/dataSetting';
 import { getNextMonth, getPrevMonth } from 'src/utils/date';
 
 export default class Header extends Component {
-  setDate: (newState: DateType) => void;
   constructor() {
     super();
-    this.setDate = setState<DateType>(dateState);
+
     this.keys = [dateState];
     this.subscribe();
     this.addClass('header');
@@ -70,13 +69,14 @@ export default class Header extends Component {
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
     const currentDate = getState<DateType>(dateState);
+    const setDateState = setState<DateType>(dateState);
 
     if (_.isTarget(target, '#left-arrow')) {
-      this.setDate(getPrevMonth(currentDate));
+      setDateState(getPrevMonth(currentDate));
       setTransactionData();
     }
     if (_.isTarget(target, '#right-arrow')) {
-      this.setDate(getNextMonth(currentDate));
+      setDateState(getNextMonth(currentDate));
       setTransactionData();
     }
 

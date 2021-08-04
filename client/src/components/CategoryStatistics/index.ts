@@ -111,12 +111,15 @@ export default class CategoryStatistics extends Component<void, void> {
 
         const { categoryList }: StatisticsType = getState<StatisticsType>(statisticsState);
         const currentCategory = categoryList[+button.id].category;
+        const setCurrentCategoryState = setState<currentCategoryType>(currentCategoryState);
 
-        setState<currentCategoryType>(currentCategoryState)({ currentCategory });
+        setCurrentCategoryState({ currentCategory });
         const t = await getTrend(currentCategory);
         if (t.success) {
           const yearlyTrend = t.response.map((v: number) => Math.abs(v));
-          setState<TrendType>(trendState)({ yearlyTrend });
+          const setTrendState = setState<TrendType>(trendState);
+
+          setTrendState({ yearlyTrend });
         }
       }
     } catch (err) {
