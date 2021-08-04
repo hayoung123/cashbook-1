@@ -50,14 +50,17 @@ export default class TransactionRecord extends Component<StateType, RecordType> 
       `;
   }
   setComponents(): ComponentType | objType {
-    if (!this.props) return {};
+    if (!this.props || !this.state) return {};
 
     const { category } = this.props;
+    const { isEdit } = this.state;
 
-    return {
-      'category-badge': new CategoryBadge({ category }),
-      'transaction__edit-form': new TransactionFrom({ isEdit: true, data: this.props }),
-    };
+    return isEdit
+      ? {
+          'category-badge': new CategoryBadge({ category }),
+          'transaction__edit-form': new TransactionFrom({ isEdit: true, data: this.props }),
+        }
+      : { 'category-badge': new CategoryBadge({ category }) };
   }
 
   handleClick(e: Event): void {

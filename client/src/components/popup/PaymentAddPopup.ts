@@ -26,35 +26,39 @@ export default class PaymentAddPupup extends Component<StateType, PropsType> {
     return `
         <div class='popup'>
           <div class='popup__tiitle'>추가하실 결제수단을 적어주세요.</div>
-          <input placeholder="입력하세요"></input>
+          <input placeholder="입력하세요" required></input>
           <div class='popup__error'>${this.state?.errorMsg || ''}</div>
           <div class='popup__btns'>
-            <div class='popup__cancle-btn'>취소</div>
-            <div class='popup__submit-btn'>등록</div>
+            <button class='popup__cancle-btn'>취소</button>
+            <button class='popup__submit-btn'>등록</button>
           </div>
         </div>
       `;
   }
 
-  handleClick(e: Event): void {
+  async handleClick(e: Event): Promise<void> {
     const target = e.target as HTMLElement;
-
     if (_.isTarget(target, '.popup__cancle-btn')) {
       this.props.controlPopup(false);
     }
     if (_.isTarget(target, '.popup__submit-btn')) {
-      this.addPayment();
+      await this.addPayment();
     }
   }
 
   async addPayment(): Promise<void> {
     try {
       const input = _.$('input', this) as HTMLInputElement;
-      const result = await createUserPayment(input.value);
 
+      if (!input.value) {
+        this.setState({ errorMsg: '결제수단을 입력해주세요' });
+        const newInput = _.$('input', this) as HTMLInputElement;
+        _.focusInput(newInput);
+        return;
+      }
+
+      const result = await createUserPayment(input.value);
       if (!result.success) {
-        console.log(result);
-        console.log(result.errorMessage);
         this.setState({ errorMsg: result.errorMessage });
         return;
       }

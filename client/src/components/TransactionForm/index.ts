@@ -14,7 +14,7 @@ import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
 import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
 import PaymentAddPupup from 'src/components/popup/PaymentAddPopup';
 
-import { userPaymentState } from 'src/store/payment';
+import { userPaymentState, PaymentType } from 'src/store/payment';
 
 import _ from 'src/utils/dom';
 import { isValidDate, getInsertedDotDate } from 'src/utils/date';
@@ -59,13 +59,14 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   date: string;
   title: string;
   price: number;
+  bodyEvent: (arg: string) => void;
   constructor(props: PropsType = INIT_FORM) {
     super(props);
     this.date = this.props.data.date;
     this.title = this.props.data.title;
     this.price = Math.abs(this.props.data.price);
+    this.bodyEvent = this.closeDropdown.bind(this);
 
-    this.render();
     this.addClass('transaction__form-container');
     if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
   }
@@ -87,6 +88,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     _.onEvent(this, 'input', this.handleDateInput.bind(this));
   }
   setTemplate(): string {
+    console.log('?');
     if (!this.state) return '';
 
     const { category, payment } = this.state;
@@ -150,19 +152,28 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   }
 
   setComponents(): objType {
+    if (!this.state) return {};
+
+    const { isOpenCategory, isOpenPayment, isOpenPopup } = this.state;
     return {
-      'form__category-dropdown': new CategoryDropdown({
-        setCategory: this.dropdownCallback.bind(this, 'category', 'isOpenCategory'),
+      ...(isOpenCategory && {
+        'form__category-dropdown': new CategoryDropdown({
+          setCategory: this.dropdownCallback.bind(this, 'category', 'isOpenCategory'),
+        }),
       }),
-      'form__payment-dropdown': new PaymentDropdown({
-        setPayment: this.dropdownCallback.bind(this, 'payment', 'isOpenPayment'),
-        controlPopup: this.controlPopup.bind(this),
+      ...(isOpenPayment && {
+        'form__payment-dropdown': new PaymentDropdown({
+          setPayment: this.dropdownCallback.bind(this, 'payment', 'isOpenPayment'),
+          controlPopup: this.controlPopup.bind(this),
+        }),
       }),
-      'payment__add-popup': new PaymentAddPupup({ controlPopup: this.controlPopup.bind(this) }),
+      ...(isOpenPopup && {
+        'payment__add-popup': new PaymentAddPupup({ controlPopup: this.controlPopup.bind(this) }),
+      }),
     };
   }
 
-  handleClick(e: Event): void {
+  async handleClick(e: Event): Promise<void> {
     const target = e.target as HTMLElement;
     //제출 버튼
     if (_.isTarget(target, '.transaction__form-submit-btn')) {
@@ -184,7 +195,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
 
     //결제수단 드롭다운 버튼
     if (_.isTarget(target, '.payment__dropdown-btn')) {
-      this.setUserPayment();
+      await this.setUserPayment();
       this.toggleDropdown('isOpenPayment', 'transaction__method');
     }
 
@@ -241,27 +252,36 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   //유저 결제수단 setting
   async setUserPayment(): Promise<void> {
     const { success, response } = await getUserPayment();
-    if (success) setState(userPaymentState)(response);
+    if (success) {
+      const setUserPaymentState = setState<PaymentType>(userPaymentState);
+      setUserPaymentState(response);
+    }
   }
 
   // 드롭다운 토글
   toggleDropdown(stateKey: string, className: string): void {
     if (!this.state) return;
+    const currentOpenState = !this.state[stateKey];
 
-    this.setState({ [stateKey]: !this.state[stateKey] });
-    if (this.state[stateKey]) {
+    if (currentOpenState) {
       const handleMousedown = (e: Event) => {
-        const documentTarget = e.target as HTMLElement;
+        const target = e.target as HTMLElement;
 
-        if (_.isTarget(documentTarget, `.${className}`) || _.isTarget(documentTarget, `input`))
-          return;
+        if (_.isTarget(target, `.${className}`) || _.isTarget(target, 'payment-add-popup')) return;
 
-        document.removeEventListener('click', handleMousedown);
-
+        document.removeEventListener('mousedown', handleMousedown);
         this.setState({ [stateKey]: false });
       };
-      document.addEventListener('click', handleMousedown);
+
+      this.setState({ [stateKey]: currentOpenState });
+      document.addEventListener('mousedown', handleMousedown);
+      return;
     }
+    this.setState({ [stateKey]: currentOpenState });
+  }
+
+  closeDropdown(stateKey: string): void {
+    this.setState({ [stateKey]: false });
   }
 
   // 드롭다운 아이템 클릭 콜백함수
@@ -276,7 +296,6 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
 
   //TODO 리팩토링 (함수분리)
   handleDateInput(e: Event): void {
-    console.log('여기?');
     const target = e.target as HTMLInputElement;
 
     if (target.name === 'date') {
