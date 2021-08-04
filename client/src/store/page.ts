@@ -1,8 +1,6 @@
 import { initState } from 'src/lib/observer';
 import { paramsType } from 'src/lib/router';
 
-import MainPage from 'src/pages/MainPage';
-
 // TODO: class의 타입은 무엇일까 (typescript class type as parameter)
 export interface PageStateType {
   Page: any;
@@ -11,7 +9,7 @@ export interface PageStateType {
 
 export const pageState = initState<PageStateType>({
   key: 'pageState',
-  defaultValue: { Page: MainPage },
+  defaultValue: { Page: null },
 });
 
 export const isLoggedInState = initState<boolean>({
