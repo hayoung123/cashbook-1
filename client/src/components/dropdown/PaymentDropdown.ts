@@ -11,6 +11,7 @@ import _ from 'src/utils/dom';
 
 interface PropsType {
   setPayment: (payment: string) => void;
+  controlPopup: (isOpen: boolean) => void;
 }
 
 export default class PaymentDropdown extends Component<void, PropsType> {
@@ -54,7 +55,7 @@ export default class PaymentDropdown extends Component<void, PropsType> {
     }
 
     if (_.isTarget(target, '.payment-add-btn')) {
-      //모달창
+      this.props.controlPopup(true);
     }
   }
 }

@@ -37,6 +37,7 @@ interface StateType {
   isAbleSubmit: boolean;
   isOpenPayment: boolean;
   isOpenCategory: boolean;
+  isOpenPopup: boolean;
   errorState: string;
   category: string;
   payment: string;
@@ -74,6 +75,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       isAbleSubmit: false,
       isOpenPayment: false,
       isOpenCategory: false,
+      isOpenPopup: false,
       errorState: '',
       category: CATEGORY__INFO[this.props.data.category]?.name,
       payment: this.props.data.payment,
@@ -88,7 +90,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (!this.state) return '';
 
     const { category, payment } = this.state;
-    const { isIncome, isAbleSubmit, isOpenPayment, isOpenCategory } = this.state;
+    const { isIncome, isAbleSubmit, isOpenPayment, isOpenCategory, isOpenPopup } = this.state;
 
     return `
     <div class="transaction__type">
@@ -143,7 +145,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       </div>
     </div>
     <div class='transaction-form__error'>${this.state.errorState}</div>
-    <div id="payment__add-popup"></div>
+    ${isOpenPopup ? `<div id="payment__add-popup"></div>` : ''}
     `;
   }
 
@@ -154,8 +156,9 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       }),
       'form__payment-dropdown': new PaymentDropdown({
         setPayment: this.dropdownCallback.bind(this, 'payment', 'isOpenPayment'),
+        controlPopup: this.controlPopup.bind(this),
       }),
-      'payment__add-popup': new PaymentAddPupup(),
+      'payment__add-popup': new PaymentAddPupup({ controlPopup: this.controlPopup.bind(this) }),
     };
   }
 
@@ -264,6 +267,10 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     this.setState({ [type]: value });
     this.setState({ [stateKey]: false });
     if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
+  }
+
+  controlPopup(isOpen: boolean): void {
+    this.setState({ isOpenPopup: isOpen });
   }
 
   //TODO 리팩토링 (함수분리)
