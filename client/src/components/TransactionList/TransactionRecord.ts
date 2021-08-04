@@ -63,11 +63,9 @@ export default class TransactionRecord extends Component<StateType, RecordType> 
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
 
-    if (this.isTransactionRecord(target)) this.setState((state) => ({ isEdit: !state?.isEdit }));
-  }
-
-  isTransactionRecord(target: HTMLElement): boolean {
-    return !!target.closest('.transaction__record');
+    if (_.isTarget(target, '.transaction__record')) {
+      this.setState((state) => ({ isEdit: !state?.isEdit }));
+    }
   }
 }
 

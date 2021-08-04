@@ -67,16 +67,15 @@ export default class Header extends Component {
     `;
   }
 
-  //TODO: 해결되지 않는 타입 무한굴래... as를 안쓰고 어떤식으로 해결해야될까...??
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
     const currentDate = getState<DateType>(dateState);
 
-    if (this.isLeftArrow(target)) {
+    if (_.isTarget(target, '#left-arrow')) {
       this.setDate(getPrevMonth(currentDate));
       setTransactionData();
     }
-    if (this.isRightArrow(target)) {
+    if (_.isTarget(target, '#right-arrow')) {
       this.setDate(getNextMonth(currentDate));
       setTransactionData();
     }
@@ -86,13 +85,6 @@ export default class Header extends Component {
 
     const path: string | void = button.dataset?.path;
     if (path) router.push(path);
-  }
-
-  isLeftArrow(target: HTMLElement): boolean {
-    return !!target.closest('#left-arrow');
-  }
-  isRightArrow(target: HTMLElement): boolean {
-    return !!target.closest('#right-arrow');
   }
 }
 
