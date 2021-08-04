@@ -1,12 +1,14 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
+import { getState } from 'src/lib/observer';
 
 import DayTransaction from './DayTransaction';
 
-import { objType } from 'src/type/type';
-
-import './style.scss';
+// TODO : 타입분리
 import { DayRecordsType, transactionState } from 'src/store/transaction';
-import { getState } from 'src/lib/observer';
+
+import { objType } from 'src/type/type';
 
 export default class TransationList extends Component {
   constructor() {

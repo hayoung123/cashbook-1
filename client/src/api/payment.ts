@@ -1,4 +1,4 @@
-import { PAYMENT_URL } from './../configs/urls';
+import { PAYMENT_URL } from 'src/configs/urls';
 
 import fetchWrapper from 'src/utils/fetchWrapper';
 

@@ -1,13 +1,12 @@
-import Component from 'src/lib/component';
-import { ComponentType, objType } from 'src/lib/component/type';
-
-import _ from 'src/utils/dom';
-import { getNumberWithComma } from 'src/utils/price';
+import Component, { ComponentType, objType } from 'src/lib/component';
 
 import CategoryBadge from 'src/components/CategoryBadge';
 import TransactionFrom from 'src/components/TransactionForm';
 
 import { RecordType } from 'src/store/transaction';
+
+import _ from 'src/utils/dom';
+import { getNumberWithComma } from 'src/utils/price';
 
 type StateType = {
   isEdit: boolean;

@@ -1,5 +1,10 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
 import { getState, setState } from 'src/lib/observer';
+
+import activePicker from 'public/assets/icon/activePicker.svg';
+import inActivePicker from 'public/assets/icon/inActivePicker.svg';
 
 import {
   transactionPriceType,
@@ -7,14 +12,9 @@ import {
   transactionState,
 } from 'src/store/transaction';
 
-import activePicker from 'public/assets/icon/activePicker.svg';
-import inActivePicker from 'public/assets/icon/inActivePicker.svg';
-
 import _ from 'src/utils/dom';
 import { setTransactionData } from 'src/utils/dataSetting';
 import { getNumberWithComma } from 'src/utils/price';
-
-import './style.scss';
 
 interface TransactionInfoType {
   total: number;

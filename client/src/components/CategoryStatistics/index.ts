@@ -10,10 +10,11 @@ import {
   trendState,
   StatisticsType,
 } from 'src/store/statistics';
+
 import { getNumberWithComma } from 'src/utils/price';
-import drawPieChart from './drawPieChart';
-import { getCategoryColor } from 'src//utils/category';
+import { getCategoryColor } from 'src/utils/category';
 import { getTrend } from 'src/api/chart';
+import drawPieChart from './drawPieChart';
 
 import { objType } from 'src/type/type';
 

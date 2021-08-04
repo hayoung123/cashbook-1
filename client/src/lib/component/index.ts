@@ -1,5 +1,7 @@
 import { subscribe, unsubscribe } from 'src/lib/observer';
+
 import { objType, Partial } from './type';
+export * from './type';
 
 export default class Component<S = void, T = void> extends HTMLElement {
   public state: S | void;

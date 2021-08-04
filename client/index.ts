@@ -1,13 +1,16 @@
-import App from './src/App';
-import Router from './src/lib/router';
+import './index.scss';
 
-import { pageState, isLoggedInState } from 'src/store/page';
-import { authorizedRoutes, unauthorizedRoutes } from 'src/configs/routes';
-import fetchWrapper from 'src/utils/fetchWrapper';
-import { AUTH_URL } from 'src/configs/urls';
+import Router from 'src/lib/router';
 import { subscribe, setState, getState } from 'src/lib/observer';
 
-import './index.scss';
+import { authorizedRoutes, unauthorizedRoutes } from 'src/configs/routes';
+import { AUTH_URL } from 'src/configs/urls';
+
+import App from 'src/App';
+
+import { pageState, isLoggedInState } from 'src/store/page';
+
+import fetchWrapper from 'src/utils/fetchWrapper';
 
 const root: HTMLElement | null = document.querySelector('#root');
 

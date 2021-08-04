@@ -1,6 +1,6 @@
 import Component from 'src/lib/component';
 
-import { router } from '../../../index';
+import { router } from 'src/..';
 import { setState } from 'src/lib/observer';
 import { isLoggedInState } from 'src/store/page';
 import fetchWrapper from 'src/utils/fetchWrapper';

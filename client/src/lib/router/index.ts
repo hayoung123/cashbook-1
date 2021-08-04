@@ -1,6 +1,8 @@
-import { pageState } from 'src/store/page';
-import { routesType, paramsType } from './type';
 import { setState } from 'src/lib/observer';
+
+import { routesType, paramsType } from './type';
+
+export * from './type';
 
 type PropsType = {
   routes: { [key: string]: Object };

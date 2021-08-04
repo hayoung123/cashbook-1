@@ -1,6 +1,9 @@
-import { STATISTICS_URL } from './../configs/urls';
 import { getState } from 'src/lib/observer';
+
+import { STATISTICS_URL } from 'src/configs/urls';
+
 import { dateState } from 'src/store/transaction';
+
 import fetchWrapper from 'src/utils/fetchWrapper';
 
 export const getCalendarStatistics = async (): Promise<{ success: boolean; response: any }> => {

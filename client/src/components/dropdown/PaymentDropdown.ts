@@ -1,10 +1,12 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
+import { getState } from 'src/lib/observer';
 
 import xBtn from 'public/assets/icon/xBtn.svg';
 
-import './style.scss';
-import { getState } from 'src/lib/observer';
 import { userPaymentState } from 'src/store/payment';
+
 import _ from 'src/utils/dom';
 
 interface PropsType {

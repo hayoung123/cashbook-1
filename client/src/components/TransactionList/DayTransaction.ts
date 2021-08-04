@@ -5,6 +5,7 @@ import TransactionRecord from './TransactionRecord';
 import { getDate } from 'src/utils/date';
 import { getNumberWithComma } from 'src/utils/price';
 
+// TODO : 타입분리
 import { objType } from 'src/type/type';
 import { DayRecordsType, RecordType } from 'src/store/transaction';
 

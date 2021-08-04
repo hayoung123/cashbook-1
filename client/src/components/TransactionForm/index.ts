@@ -1,3 +1,5 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
 import { setState } from 'src/lib/observer';
 
@@ -5,22 +7,23 @@ import inActiveSubmitBtn from 'public/assets/icon/inActiveSubmitBtn.svg';
 import activeSubmitBtn from 'public/assets/icon/activeSubmitBtn.svg';
 import downArrow from 'public/assets/icon/downArrow.svg';
 import trashIcon from 'public/assets/icon/trashIcon.svg';
+
+import { CATEGORY__INFO } from 'src/constant/category';
+
 import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
 import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
 
+import { userPaymentState } from 'src/store/payment';
+
 import _ from 'src/utils/dom';
-import { CATEGORY__INFO } from 'src/constant/category';
 import { isValidDate, getInsertedDotDate } from 'src/utils/date';
 import { getCategoryKey } from 'src/utils/category';
 import { setTransactionData } from 'src/utils/dataSetting';
-
 import { createTransaction, deleteTransaction, editTransaction } from 'src/api/transaction';
 import { getUserPayment } from 'src/api/payment';
-import { userPaymentState } from 'src/store/payment';
+
 import { RecordType } from 'src/store/transaction';
 import { objType } from 'src/type/type';
-
-import './style.scss';
 
 interface PropsType {
   isEdit: boolean;

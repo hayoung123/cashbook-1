@@ -1,8 +1,9 @@
 import Component from 'src/lib/component';
 import { getState } from 'src/lib/observer';
 
-import { getNumberWithComma } from 'src/utils/price';
 import { calendarDataState } from 'src/store/calendar';
+
+import { getNumberWithComma } from 'src/utils/price';
 
 export default class TotalPriceInfo extends Component {
   constructor() {

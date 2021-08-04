@@ -1,6 +1,9 @@
-import { TRANSACTION_URL } from './../configs/urls';
 import { getState } from 'src/lib/observer';
+
+import { TRANSACTION_URL } from 'src/configs/urls';
+
 import { dateState, transactionPriceTypeState } from 'src/store/transaction';
+
 import fetchWrapper from 'src/utils/fetchWrapper';
 
 export const getTransaction = async (): Promise<{ success: boolean; response: any }> => {

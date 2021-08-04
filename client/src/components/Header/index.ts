@@ -1,3 +1,5 @@
+import './style.scss';
+
 import { getState, setState } from 'src/lib/observer';
 import Component from 'src/lib/component';
 
@@ -7,14 +9,12 @@ import historyIcon from 'public/assets/icon/historyIcon.svg';
 import leftArrow from 'public/assets/icon/leftArrow.svg';
 import rightArrow from 'public/assets/icon/rightArrow.svg';
 
+import { dateState, DateType } from 'src/store/transaction';
+
+import { router } from 'src/..';
 import _ from 'src/utils/dom';
 import { setTransactionData } from 'src/utils/dataSetting';
 import { getNextMonth, getPrevMonth } from 'src/utils/date';
-import { dateState, DateType } from 'src/store/transaction';
-
-import { router } from '../../../index';
-
-import './style.scss';
 
 export default class Header extends Component {
   setDate: (newState: DateType) => void;

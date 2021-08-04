@@ -1,11 +1,11 @@
 import Component from 'src/lib/component';
 import { getState } from 'src/lib/observer';
 
-import { getMonthData, isToday } from 'src/utils/calendar';
-import { getNumberWithComma } from 'src/utils/price';
-
 import { dateState } from 'src/store/transaction';
 import { calendarDataState } from 'src/store/calendar';
+
+import { getMonthData, isToday } from 'src/utils/calendar';
+import { getNumberWithComma } from 'src/utils/price';
 
 interface TotalPriceType {
   income: number;

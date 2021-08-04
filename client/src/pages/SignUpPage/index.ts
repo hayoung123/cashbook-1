@@ -1,14 +1,15 @@
-import Component from 'src/lib/component';
+import './style.scss';
 
-import { router } from '../../../index';
+import Component from 'src/lib/component';
 import { setState } from 'src/lib/observer';
-import { isLoggedInState } from 'src/store/page';
-import fetchWrapper from 'src/utils/fetchWrapper';
-import getValidityMessage from 'src/utils/getValidityMessages';
 
 import { SIGNUP_URL } from 'src/configs/urls';
 
-import './style.scss';
+import { isLoggedInState } from 'src/store/page';
+
+import { router } from 'src/..';
+import fetchWrapper from 'src/utils/fetchWrapper';
+import getValidityMessage from 'src/utils/getValidityMessages';
 
 interface FormType extends EventTarget {
   email?: HTMLInputElement;

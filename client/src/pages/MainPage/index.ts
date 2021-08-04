@@ -1,7 +1,9 @@
+import Component from 'src/lib/component';
+
 import TransactionFrom from 'src/components/TransactionForm';
 import TransactionHeader from 'src/components/TransactionHeader';
 import TransactionList from 'src/components/TransactionList';
-import Component from 'src/lib/component';
+
 import { objType } from 'src/type/type';
 
 export default class MainPage extends Component {
