@@ -35,3 +35,7 @@ export const getInsertedDotDate = (date: string): string => {
   if (date.length < 7) return date.slice(0, 4) + '-' + date.slice(4);
   return date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6);
 };
+
+export const isValidDate = (date: string): boolean => {
+  return !isNaN(new Date(date).getTime());
+};
