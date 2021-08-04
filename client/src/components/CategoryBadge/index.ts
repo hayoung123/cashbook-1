@@ -4,9 +4,7 @@ import Component from 'src/lib/component';
 
 import { CATEGORY__INFO } from 'src/constant/category';
 
-type CategoryType = {
-  category: string;
-};
+import { CategoryType } from 'src/type/category';
 
 export default class CategoryBadge extends Component<void, CategoryType> {
   constructor(props: CategoryType) {

@@ -3,11 +3,13 @@ import { getState, setState } from 'src/lib/observer';
 import { pageState, PageStateType } from 'src/store/page';
 import { transactionState, transactionType } from 'src/store/transaction';
 import { calendarDataState, CalendarStatisticsType } from 'src/store/calendar';
-import { statisticsState, StatisticsType, CategoryStatisticsType } from 'src/store/statistics';
+import { statisticsState, StatisticsType } from 'src/store/statistics';
 
 import { getTransaction } from 'src/api/transaction';
 import { getCalendarStatistics } from 'src/api/calendar';
 import { getChartStatistics } from 'src/api/chart';
+
+import { CategoryStatisticsType } from 'src/type/statistics';
 
 //util안에 있을 애는 아닌 것 같은데 위치를 못잡겠음
 
@@ -35,12 +37,12 @@ export async function setTransactionData(): Promise<any> {
 }
 
 function parseCategoryList(data: { [key: string]: number }): StatisticsType {
-  const a = Object.entries(data).sort((a, b) => +a[1] - +b[1]);
+  const sortedCategoryStatisticsList = Object.entries(data).sort((a, b) => +a[1] - +b[1]);
   let totalExpenditure = 0;
   const categoryList: CategoryStatisticsType[] = [];
 
-  a.forEach((b) => {
-    const [category, expenditure] = b;
+  sortedCategoryStatisticsList.forEach((categoryStatistics) => {
+    const [category, expenditure] = categoryStatistics;
     totalExpenditure += Math.abs(expenditure);
     if (Math.abs(expenditure) > 0) {
       categoryList.push({

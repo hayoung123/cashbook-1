@@ -1,8 +1,8 @@
-type createElemType = {
+interface createElemType {
   tagName: string;
-  classNames?: Array<string>;
+  classNames?: string[];
   value?: string;
-};
+}
 
 type targetType = HTMLElement | Document;
 

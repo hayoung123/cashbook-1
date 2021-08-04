@@ -22,7 +22,7 @@ import { setTransactionData } from 'src/utils/dataSetting';
 import { createTransaction, deleteTransaction, editTransaction } from 'src/api/transaction';
 import { getUserPayment } from 'src/api/payment';
 
-import { RecordType } from 'src/store/transaction';
+import { RecordType } from 'src/type/transaction';
 import { objType } from 'src/type/type';
 
 interface PropsType {

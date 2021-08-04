@@ -1,15 +1,13 @@
 import { initState } from 'src/lib/observer';
 
+import { TotalPriceType } from 'src/type/statistics';
+
 export interface CalendarStatisticsType {
   totalIncome: number;
   totalExpenditure: number;
   totalPrice: number;
   statistics: {
-    [key: number]: {
-      income: number;
-      expenditure: number;
-      total: number;
-    };
+    [key: number]: TotalPriceType;
   };
 }
 

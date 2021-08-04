@@ -11,6 +11,8 @@ import {
 
 import fetchWrapper from 'src/utils/fetchWrapper';
 
+import { RecordInfoType, RecordType } from 'src/type/transaction';
+
 export const getTransaction = async (): Promise<{ success: boolean; response: any }> => {
   const { year, month } = getState<DateType>(dateState);
   const { isIncome, isExpenditure } = getState<transactionPriceType>(transactionPriceTypeState);
@@ -21,27 +23,15 @@ export const getTransaction = async (): Promise<{ success: boolean; response: an
   return data;
 };
 
-interface TransactionType {
-  date: string;
-  category: string;
-  title: string;
-  payment: string;
-  price: number;
-}
-
 export const createTransaction = async (
-  transactionInfo: TransactionType,
+  transactionInfo: RecordInfoType,
 ): Promise<{ success: boolean; response: any }> => {
   const res = await fetchWrapper(TRANSACTION_URL, 'POST', transactionInfo);
   return res;
 };
 
-interface EditTransactionType extends TransactionType {
-  id: string;
-}
-
 export const editTransaction = async (
-  transactionInfo: EditTransactionType,
+  transactionInfo: RecordType,
 ): Promise<{ success: boolean; response: any }> => {
   const res = await fetchWrapper(
     `${TRANSACTION_URL}/${transactionInfo.id}`,

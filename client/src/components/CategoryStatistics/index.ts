@@ -8,7 +8,6 @@ import {
   StatisticsType,
   currentCategoryState,
   currentCategoryType,
-  CategoryStatisticsType,
   trendState,
   TrendType,
 } from 'src/store/statistics';
@@ -19,6 +18,7 @@ import { getTrend } from 'src/api/chart';
 import drawPieChart from './drawPieChart';
 
 import { objType } from 'src/type/type';
+import { CategoryStatisticsType } from 'src/type/statistics';
 
 export default class CategoryStatistics extends Component<void, void> {
   constructor() {

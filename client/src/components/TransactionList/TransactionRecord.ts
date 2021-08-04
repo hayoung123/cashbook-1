@@ -3,10 +3,10 @@ import Component, { ComponentType, objType } from 'src/lib/component';
 import CategoryBadge from 'src/components/CategoryBadge';
 import TransactionFrom from 'src/components/TransactionForm';
 
-import { RecordType } from 'src/store/transaction';
-
 import _ from 'src/utils/dom';
 import { getNumberWithComma } from 'src/utils/price';
+
+import { RecordType } from 'src/type/transaction';
 
 type StateType = {
   isEdit: boolean;
@@ -20,7 +20,7 @@ export default class TransactionRecord extends Component<StateType, RecordType> 
     return { isEdit: false };
   }
 
-  addEvent() {
+  addEvent(): void {
     _.onEvent(this, 'click', this.handleClick.bind(this));
   }
 

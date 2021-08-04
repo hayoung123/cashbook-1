@@ -1,10 +1,11 @@
-export type DateType = {
+export interface DateDayType {
   year?: number;
   month: number;
   date: number;
   day: string;
-};
-export const getDate = (date: string): DateType => {
+}
+
+export const getDate = (date: string): DateDayType => {
   const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
   const dateObj = new Date(date);
   return {
@@ -15,7 +16,7 @@ export const getDate = (date: string): DateType => {
   };
 };
 
-interface YearMonthType {
+export interface YearMonthType {
   year: number;
   month: number;
 }
