@@ -165,6 +165,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
         'form__payment-dropdown': new PaymentDropdown({
           setPayment: this.dropdownCallback.bind(this, 'payment', 'isOpenPayment'),
           controlPopup: this.controlPopup.bind(this),
+          setError: this.setError.bind(this),
         }),
       }),
       ...(isOpenPopup && {
@@ -214,12 +215,13 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (!this.date || !category || !this.title || !payment || !price) return;
 
     if (!isValidDate(this.date)) {
-      this.setState({ errorState: '올바른 날짜를 입력해주세요.' });
+      this.setError('올바른 날짜를 입력해주세요.');
+
       return;
     }
 
     if (this.price < 0) {
-      this.setState({ errorState: '가격은 음수가 될 수 없습니다.' });
+      this.setError('가격은 음수가 될 수 없습니다.');
       return;
     }
 
@@ -239,7 +241,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       this.clearState();
       setTransactionData();
     } else {
-      this.setState({ errorState: response.errorMessage });
+      this.setError(response.errorMessage ?? '');
     }
   }
 
@@ -294,7 +296,10 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     this.setState({ isOpenPopup: isOpen });
   }
 
-  //TODO 리팩토링 (함수분리)
+  setError(msg: string): void {
+    this.setState({ errorState: msg });
+  }
+
   handleDateInput(e: Event): void {
     const target = e.target as HTMLInputElement;
 

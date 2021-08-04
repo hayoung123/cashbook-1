@@ -13,3 +13,8 @@ export const createUserPayment = async (payment: string): Promise<responseType> 
   const result = await fetchWrapper(PAYMENT_URL, 'POST', { payment });
   return result;
 };
+
+export const deleteUserPayment = async (payment: string): Promise<responseType> => {
+  const result = await fetchWrapper(PAYMENT_URL, 'DELETE', { payment });
+  return result;
+};
