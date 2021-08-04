@@ -25,7 +25,7 @@ router.use('/statistics', statistics);
  * post: 결제내역 추가
  */
 
-router.get('/', async (req, res) => {
+router.get('/', validateToken, async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken('access', accessToken);
@@ -55,7 +55,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateToken, async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken('access', accessToken);
@@ -72,7 +72,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateToken, async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken('access', accessToken);
@@ -98,7 +98,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validateToken, async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken('access', accessToken);

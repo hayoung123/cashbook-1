@@ -28,8 +28,12 @@ subscribe(isLoggedInState, setRoute);
 
 async function init() {
   try {
-    const res = await fetchWrapper(AUTH_URL, 'HEAD');
+    const res = await fetchWrapper(AUTH_URL, 'GET');
     const setLoggedInState = setState<boolean>(isLoggedInState);
+
+    if (res.response?.newAccessToken) {
+      window.localStorage.setItem('_at', res.response.newAccessToken);
+    }
 
     if (res.success) setLoggedInState(true);
     else setLoggedInState(false);
