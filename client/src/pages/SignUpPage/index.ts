@@ -121,7 +121,8 @@ export default class SignUpPage extends Component {
 
       localStorage.setItem('_at', accessToken);
 
-      setState(isLoggedInState)(true);
+      const setIsloggedInState = setState<boolean>(isLoggedInState);
+      setIsloggedInState(true);
       router.replace('/');
     } catch (err) {
       console.log(err);

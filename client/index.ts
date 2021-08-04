@@ -29,12 +29,10 @@ subscribe(isLoggedInState, setRoute);
 async function init() {
   try {
     const res = await fetchWrapper(AUTH_URL, 'HEAD');
-    // TODO: setState 분리
-    if (res.success) {
-      setState<boolean>(isLoggedInState)(true);
-    } else {
-      setState<boolean>(isLoggedInState)(false);
-    }
+    const setLoggedInState = setState<boolean>(isLoggedInState);
+
+    if (res.success) setLoggedInState(true);
+    else setLoggedInState(false);
 
     const app: HTMLElement = new App();
     root?.append(app);

@@ -21,17 +21,24 @@ export async function setTransactionData(): Promise<any> {
 
   if (pageName === 'MainPage') {
     const { success, response } = await getTransaction();
-    if (success) setState<transactionType>(transactionState)(response);
+    if (success) {
+      const setTransactionState = setState<transactionType>(transactionState);
+      setTransactionState(response);
+    }
   }
   if (pageName === 'CalendarPage') {
     const { success, response } = await getCalendarStatistics();
-    if (success) setState<CalendarStatisticsType>(calendarDataState)(response);
+    if (success) {
+      const setCalendarState = setState<CalendarStatisticsType>(calendarDataState);
+      setCalendarState(response);
+    }
   }
   if (pageName === 'ChartPage') {
     const { success, response } = await getChartStatistics();
     if (success) {
+      const setStatisticsState = setState<StatisticsType>(statisticsState);
       const state = parseCategoryList(response);
-      setState<StatisticsType>(statisticsState)(state);
+      setStatisticsState(state);
     }
   }
 }

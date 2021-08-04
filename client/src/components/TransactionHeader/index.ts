@@ -48,27 +48,20 @@ export default class TransactionHeader extends Component {
 
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
-    const setType = setState<transactionPriceType>(transactionPriceTypeState);
+    const setTransactionType = setState<transactionPriceType>(transactionPriceTypeState);
 
-    if (this.isIncomeBtn(target)) {
-      setType((type) => ({ ...type, isIncome: !type.isIncome }));
+    if (_.isTarget(target, '#transaction__income-btn')) {
+      setTransactionType((type) => ({ ...type, isIncome: !type.isIncome }));
       setTransactionData();
     }
 
-    if (this.isExpenditureBtn(target)) {
-      setType((type) => ({
+    if (_.isTarget(target, '#transaction__expenditure-btn')) {
+      setTransactionType((type) => ({
         ...type,
         isExpenditure: !type.isExpenditure,
       }));
       setTransactionData();
     }
-  }
-
-  isIncomeBtn(target: HTMLElement): boolean {
-    return !!target.closest('#transaction__income-btn');
-  }
-  isExpenditureBtn(target: HTMLElement): boolean {
-    return !!target.closest('#transaction__expenditure-btn');
   }
 }
 

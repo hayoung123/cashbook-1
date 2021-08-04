@@ -53,13 +53,9 @@ export default class PaymentDropdown extends Component<void, PropsType> {
       this.props.setPayment(payment);
     }
 
-    if (this.isAddBtn(target)) {
+    if (_.isTarget(target, '.payment-add-btn')) {
       //모달창
     }
-  }
-
-  isAddBtn(target: HTMLElement): boolean {
-    return !!target.closest('.payment-add-bnt');
   }
 }
 
