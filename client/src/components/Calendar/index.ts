@@ -1,10 +1,10 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
 
 import CalendarDate from './CalendarDate';
 import CalendarDay from './CalendarDay';
 import TotalPriceInfo from './TotalPriceInfo';
-
-import './style.scss';
 
 export default class Calendar extends Component {
   setTemplate(): string {

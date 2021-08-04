@@ -1,6 +1,6 @@
-import { getNumberWithComma } from 'src/utils/price';
-
 import { COORDINATE_WIDTH, COLUMNS } from './drawCoordinatePlane';
+
+import { getNumberWithComma } from 'src/utils/price';
 
 function drawLineChart(element: HTMLElement, canvasID: string, info: number[]): void {
   const canvas: HTMLCanvasElement | null = element.querySelector(`#${canvasID}`);

@@ -1,8 +1,9 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
 
 import { CATEGORY__INFO } from 'src/constant/category';
 
-import './style.scss';
 import _ from 'src/utils/dom';
 
 interface PropsType {

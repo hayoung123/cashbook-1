@@ -1,16 +1,14 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
 import { getState } from 'src/lib/observer';
 
 import CategoryStatistics from 'src/components/CategoryStatistics';
 import Trend from 'src/components/Trend';
-import { currentCategoryState } from 'src/store/statistics';
 
-import fetchWrapper from 'src/utils/fetchWrapper';
+import { currentCategoryState, currentCategoryType } from 'src/store/statistics';
+
 import { objType } from 'src/type/type';
-
-import { STATISTICS_URL } from 'src/configs/urls';
-
-import './style.scss';
 
 interface StateType {
   current: string | null;
@@ -33,7 +31,7 @@ export default class ChartPage extends Component<StateType, void> {
   }
 
   setComponents(): objType {
-    const { currentCategory } = getState(currentCategoryState);
+    const { currentCategory } = getState<currentCategoryType>(currentCategoryState);
 
     return {
       'chart__category-statistics': new CategoryStatistics(),

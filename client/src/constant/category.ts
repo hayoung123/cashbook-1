@@ -12,7 +12,7 @@ export const CATEGORY = [
 ];
 
 export type CategoryInfoType = {
-  [key: string]: { name: string; color: string };
+  [key in string]: { name: string; color: string };
 };
 
 export const CATEGORY__INFO: CategoryInfoType = {

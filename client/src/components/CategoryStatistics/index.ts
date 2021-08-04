@@ -5,17 +5,20 @@ import CategoryBadge from 'src/components/CategoryBadge';
 
 import {
   statisticsState,
-  currentCategoryState,
-  CategoryStatisticsType,
-  trendState,
   StatisticsType,
+  currentCategoryState,
+  currentCategoryType,
+  trendState,
+  TrendType,
 } from 'src/store/statistics';
+
 import { getNumberWithComma } from 'src/utils/price';
-import drawPieChart from './drawPieChart';
-import { getCategoryColor } from 'src//utils/category';
+import { getCategoryColor } from 'src/utils/category';
 import { getTrend } from 'src/api/chart';
+import drawPieChart from './drawPieChart';
 
 import { objType } from 'src/type/type';
+import { CategoryStatisticsType } from 'src/type/statistics';
 
 export default class CategoryStatistics extends Component<void, void> {
   constructor() {
@@ -26,7 +29,8 @@ export default class CategoryStatistics extends Component<void, void> {
   }
 
   setTemplate(): string {
-    const { totalExpenditure, categoryList }: StatisticsType = getState(statisticsState);
+    const { totalExpenditure, categoryList }: StatisticsType =
+      getState<StatisticsType>(statisticsState);
 
     return `
       <section class="container box row">
@@ -66,7 +70,8 @@ export default class CategoryStatistics extends Component<void, void> {
   }
 
   setComponents(): { [key: string]: HTMLElement } {
-    const { categoryList }: { categoryList: CategoryStatisticsType[] } = getState(statisticsState);
+    const { categoryList }: { categoryList: CategoryStatisticsType[] } =
+      getState<StatisticsType>(statisticsState);
 
     const components: objType = {};
     categoryList.forEach(({ category }, idx) => {
@@ -78,7 +83,8 @@ export default class CategoryStatistics extends Component<void, void> {
   }
 
   componentDidMount(): void {
-    const { totalExpenditure, categoryList }: StatisticsType = getState(statisticsState);
+    const { totalExpenditure, categoryList }: StatisticsType =
+      getState<StatisticsType>(statisticsState);
 
     const pieInfo = categoryList.map(({ category, expenditure }) => {
       return {
@@ -103,14 +109,14 @@ export default class CategoryStatistics extends Component<void, void> {
       if (button.tagName === 'TR') {
         button.classList.add('selected');
 
-        const { categoryList }: StatisticsType = getState(statisticsState);
+        const { categoryList }: StatisticsType = getState<StatisticsType>(statisticsState);
         const currentCategory = categoryList[+button.id].category;
 
-        setState(currentCategoryState)({ currentCategory });
+        setState<currentCategoryType>(currentCategoryState)({ currentCategory });
         const t = await getTrend(currentCategory);
         if (t.success) {
           const yearlyTrend = t.response.map((v: number) => Math.abs(v));
-          setState(trendState)({ yearlyTrend });
+          setState<TrendType>(trendState)({ yearlyTrend });
         }
       }
     } catch (err) {

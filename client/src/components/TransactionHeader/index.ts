@@ -1,44 +1,35 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
 import { getState, setState } from 'src/lib/observer';
 
-import {
-  transactionPriceType,
-  transactionPriceTypeState,
-  transactionState,
-} from 'src/store/transaction';
-
 import activePicker from 'public/assets/icon/activePicker.svg';
 import inActivePicker from 'public/assets/icon/inActivePicker.svg';
+
+import {
+  transactionPriceTypeState,
+  transactionPriceType,
+  transactionState,
+  transactionType,
+} from 'src/store/transaction';
 
 import _ from 'src/utils/dom';
 import { setTransactionData } from 'src/utils/dataSetting';
 import { getNumberWithComma } from 'src/utils/price';
 
-import './style.scss';
-
-interface TransactionInfoType {
-  total: number;
-  price: {
-    income: number;
-    expenditure: number;
-  };
-}
-
 export default class TransactionHeader extends Component {
-  //TODO: 리팩토링 - setState타입을 설정해주기
-  setType: (newState: (arg: transactionPriceType) => transactionPriceType) => void;
   constructor() {
     super();
     this.keys = [transactionPriceTypeState, transactionState];
-    this.setType = setState(transactionPriceTypeState);
     this.subscribe();
   }
   addEvent(): void {
     _.onEvent(this, 'click', this.handleClick.bind(this));
   }
   setTemplate(): string {
-    const { isIncome, isExpenditure } = getState(transactionPriceTypeState);
-    const { totalCount, totalIncome, totalExpenditure } = getState(transactionState);
+    const { isIncome, isExpenditure } = getState<transactionPriceType>(transactionPriceTypeState);
+    const { totalCount, totalIncome, totalExpenditure } =
+      getState<transactionType>(transactionState);
 
     return `
       <h2 class="transaction__total" >전체 내역 ${totalCount}건</h2>
@@ -57,14 +48,15 @@ export default class TransactionHeader extends Component {
 
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
+    const setType = setState<transactionPriceType>(transactionPriceTypeState);
 
     if (this.isIncomeBtn(target)) {
-      this.setType((type) => ({ ...type, isIncome: !type.isIncome }));
+      setType((type) => ({ ...type, isIncome: !type.isIncome }));
       setTransactionData();
     }
 
     if (this.isExpenditureBtn(target)) {
-      this.setType((type) => ({
+      setType((type) => ({
         ...type,
         isExpenditure: !type.isExpenditure,
       }));

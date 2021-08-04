@@ -1,3 +1,5 @@
+import './style.scss';
+
 import { getState, setState } from 'src/lib/observer';
 import Component from 'src/lib/component';
 
@@ -7,20 +9,18 @@ import historyIcon from 'public/assets/icon/historyIcon.svg';
 import leftArrow from 'public/assets/icon/leftArrow.svg';
 import rightArrow from 'public/assets/icon/rightArrow.svg';
 
+import { dateState, DateType } from 'src/store/transaction';
+
+import { router } from 'src/..';
 import _ from 'src/utils/dom';
 import { setTransactionData } from 'src/utils/dataSetting';
 import { getNextMonth, getPrevMonth } from 'src/utils/date';
-import { dateState, DateType } from 'src/store/transaction';
-
-import { router } from '../../../index';
-
-import './style.scss';
 
 export default class Header extends Component {
   setDate: (newState: DateType) => void;
   constructor() {
     super();
-    this.setDate = setState(dateState);
+    this.setDate = setState<DateType>(dateState);
     this.keys = [dateState];
     this.subscribe();
     this.addClass('header');
@@ -31,7 +31,7 @@ export default class Header extends Component {
   }
 
   setTemplate(): string {
-    const { year, month } = getState(dateState);
+    const { year, month } = getState<DateType>(dateState);
     const path = location.pathname;
     const isHistory = path === '/';
     const isCalendar = path === '/calendar';
@@ -70,7 +70,7 @@ export default class Header extends Component {
   //TODO: 해결되지 않는 타입 무한굴래... as를 안쓰고 어떤식으로 해결해야될까...??
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
-    const currentDate = getState(dateState);
+    const currentDate = getState<DateType>(dateState);
 
     if (this.isLeftArrow(target)) {
       this.setDate(getPrevMonth(currentDate));

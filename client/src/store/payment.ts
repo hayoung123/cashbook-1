@@ -1,8 +1,8 @@
 import { initState } from 'src/lib/observer';
 
-export type PaymentType = Array<string>;
+export type PaymentType = string[];
 
-export const userPaymentState = initState({
+export const userPaymentState = initState<PaymentType>({
   key: 'user payment state',
   defaultValue: [],
 });

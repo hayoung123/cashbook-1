@@ -1,9 +1,12 @@
-import { pageState } from 'src/store/page';
-import { routesType, paramsType } from './type';
 import { setState } from 'src/lib/observer';
+import { PageStateType } from 'src/store/page';
+
+import { routesType, paramsType } from './type';
+
+export * from './type';
 
 type PropsType = {
-  routes: { [key: string]: Object };
+  routes: { [key: string]: any };
   pageState: string;
 };
 
@@ -13,25 +16,24 @@ export default class Router {
   currIndex: number;
   constructor({ routes, pageState }: PropsType) {
     this.routes = routes;
-    this.setPage = setState(pageState);
+    this.setPage = setState<PageStateType>(pageState);
     this.currIndex = 0;
 
     this.init();
   }
 
-  init() {
+  init(): void {
     history.replaceState({ index: 0 }, '');
     window.addEventListener('popstate', this.handlePopstate.bind(this));
-    this.handlePopstate();
   }
 
-  setRoutes(routes: { [key: string]: Object }): void {
+  setRoutes(routes: { [key: string]: any }): void {
     this.routes = routes;
     this.handlePopstate();
   }
 
   // 브라우저 뒤로, 앞으로가기
-  handlePopstate() {
+  handlePopstate(): void {
     const path = location.pathname;
 
     //TODO: 클래스의 타입이 뭔지 알아보고 적용해봐야된다.
@@ -46,23 +48,28 @@ export default class Router {
       }
     }
 
-    this.setPage({ Page, params, direction: this.isBack(history.state.index) ? 'left' : 'right' });
+    if (!Page) {
+      this.replace('/');
+      return;
+    }
+
+    this.setPage({ Page, params });
     this.currIndex = history.state.index;
   }
 
   // 화면 앞으로가기
-  push(pathname: string) {
+  push(pathname: string): void {
     history.pushState({ index: this.currIndex + 1 }, '', pathname);
     this.handlePopstate();
   }
 
-  replace(pathname: string) {
+  replace(pathname: string): void {
     history.replaceState({ index: this.currIndex }, '', pathname);
     this.handlePopstate();
   }
 
   // 화면 뒤로가기
-  pop() {
+  pop(): void {
     if (!this.currIndex) {
       history.pushState({ index: this.currIndex - 1 }, '', '/');
       this.handlePopstate();
@@ -72,7 +79,7 @@ export default class Router {
   }
 
   //
-  match(routePath: string, path: string) {
+  match(routePath: string, path: string): boolean {
     const routeChunks = routePath.split('/');
     const chunks = path.split('/');
 
@@ -106,7 +113,7 @@ export default class Router {
     return params;
   }
 
-  isBack(index: number) {
+  isBack(index: number): boolean {
     return index < this.currIndex;
   }
 }

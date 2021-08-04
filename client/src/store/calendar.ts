@@ -1,20 +1,18 @@
 import { initState } from 'src/lib/observer';
 
+import { TotalPriceType } from 'src/type/statistics';
+
 export interface CalendarStatisticsType {
   totalIncome: number;
   totalExpenditure: number;
   totalPrice: number;
   statistics: {
-    [key: number]: {
-      income: number;
-      expenditure: number;
-      total: number;
-    };
+    [key: number]: TotalPriceType;
   };
 }
 
-export const calendarDataState = initState({
-  key: 'calendar date state',
+export const calendarDataState = initState<CalendarStatisticsType>({
+  key: 'calendar statistics state',
   defaultValue: {
     totalIncome: 0,
     totalExpenditure: 0,

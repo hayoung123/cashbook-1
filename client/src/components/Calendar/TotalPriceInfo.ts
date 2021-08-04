@@ -1,8 +1,9 @@
 import Component from 'src/lib/component';
 import { getState } from 'src/lib/observer';
 
+import { calendarDataState, CalendarStatisticsType } from 'src/store/calendar';
+
 import { getNumberWithComma } from 'src/utils/price';
-import { calendarDataState } from 'src/store/calendar';
 
 export default class TotalPriceInfo extends Component {
   constructor() {
@@ -11,7 +12,8 @@ export default class TotalPriceInfo extends Component {
     this.subscribe();
   }
   setTemplate(): string {
-    const { totalIncome, totalExpenditure, totalPrice } = getState(calendarDataState);
+    const { totalIncome, totalExpenditure, totalPrice } =
+      getState<CalendarStatisticsType>(calendarDataState);
 
     return `
       <div>

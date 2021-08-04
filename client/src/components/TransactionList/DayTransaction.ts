@@ -1,4 +1,4 @@
-import Component from 'src/lib/component';
+import Component, { ComponentType } from 'src/lib/component';
 
 import TransactionRecord from './TransactionRecord';
 
@@ -6,13 +6,9 @@ import { getDate } from 'src/utils/date';
 import { getNumberWithComma } from 'src/utils/price';
 
 import { objType } from 'src/type/type';
-import { DayRecordsType, RecordType } from 'src/store/transaction';
+import { DayRecordsType, RecordType } from 'src/type/transaction';
 
-type StateType = void;
-
-type ComponentType = { [key: string]: HTMLElement };
-
-export default class DayTransaction extends Component<StateType, DayRecordsType> {
+export default class DayTransaction extends Component<void, DayRecordsType> {
   constructor(props: DayRecordsType) {
     super(props);
   }

@@ -1,13 +1,16 @@
-export interface PaymentType {
+export interface RecordInfoType {
+  date: string;
   category: string;
   title: string;
-  method: string;
+  payment: string;
   price: number;
 }
 
-export type DayTransactionType = {
-  date: string;
-  transaction: Array<PaymentType>;
-};
+export interface RecordType extends RecordInfoType {
+  id: string;
+}
 
-export type TransactionType = Array<DayTransactionType>;
+export interface DayRecordsType {
+  date: string;
+  transaction: RecordType[];
+}

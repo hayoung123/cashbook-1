@@ -1,12 +1,10 @@
+import './style.scss';
+
 import Component from 'src/lib/component';
 
 import { CATEGORY__INFO } from 'src/constant/category';
 
-import './style.scss';
-
-type CategoryType = {
-  category: string;
-};
+import { CategoryType } from 'src/type/category';
 
 export default class CategoryBadge extends Component<void, CategoryType> {
   constructor(props: CategoryType) {

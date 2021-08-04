@@ -5,9 +5,9 @@ import TransationList from 'src/components/TransactionList';
 
 import {
   currentCategoryState,
+  currentCategoryType,
   trendState,
   TrendType,
-  currentCategoryType,
 } from 'src/store/statistics';
 import drawCoordinatePlane from './drawCoordinatePlane';
 import drawLineChart from './drawLineChart';
@@ -21,7 +21,8 @@ export default class Trend extends Component<void, void> {
   }
 
   setTemplate(): string {
-    const { currentCategory }: currentCategoryType = getState(currentCategoryState);
+    const { currentCategory }: currentCategoryType =
+      getState<currentCategoryType>(currentCategoryState);
 
     return `
       <section class="container box">
@@ -41,7 +42,7 @@ export default class Trend extends Component<void, void> {
   }
 
   componentDidMount(): void {
-    const { yearlyTrend }: TrendType = getState(trendState);
+    const { yearlyTrend }: TrendType = getState<TrendType>(trendState);
 
     drawCoordinatePlane(this, 'line-chart');
     drawLineChart(this, 'line-chart', yearlyTrend);
