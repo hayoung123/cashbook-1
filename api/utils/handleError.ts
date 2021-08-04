@@ -22,8 +22,7 @@ export const checkInvalidCategory = (category: string): void => {
 };
 
 export const checkInvalidPrice = (price: number): void => {
-  const numberRegex = /^[0-9]/g;
-  if (numberRegex.test(price + '')) {
+  if (isNaN(price)) {
     throw errorGenerator({
       code: 'req/invalid-price',
       message: 'Required valid price',
