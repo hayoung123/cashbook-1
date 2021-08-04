@@ -36,7 +36,6 @@ payment-add-popup {
 
     .popup__error {
       height: 30px;
-      padding-left: 3px;
       color: var(--error-color);
       font-size: var(--bold-medium-size);
     }
@@ -46,14 +45,16 @@ payment-add-popup {
       justify-content: space-between;
       cursor: pointer;
 
+      & > div {
+        padding: 1px;
+      }
+
       .popup__cancle-btn {
         color: var(--label-color);
-        padding-left: 3px;
       }
 
       .popup__submit-btn {
         color: var(--primary-dark-color);
-        padding-right: 3px;
       }
     }
   }
