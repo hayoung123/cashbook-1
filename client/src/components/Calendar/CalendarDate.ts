@@ -1,8 +1,8 @@
 import Component from 'src/lib/component';
 import { getState } from 'src/lib/observer';
 
-import { dateState } from 'src/store/transaction';
-import { calendarDataState } from 'src/store/calendar';
+import { dateState, DateType } from 'src/store/transaction';
+import { calendarDataState, CalendarStatisticsType } from 'src/store/calendar';
 
 import { getMonthData, isToday } from 'src/utils/calendar';
 import { getNumberWithComma } from 'src/utils/price';
@@ -20,9 +20,9 @@ export default class CalendarDate extends Component {
     this.subscribe();
   }
   setTemplate(): string {
-    const date = getState(dateState);
+    const date = getState<DateType>(dateState);
     const monthArr = getMonthData(date);
-    const { statistics: priceInfo } = getState(calendarDataState);
+    const { statistics: priceInfo } = getState<CalendarStatisticsType>(calendarDataState);
 
     const monthTemplate: string = monthArr.reduce((acc, weekArr) => {
       const weekTemplate = weekArr.reduce((acc, day) => {
@@ -30,13 +30,13 @@ export default class CalendarDate extends Component {
           ? 'today-date'
           : '';
 
-        const priceTemplate = this.priceTemplate(priceInfo[day ? day : '']);
+        const priceTemplate = this.priceTemplate(priceInfo[day ?? 0]);
 
         return (
           acc +
           `<td class=${tdClass}>
             ${priceTemplate}
-            <div class='calendar-date__date'>${day ? day : ''}</div>
+            <div class='calendar-date__date'>${day ?? ''}</div>
            </td>`
         );
       }, '');

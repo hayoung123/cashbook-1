@@ -18,7 +18,7 @@ export interface currentCategoryType {
   currentCategory: string;
 }
 
-export const statisticsState = initState({
+export const statisticsState = initState<StatisticsType>({
   key: 'statisticsState',
   defaultValue: {
     totalExpenditure: 0,
@@ -26,14 +26,14 @@ export const statisticsState = initState({
   },
 });
 
-export const trendState = initState({
+export const trendState = initState<TrendType>({
   key: 'trendState',
   defaultValue: {
     yearlyTrend: [],
   },
 });
 
-export const currentCategoryState = initState({
+export const currentCategoryState = initState<currentCategoryType>({
   key: 'currentCategoryState',
   defaultValue: {
     currentCategory: '',

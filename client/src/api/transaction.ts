@@ -2,13 +2,18 @@ import { getState } from 'src/lib/observer';
 
 import { TRANSACTION_URL } from 'src/configs/urls';
 
-import { dateState, transactionPriceTypeState } from 'src/store/transaction';
+import {
+  DateType,
+  dateState,
+  transactionPriceType,
+  transactionPriceTypeState,
+} from 'src/store/transaction';
 
 import fetchWrapper from 'src/utils/fetchWrapper';
 
 export const getTransaction = async (): Promise<{ success: boolean; response: any }> => {
-  const { year, month } = getState(dateState);
-  const { isIncome, isExpenditure } = getState(transactionPriceTypeState);
+  const { year, month } = getState<DateType>(dateState);
+  const { isIncome, isExpenditure } = getState<transactionPriceType>(transactionPriceTypeState);
 
   const query = `year=${year}&month=${month}&isIncome=${isIncome}&isExpenditure=${isExpenditure}`;
 

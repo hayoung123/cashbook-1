@@ -1,9 +1,9 @@
 import { getState, setState } from 'src/lib/observer';
 
-import { pageState } from 'src/store/page';
-import { transactionState } from 'src/store/transaction';
-import { calendarDataState } from 'src/store/calendar';
-import { statisticsState, CategoryStatisticsType } from 'src/store/statistics';
+import { pageState, PageStateType } from 'src/store/page';
+import { transactionState, transactionType } from 'src/store/transaction';
+import { calendarDataState, CalendarStatisticsType } from 'src/store/calendar';
+import { statisticsState, StatisticsType, CategoryStatisticsType } from 'src/store/statistics';
 
 import { getTransaction } from 'src/api/transaction';
 import { getCalendarStatistics } from 'src/api/calendar';
@@ -13,28 +13,28 @@ import { getChartStatistics } from 'src/api/chart';
 
 //TODO 함수 위치 변경
 export async function setTransactionData(): Promise<any> {
-  const { Page } = getState(pageState);
+  const { Page } = getState<PageStateType>(pageState);
   const pageName = Page.name;
   //TODO에러처리
 
   if (pageName === 'MainPage') {
     const { success, response } = await getTransaction();
-    if (success) setState(transactionState)(response);
+    if (success) setState<transactionType>(transactionState)(response);
   }
   if (pageName === 'CalendarPage') {
     const { success, response } = await getCalendarStatistics();
-    if (success) setState(calendarDataState)(response);
+    if (success) setState<CalendarStatisticsType>(calendarDataState)(response);
   }
   if (pageName === 'ChartPage') {
     const { success, response } = await getChartStatistics();
     if (success) {
       const state = parseCategoryList(response);
-      setState(statisticsState)(state);
+      setState<StatisticsType>(statisticsState)(state);
     }
   }
 }
 
-function parseCategoryList(data: { [key: string]: number }) {
+function parseCategoryList(data: { [key: string]: number }): StatisticsType {
   const a = Object.entries(data).sort((a, b) => +a[1] - +b[1]);
   let totalExpenditure = 0;
   const categoryList: CategoryStatisticsType[] = [];

@@ -13,8 +13,8 @@ export interface CalendarStatisticsType {
   };
 }
 
-export const calendarDataState = initState({
-  key: 'calendar date state',
+export const calendarDataState = initState<CalendarStatisticsType>({
+  key: 'calendar statistics state',
   defaultValue: {
     totalIncome: 0,
     totalExpenditure: 0,

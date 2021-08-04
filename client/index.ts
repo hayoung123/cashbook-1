@@ -20,7 +20,7 @@ const defaultRoutes = unauthorizedRoutes;
 export const router = new Router({ routes: defaultRoutes, pageState });
 
 const setRoute = () => {
-  const isAuthorized = getState(isLoggedInState);
+  const isAuthorized = getState<boolean>(isLoggedInState);
   const routes = isAuthorized ? authorizedRoutes : unauthorizedRoutes;
   router.setRoutes(routes);
 };
@@ -31,10 +31,10 @@ async function init() {
   try {
     const res = await fetchWrapper(AUTH_URL, 'HEAD');
     if (res.success) {
-      setState(isLoggedInState)(true);
+      setState<boolean>(isLoggedInState)(true);
       setRoute();
     } else {
-      setState(isLoggedInState)(false);
+      setState<boolean>(isLoggedInState)(false);
       setRoute();
     }
 

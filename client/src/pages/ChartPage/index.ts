@@ -6,7 +6,7 @@ import { getState } from 'src/lib/observer';
 import CategoryStatistics from 'src/components/CategoryStatistics';
 import Trend from 'src/components/Trend';
 
-import { currentCategoryState } from 'src/store/statistics';
+import { currentCategoryState, currentCategoryType } from 'src/store/statistics';
 
 import { objType } from 'src/type/type';
 
@@ -31,7 +31,7 @@ export default class ChartPage extends Component<StateType, void> {
   }
 
   setComponents(): objType {
-    const { currentCategory } = getState(currentCategoryState);
+    const { currentCategory } = getState<currentCategoryType>(currentCategoryState);
 
     return {
       'chart__category-statistics': new CategoryStatistics(),

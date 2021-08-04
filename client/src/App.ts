@@ -3,9 +3,9 @@ import { getState } from 'src/lib/observer';
 
 import Header from 'src/components/Header';
 
-import { pageState, isLoggedInState } from 'src/store/page';
+import { pageState, isLoggedInState, PageStateType } from 'src/store/page';
 
-import { setTransactionData } from './utils/dataSetting';
+import { setTransactionData } from 'src/utils/dataSetting';
 
 type objType = {
   [key: string]: any;
@@ -20,7 +20,7 @@ export default class App extends Component<void, void> {
   }
 
   setTemplate(): string {
-    const isLoggedIn = getState(isLoggedInState);
+    const isLoggedIn = getState<boolean>(isLoggedInState);
 
     return `
       ${isLoggedIn ? `<div id="app_header"></div>` : ''}
@@ -29,7 +29,7 @@ export default class App extends Component<void, void> {
   }
 
   setComponents(): objType {
-    const { Page } = getState(pageState);
+    const { Page } = getState<PageStateType>(pageState);
     return {
       page: new Page(),
       app_header: new Header(),

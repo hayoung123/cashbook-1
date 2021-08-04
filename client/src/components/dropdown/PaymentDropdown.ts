@@ -5,7 +5,7 @@ import { getState } from 'src/lib/observer';
 
 import xBtn from 'public/assets/icon/xBtn.svg';
 
-import { userPaymentState } from 'src/store/payment';
+import { userPaymentState, PaymentType } from 'src/store/payment';
 
 import _ from 'src/utils/dom';
 
@@ -21,12 +21,12 @@ export default class PaymentDropdown extends Component<void, PropsType> {
     this.addClass('dropdown');
   }
 
-  addEvent() {
+  addEvent(): void {
     _.onEvent(this, 'click', this.handleClick.bind(this));
   }
 
   setTemplate(): string {
-    const userPayment: Array<string> = getState(userPaymentState);
+    const userPayment: Array<string> = getState<PaymentType>(userPaymentState);
     const paymentTemplate = userPayment.reduce((acc, cur) => {
       return (acc += `
             <div class='payment-item'>
