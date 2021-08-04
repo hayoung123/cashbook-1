@@ -31,6 +31,7 @@ interface PropsType {
 }
 
 interface StateType {
+  [key: string]: string | boolean;
   isIncome: boolean;
   isAbleSubmit: boolean;
   isOpenPayment: boolean;
@@ -146,39 +147,43 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
 
   setComponents(): objType {
     return {
-      'form__category-dropdown': new CategoryDropdown({ setCategory: this.setCategory.bind(this) }),
-      'form__payment-dropdown': new PaymentDropdown({ setPayment: this.setPayment.bind(this) }),
+      'form__category-dropdown': new CategoryDropdown({
+        setCategory: this.dropdownCallback.bind(this, 'category', 'isOpenCategory'),
+      }),
+      'form__payment-dropdown': new PaymentDropdown({
+        setPayment: this.dropdownCallback.bind(this, 'payment', 'isOpenPayment'),
+      }),
     };
   }
 
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
     //제출 버튼
-    if (this.isSubmitBtn(target)) {
+    if (_.isTarget(target, '.transaction__form-submit-btn')) {
       this.submitForm();
       //성공시 set Data
       return;
     }
 
     //수입,지출 버튼
-    if (this.isTransactionTypeBtn(target)) {
+    if (_.isTarget(target, '.transaction__type-btn')) {
       const isIncome = target.textContent === '수입';
       this.setState({ isIncome });
     }
 
     //카테고리 드롭다운 버튼
-    if (this.isCategoryDropdownBtn(target)) {
-      this.toggleCategoryDropdown();
+    if (_.isTarget(target, '.category__dropdown-btn')) {
+      this.toggleDropdown('isOpenCategory', 'transaction__category');
     }
 
     //결제수단 드롭다운 버튼
-    if (this.isPaymentDropdownBtn(target)) {
+    if (_.isTarget(target, '.payment__dropdown-btn')) {
       this.setUserPayment();
-      this.togglePaymentDropdown();
+      this.toggleDropdown('isOpenPayment', 'transaction__method');
     }
 
     //결제수단 삭제 버튼
-    if (this.isDeleteBtn(target)) {
+    if (_.isTarget(target, '.transaction__delete-btn')) {
       this.deleteRecord();
     }
   }
@@ -187,7 +192,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   async submitForm(): Promise<void> {
     const category: string = this.state?.category || '';
     const payment: string = this.state?.payment || '';
-    const price = this.state?.isIncome ? this.price : this.price * -1;
+    const price = this.state?.isIncome ? +this.price : this.price * -1;
 
     if (!this.date || !category || !this.title || !payment || !price) return;
 
@@ -217,7 +222,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       this.clearState();
       setTransactionData();
     } else {
-      //TODO : setState({errorState:response.errorMessage})
+      // this.setState({ errorState: response.errorMessage });
     }
   }
 
@@ -233,50 +238,28 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (success) setState(userPaymentState)(response);
   }
 
-  //카테고리 드롭다운 토글
-  toggleCategoryDropdown(): void {
-    this.setState((state) => ({ isOpenCategory: !state?.isOpenCategory }));
+  // 드롭다운 토글
+  toggleDropdown(stateKey: string, className: string): void {
+    if (!this.state) return;
 
-    if (this.state?.isOpenCategory) {
+    this.setState({ [stateKey]: !this.state[stateKey] });
+    if (this.state[stateKey]) {
       const handleMousedown = (e: Event) => {
         const documentTarget = e.target as HTMLElement;
 
-        if (documentTarget.closest('.transaction__category')) {
-          return;
-        }
+        if (documentTarget.closest(`.${className}`)) return;
 
-        document.removeEventListener('mousedown', handleMousedown);
-        this.setState({ isOpenCategory: false });
+        document.removeEventListener('click', handleMousedown);
+        this.setState({ [stateKey]: false });
       };
-
-      document.addEventListener('mousedown', handleMousedown);
+      document.addEventListener('click', handleMousedown);
     }
   }
-  //결재수단 드롭다운 토글
-  togglePaymentDropdown(): void {
-    this.setState((state) => ({ isOpenPayment: !state?.isOpenPayment }));
-    if (this.state?.isOpenPayment) {
-      const handleMousedown = (e: Event) => {
-        const documentTarget = e.target as HTMLElement;
 
-        if (documentTarget.closest('.transaction__method')) return;
-
-        document.removeEventListener('mousedown', handleMousedown);
-        this.setState({ isOpenPayment: false });
-      };
-      document.addEventListener('mousedown', handleMousedown);
-    }
-  }
-  //카테고리 드롭다운 아이템 클릭 콜백함수
-  setCategory(category: string): void {
-    this.setState({ category });
-    this.setState({ isOpenCategory: false });
-    if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
-  }
-  //결제수단 드롭다운 아이템 클릭 콜백함수
-  setPayment(payment: string): void {
-    this.setState({ payment });
-    this.setState({ isOpenPayment: false });
+  // 드롭다운 아이템 클릭 콜백함수
+  dropdownCallback(type: string, stateKey: string, value: string): void {
+    this.setState({ [type]: value });
+    this.setState({ [stateKey]: false });
     if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
   }
 
@@ -296,10 +279,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (this.state?.isAbleSubmit !== this.checkAbleSubmit()) {
       this.setState({ isAbleSubmit: this.checkAbleSubmit() });
       const input = _.$(`input[name=${target.name}]`, this) as HTMLInputElement;
-      input.focus();
-      input.type = 'text';
-      input.setSelectionRange(1, 1);
-      input.type = 'number';
+      _.focusInput(input);
     }
   }
 
@@ -314,23 +294,6 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     this.title = '';
     this.date = '';
     this.setState({ isIncome: true, category: '', payment: '', errorState: '' });
-  }
-
-  isSubmitBtn(target: HTMLElement): boolean {
-    return !!target.closest('.transaction__form-submit-btn');
-  }
-  isTransactionTypeBtn(target: HTMLElement): boolean {
-    return !!target.closest('.transaction__type-btn');
-  }
-
-  isCategoryDropdownBtn(target: HTMLElement): boolean {
-    return !!target.closest('.category__dropdown-btn');
-  }
-  isPaymentDropdownBtn(target: HTMLElement): boolean {
-    return !!target.closest('.payment__dropdown-btn');
-  }
-  isDeleteBtn(target: HTMLElement): boolean {
-    return !!target.closest('.transaction__delete-btn');
   }
 }
 
