@@ -1,21 +1,10 @@
 import { initState } from 'src/lib/observer';
 
-export interface CategoryStatisticsType {
-  category: string;
-  expenditure: number;
-}
+import { CategoryStatisticsType } from 'src/type/statistics';
 
 export interface StatisticsType {
   totalExpenditure: number;
   categoryList: CategoryStatisticsType[];
-}
-
-export interface TrendType {
-  yearlyTrend: number[];
-}
-
-export interface currentCategoryType {
-  currentCategory: string;
 }
 
 export const statisticsState = initState<StatisticsType>({
@@ -26,12 +15,20 @@ export const statisticsState = initState<StatisticsType>({
   },
 });
 
+export interface TrendType {
+  yearlyTrend: number[];
+}
+
 export const trendState = initState<TrendType>({
   key: 'trendState',
   defaultValue: {
     yearlyTrend: [],
   },
 });
+
+export interface currentCategoryType {
+  currentCategory: string;
+}
 
 export const currentCategoryState = initState<currentCategoryType>({
   key: 'currentCategoryState',

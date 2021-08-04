@@ -21,9 +21,11 @@ const DEMO_EMAIL = 'test@woowahan.com';
 const DEMO_PASSWORD = '13579';
 
 export default class SignInPage extends Component {
+  setLoggedInState: (arg: boolean) => void;
   constructor() {
     super();
     this.addClass('page');
+    this.setLoggedInState = setState<boolean>(isLoggedInState);
   }
 
   setTemplate(): string {
@@ -87,7 +89,7 @@ export default class SignInPage extends Component {
       const { accessToken } = res.response;
       localStorage.setItem('_at', accessToken);
 
-      setState(isLoggedInState)(true);
+      this.setLoggedInState(true);
     } catch (err) {
       console.log(err);
     }
@@ -162,7 +164,7 @@ export default class SignInPage extends Component {
       const { accessToken } = res.response;
       localStorage.setItem('_at', accessToken);
 
-      setState(isLoggedInState)(true);
+      this.setLoggedInState(true);
     } catch (err) {
       console.log(err);
     }

@@ -1,8 +1,8 @@
-type createElemType = {
+interface createElemType {
   tagName: string;
-  classNames?: Array<string>;
+  classNames?: string[];
   value?: string;
-};
+}
 
 type targetType = HTMLElement | Document;
 
@@ -25,6 +25,16 @@ const _ = {
     element.classList.add(...classNames);
     if (value) element.innerHTML = value;
     return element;
+  },
+  focusInput: (input: HTMLInputElement): void => {
+    input.focus();
+    const inputType = input.type;
+    if (inputType === 'number') input.type = 'text';
+    input.setSelectionRange(input.value.length, input.value.length);
+    if (inputType === 'number') input.type = 'number';
+  },
+  isTarget: (target: HTMLElement, selector: string): boolean => {
+    return !!target.closest(selector);
   },
 };
 

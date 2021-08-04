@@ -7,16 +7,12 @@ import { calendarDataState, CalendarStatisticsType } from 'src/store/calendar';
 import { getMonthData, isToday } from 'src/utils/calendar';
 import { getNumberWithComma } from 'src/utils/price';
 
-interface TotalPriceType {
-  income: number;
-  expenditure: number;
-  total: number;
-}
+import { TotalPriceType } from 'src/type/statistics';
 
 export default class CalendarDate extends Component {
   constructor() {
     super();
-    this.keys = [dateState, calendarDataState];
+    this.keys = [calendarDataState];
     this.subscribe();
   }
   setTemplate(): string {

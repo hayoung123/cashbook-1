@@ -29,11 +29,16 @@ export default class App extends Component<void, void> {
   }
 
   setComponents(): objType {
-    const { Page } = getState<PageStateType>(pageState);
-    return {
-      page: new Page(),
-      app_header: new Header(),
-    };
+    try {
+      const { Page } = getState<PageStateType>(pageState);
+      return {
+        page: new Page(),
+        app_header: new Header(),
+      };
+    } catch (err) {
+      console.log(err);
+      return {};
+    }
   }
   componentDidMount(): void {
     setTransactionData();

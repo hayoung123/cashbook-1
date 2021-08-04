@@ -1,14 +1,9 @@
-export interface calendarDateType {
+interface MonthType {
   year: number;
   month: number;
-}
-interface DateType {
-  year: number;
-  month: number;
-  date: number;
 }
 
-export const getMonthData = ({ year, month }: calendarDateType): (number | null)[][] => {
+export const getMonthData = ({ year, month }: MonthType): (number | null)[][] => {
   const monthArr: (number | null)[][] = [];
 
   const firstDay: number = new Date(year, month - 1).getDay();
@@ -31,6 +26,12 @@ export const getMonthData = ({ year, month }: calendarDateType): (number | null)
 
   return monthArr;
 };
+
+interface DateType {
+  year: number;
+  month: number;
+  date: number;
+}
 
 export const isToday = ({ year, month, date }: DateType): boolean => {
   const dateObj = new Date();

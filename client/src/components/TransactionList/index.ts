@@ -5,7 +5,6 @@ import { getState } from 'src/lib/observer';
 
 import DayTransaction from './DayTransaction';
 
-// TODO : 타입분리
 import { transactionState, transactionType } from 'src/store/transaction';
 
 import { objType } from 'src/type/type';
