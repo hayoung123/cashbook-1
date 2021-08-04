@@ -16,7 +16,7 @@ import { CategoryStatisticsType } from 'src/type/statistics';
 //TODO 함수 위치 변경
 export async function setTransactionData(): Promise<any> {
   const { Page } = getState<PageStateType>(pageState);
-  const pageName = Page.name;
+  const pageName = Page?.name;
   //TODO에러처리
 
   if (pageName === 'MainPage') {

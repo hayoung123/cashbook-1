@@ -16,7 +16,6 @@ const root: HTMLElement | null = document.querySelector('#root');
 
 const defaultRoutes = unauthorizedRoutes;
 
-// // TODO: '/'외의 경로에서 로그인 상태가 바뀔 경우 새로고침 하면 흰 화면이 나타나는 현상 해결
 export const router = new Router({ routes: defaultRoutes, pageState });
 
 const setRoute = () => {

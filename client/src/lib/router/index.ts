@@ -6,7 +6,7 @@ import { routesType, paramsType } from './type';
 export * from './type';
 
 type PropsType = {
-  routes: { [key: string]: Object };
+  routes: { [key: string]: any };
   pageState: string;
 };
 
@@ -25,10 +25,9 @@ export default class Router {
   init(): void {
     history.replaceState({ index: 0 }, '');
     window.addEventListener('popstate', this.handlePopstate.bind(this));
-    this.handlePopstate();
   }
 
-  setRoutes(routes: { [key: string]: Object }): void {
+  setRoutes(routes: { [key: string]: any }): void {
     this.routes = routes;
     this.handlePopstate();
   }
@@ -47,6 +46,11 @@ export default class Router {
         params = this.parseParams(routePath, path);
         break;
       }
+    }
+
+    if (!Page) {
+      this.replace('/');
+      return;
     }
 
     this.setPage({ Page, params });
