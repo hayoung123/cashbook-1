@@ -12,6 +12,7 @@ import { CATEGORY__INFO } from 'src/constant/category';
 
 import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
 import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
+import PaymentAddPupup from 'src/components/popup/PaymentAddPopup';
 
 import { userPaymentState } from 'src/store/payment';
 
@@ -141,6 +142,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
       </div>
     </div>
     <div class='transaction-form__error'>${this.state.errorState}</div>
+    <div id="payment__add-popup"></div>
     `;
   }
 
@@ -148,6 +150,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     return {
       'form__category-dropdown': new CategoryDropdown({ setCategory: this.setCategory.bind(this) }),
       'form__payment-dropdown': new PaymentDropdown({ setPayment: this.setPayment.bind(this) }),
+      'payment__add-popup': new PaymentAddPupup(),
     };
   }
 
