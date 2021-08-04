@@ -6,13 +6,17 @@ interface OptionType {
   uid: string;
 }
 
-const ACCESS_TOKEN_EXPIRE_DATE = Math.floor(Date.now() / 1000) + 60 * 60 * 12;
-const REFRESH_TOKEN_EXPIRE_DATE = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
+type TokenType = 'access' | 'refresh';
 
-const secret = process.env.TOKEN_SECRET || '';
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || '';
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || '';
 
-export const createToken = (type: 'access' | 'refresh', option: OptionType): string => {
+export const createToken = (type: TokenType, option: OptionType): string => {
+  const ACCESS_TOKEN_EXPIRE_DATE = Math.floor(Date.now() / 1000) + 30;
+  const REFRESH_TOKEN_EXPIRE_DATE = Math.floor(Date.now() / 1000) + 60 * 1;
+
   const expireDate = type === 'access' ? ACCESS_TOKEN_EXPIRE_DATE : REFRESH_TOKEN_EXPIRE_DATE;
+  const secret = type === 'access' ? ACCESS_TOKEN_SECRET : REFRESH_TOKEN_SECRET;
 
   const token = jwt.sign(
     {
@@ -25,7 +29,8 @@ export const createToken = (type: 'access' | 'refresh', option: OptionType): str
   return token;
 };
 
-export const decodeToken = (token: string): JwtPayload => {
+export const decodeToken = (type: TokenType, token: string): JwtPayload => {
+  const secret = type === 'access' ? ACCESS_TOKEN_SECRET : REFRESH_TOKEN_SECRET;
   const decoded = jwt.verify(token, secret);
 
   if (typeof decoded === 'string') {
@@ -39,9 +44,11 @@ export const decodeToken = (token: string): JwtPayload => {
 };
 
 export const verifyToken = (
+  type: TokenType,
   token: string,
   errCallback: (err: VerifyErrors | null) => void,
 ): void => {
+  const secret = type === 'access' ? ACCESS_TOKEN_SECRET : REFRESH_TOKEN_SECRET;
   jwt.verify(token, secret, (err) => {
     errCallback(err);
   });
@@ -52,8 +59,9 @@ export const getAccessToken = (authorization: string | void): string => {
   return authorization.split('Bearer ')[1];
 };
 
-export const checkTokenExpiration = (token: string): Promise<boolean> => {
+export const checkTokenExpiration = (type: TokenType, token: string): Promise<boolean> => {
   return new Promise((resolve, reject) => {
+    const secret = type === 'access' ? ACCESS_TOKEN_SECRET : REFRESH_TOKEN_SECRET;
     jwt.verify(token, secret, (err: VerifyErrors | null) => {
       if (err?.name === 'TokenExpiredError') {
         resolve(true);
