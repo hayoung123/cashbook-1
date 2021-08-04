@@ -19,7 +19,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
-    const { uid: userId } = decodeToken(accessToken);
+    const { uid: userId } = decodeToken('access', accessToken);
 
     const result = await paymentService.getUserPayment(userId);
     res.status(200).json(result);
@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
 router.delete('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
-    const { uid: userId } = decodeToken(accessToken);
+    const { uid: userId } = decodeToken('access', accessToken);
 
     const { payment } = req.body;
 
@@ -56,7 +56,7 @@ router.delete('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
-    const { uid: userId } = decodeToken(accessToken);
+    const { uid: userId } = decodeToken('access', accessToken);
 
     const { payment } = req.body;
 

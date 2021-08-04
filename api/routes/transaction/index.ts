@@ -28,7 +28,7 @@ router.use('/statistics', statistics);
 router.get('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
-    const { uid: userId } = decodeToken(accessToken);
+    const { uid: userId } = decodeToken('access', accessToken);
 
     const { year, month, isIncome, isExpenditure } = req.query;
 
@@ -58,7 +58,7 @@ router.get('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
-    const { uid: userId } = decodeToken(accessToken);
+    const { uid: userId } = decodeToken('access', accessToken);
 
     const { id: transactionId } = req.params;
 
@@ -75,7 +75,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
-    const { uid: userId } = decodeToken(accessToken);
+    const { uid: userId } = decodeToken('access', accessToken);
 
     const { date, category, title, payment, price } = req.body;
 
@@ -101,7 +101,7 @@ router.put('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
-    const { uid: userId } = decodeToken(accessToken);
+    const { uid: userId } = decodeToken('access', accessToken);
 
     const { date, category, title, payment, price } = req.body;
 

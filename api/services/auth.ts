@@ -1,6 +1,6 @@
 import { VerifyErrors } from 'jsonwebtoken';
 
-import sequelize, { db } from 'models/db';
+import { db } from 'models/db';
 
 import { createToken, verifyToken } from 'utils/jwt';
 import errorGenerator from 'utils/error-generator';
@@ -22,44 +22,25 @@ async function signUp(email: string, password: string): Promise<TokenType> {
     });
   }
 
-  const transaction = await sequelize.transaction();
-
   const hashedPassword = await hashPassword(password);
 
-  const user = await db.User.create(
-    {
-      email,
-      password: hashedPassword,
-      is_OAuth: false,
-    },
-    { transaction },
-  );
+  const user = await db.User.create({
+    email,
+    password: hashedPassword,
+    is_OAuth: false,
+  });
 
   const uid = user.getDataValue('id');
 
   const accessToken = createToken('access', { uid });
   const refreshToken = createToken('refresh', { uid });
 
-  await db.User.update(
-    {
-      refresh_token: refreshToken,
-    },
-    {
-      where: {
-        id: uid,
-      },
-      transaction,
-    },
-  );
-
-  await transaction.commit();
-
   return { accessToken, refreshToken };
 }
 
 async function verifyAuth(token: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    verifyToken(token, (err: VerifyErrors | null) => {
+    verifyToken('access', token, (err: VerifyErrors | null) => {
       if (!err) {
         resolve();
         return;
@@ -122,24 +103,8 @@ async function signIn(email: string, password: string): Promise<TokenType> {
     });
   }
 
-  const transaction = await sequelize.transaction();
-
   const accessToken = createToken('access', { uid });
   const refreshToken = createToken('refresh', { uid });
-
-  await db.User.update(
-    {
-      refresh_token: refreshToken,
-    },
-    {
-      where: {
-        id: uid,
-      },
-      transaction,
-    },
-  );
-
-  await transaction.commit();
 
   return { accessToken, refreshToken };
 }

@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
     }
 
     const token = getAccessToken(req.headers.authorization);
-    const { uid } = decodeToken(token);
+    const { uid } = decodeToken('access', token);
 
     let result: CategoryStatisticsType | TrendStatisticsType | CalendarStatisticsType | void;
 
