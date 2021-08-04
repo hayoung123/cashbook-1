@@ -6,7 +6,8 @@ import _ from 'src/utils/dom';
 import { createUserPayment } from 'src/api/payment';
 
 interface PropsType {
-  controlPopup: (arg: boolean) => void;
+  setPayment: (payment: string) => void;
+  controlPopup: (isOpen: boolean) => void;
 }
 interface StateType {
   errorMsg: string;
@@ -49,21 +50,23 @@ export default class PaymentAddPupup extends Component<StateType, PropsType> {
   async addPayment(): Promise<void> {
     try {
       const input = _.$('input', this) as HTMLInputElement;
+      const value = input.value;
 
-      if (!input.value) {
+      if (!value) {
         this.setState({ errorMsg: '결제수단을 입력해주세요' });
         const newInput = _.$('input', this) as HTMLInputElement;
         _.focusInput(newInput);
         return;
       }
 
-      const result = await createUserPayment(input.value);
+      const result = await createUserPayment(value);
       if (!result.success) {
         this.setState({ errorMsg: result.errorMessage });
         return;
       }
 
       this.props.controlPopup(false);
+      this.props.setPayment(value);
     } catch (err) {
       console.log(err);
     }

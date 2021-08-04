@@ -88,7 +88,6 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     _.onEvent(this, 'input', this.handleDateInput.bind(this));
   }
   setTemplate(): string {
-    console.log('?');
     if (!this.state) return '';
 
     const { category, payment } = this.state;
@@ -169,7 +168,10 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
         }),
       }),
       ...(isOpenPopup && {
-        'payment__add-popup': new PaymentAddPupup({ controlPopup: this.controlPopup.bind(this) }),
+        'payment__add-popup': new PaymentAddPupup({
+          setPayment: this.dropdownCallback.bind(this, 'payment', 'isOpenPayment'),
+          controlPopup: this.controlPopup.bind(this),
+        }),
       }),
     };
   }
