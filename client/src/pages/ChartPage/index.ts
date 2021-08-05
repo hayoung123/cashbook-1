@@ -35,7 +35,9 @@ export default class ChartPage extends Component<StateType, void> {
 
     return {
       'chart__category-statistics': new CategoryStatistics(),
-      chart__trend: new Trend(),
+      ...(currentCategory && {
+        chart__trend: new Trend(),
+      }),
     };
   }
 }

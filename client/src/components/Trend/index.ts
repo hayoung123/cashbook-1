@@ -1,6 +1,8 @@
 import Component from 'src/lib/component';
 import { getState } from 'src/lib/observer';
 
+import { CATEGORY__INFO } from 'src/constant/category';
+
 import TransationList from 'src/components/TransactionList';
 
 import {
@@ -24,9 +26,11 @@ export default class Trend extends Component<void, void> {
     const { currentCategory }: currentCategoryType =
       getState<currentCategoryType>(currentCategoryState);
 
+    const category = CATEGORY__INFO[currentCategory]?.name || '';
+
     return `
       <section class="container box">
-        <h3>${currentCategory} 카테고리 소비 추이</h3>
+        <h3>${category} 카테고리 소비 추이</h3>
         <canvas id="line-chart" width="750" height="310"></canvas>
       </section>
       <section class="container">
@@ -37,7 +41,7 @@ export default class Trend extends Component<void, void> {
 
   setComponents(): { [key: string]: HTMLElement } {
     return {
-      // chart__list: new TransationList(),
+      chart__list: new TransationList(),
     };
   }
 
@@ -49,4 +53,4 @@ export default class Trend extends Component<void, void> {
   }
 }
 
-customElements.define('a-trend', Trend);
+customElements.define('trend-component', Trend);
