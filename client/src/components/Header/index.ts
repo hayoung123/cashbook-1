@@ -8,6 +8,7 @@ import chartIcon from 'public/assets/icon/chartIcon.svg';
 import historyIcon from 'public/assets/icon/historyIcon.svg';
 import leftArrow from 'public/assets/icon/leftArrow.svg';
 import rightArrow from 'public/assets/icon/rightArrow.svg';
+import logoutIcon from 'public/assets/icon/logoutIcon.svg';
 
 import { dateState, DateType } from 'src/store/transaction';
 
@@ -52,6 +53,9 @@ export default class Header extends Component {
           </button>
         </div>
         <div class="navigator">
+          <button class="nav-btn logout-btn">
+            <img src=${logoutIcon} alt='로그아웃'/>
+          </button>
           <button class="nav-btn ${isHistory ? 'selected' : ''}" data-path="/">
             <img src=${historyIcon} alt='거래내역 보기'/>
           </button>
