@@ -110,9 +110,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     <div class="transaction__form">
       <div class="transaction__form-column transaction__date" >
         <label for='date'>일자</label>
-        <input name='date' id='date' maxLength='10' value='${
-          this.date || ''
-        }' placeholder="예) 2020-08-01"/>
+        <input name='date' maxLength='10' value='${this.date || ''}' placeholder="예) 2021-08-01"/>
       </div>
       <div class="transaction__form-column transaction__category" >
         <div>분류</div>
@@ -141,9 +139,9 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
           <span>원</span>
         </div>
       </div>
-      <div class="transaction__form-submit-btn">
+      <button class="transaction__form-submit-btn">
         <img src=${isAbleSubmit ? activeSubmitBtn : inActiveSubmitBtn} alt='제출 버튼' />
-      </div>
+      </button>
     </div>
     <div class='transaction-form__error'>${this.state.errorState}</div>
     ${isOpenPopup ? `<div id="payment__add-popup"></div>` : ''}

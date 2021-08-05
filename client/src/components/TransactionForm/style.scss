@@ -9,6 +9,7 @@
 
   .transaction__form {
     display: flex;
+    align-items: center;
   }
   .transaction__form-column {
     padding: 0 20px;
@@ -67,9 +68,6 @@
   }
 
   .transaction__form-submit-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding-right: 24px;
   }
 
