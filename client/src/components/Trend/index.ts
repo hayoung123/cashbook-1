@@ -41,7 +41,7 @@ export default class Trend extends Component<void, void> {
 
   setComponents(): { [key: string]: HTMLElement } {
     return {
-      chart__list: new TransationList(),
+      chart__list: new TransationList({ isEditable: false }),
     };
   }
 

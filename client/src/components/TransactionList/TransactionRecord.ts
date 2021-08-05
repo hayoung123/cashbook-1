@@ -12,8 +12,12 @@ type StateType = {
   isEdit: boolean;
 };
 
-export default class TransactionRecord extends Component<StateType, RecordType> {
-  constructor(props: RecordType) {
+interface PropType extends RecordType {
+  isEditable: boolean;
+}
+
+export default class TransactionRecord extends Component<StateType, PropType> {
+  constructor(props: PropType) {
     super(props);
   }
   initState(): StateType {
@@ -31,7 +35,7 @@ export default class TransactionRecord extends Component<StateType, RecordType> 
     const { isEdit } = this.state;
     return `
       <div class="transaction__record-container">
-        <div class="transaction__record">
+        <div class="transaction__record ${this.props.isEditable ? 'selectable' : ''}">
           <div class="transaction__record-main">
             <div id="category-badge"></div>
             <div class="transaction__record-title">${title}</div>
@@ -65,6 +69,7 @@ export default class TransactionRecord extends Component<StateType, RecordType> 
 
   handleClick(e: Event): void {
     const target = e.target as HTMLElement;
+    if (!this.props.isEditable) return;
 
     if (_.isTarget(target, '.transaction__record')) {
       this.setState((state) => ({ isEdit: !state?.isEdit }));
