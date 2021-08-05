@@ -23,7 +23,7 @@ export default class MainPage extends Component {
   }
   setComponents(): objType {
     return {
-      main_page__list: new TransactionList(),
+      main_page__list: new TransactionList({ isEditable: true }),
       main_page__title: new TransactionHeader(),
       main_page__input: new TransactionFrom(),
     };

@@ -9,9 +9,13 @@ import { transactionState, transactionType } from 'src/store/transaction';
 
 import { objType } from 'src/type/type';
 
-export default class TransationList extends Component {
-  constructor() {
-    super();
+interface PropType {
+  isEditable: boolean;
+}
+
+export default class TransationList extends Component<void, PropType> {
+  constructor(props: PropType) {
+    super(props);
     this.keys = [transactionState];
     this.subscribe();
   }
@@ -26,12 +30,13 @@ export default class TransationList extends Component {
   }
 
   setComponents(): { [key: string]: HTMLElement } {
+    const { isEditable } = this.props;
     const { transaction } = getState<transactionType>(transactionState);
 
     const components: objType = {};
     transaction.forEach((data, idx) => {
       const key = `transaction-${idx}`;
-      components[key] = new DayTransaction(data);
+      components[key] = new DayTransaction({ isEditable, data });
     });
     return components;
   }

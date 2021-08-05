@@ -15,14 +15,9 @@ import { getChartStatistics } from 'src/api/chart';
 
 import { CategoryStatisticsType } from 'src/type/statistics';
 
-//util안에 있을 애는 아닌 것 같은데 위치를 못잡겠음
-
-//TODO 함수 위치 변경
 export async function setTransactionData(): Promise<any> {
   const { Page } = getState<PageStateType>(pageState);
   const pageName = Page?.name;
-  //TODO에러처리
-  console.log(Page, pageName);
 
   if (pageName === MainPage.name) {
     const { success, response } = await getTransaction();

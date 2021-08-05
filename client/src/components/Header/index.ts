@@ -84,7 +84,8 @@ export default class Header extends Component {
     if (!button) return;
 
     const path: string | void = button.dataset?.path;
-    if (path) router.push(path);
+
+    if (path && path !== window.location.pathname) router.push(path);
   }
 }
 

@@ -8,13 +8,18 @@ import { getNumberWithComma } from 'src/utils/price';
 import { objType } from 'src/type/type';
 import { DayRecordsType, RecordType } from 'src/type/transaction';
 
-export default class DayTransaction extends Component<void, DayRecordsType> {
-  constructor(props: DayRecordsType) {
+interface PropType {
+  data: DayRecordsType;
+  isEditable: boolean;
+}
+
+export default class DayTransaction extends Component<void, PropType> {
+  constructor(props: PropType) {
     super(props);
   }
 
   setTemplate(): string {
-    const { date: transactionDate, transaction } = this.props;
+    const { date: transactionDate, transaction } = this.props.data;
     const { month, date, day } = getDate(transactionDate);
     const totalPrice = this.getTotalPrice(transaction);
 
@@ -40,12 +45,15 @@ export default class DayTransaction extends Component<void, DayRecordsType> {
   setComponents(): ComponentType | objType {
     if (!this.props) return {};
 
-    const { transaction } = this.props;
+    const {
+      isEditable,
+      data: { transaction },
+    } = this.props;
 
     const components: ComponentType = {};
     transaction.forEach((record, idx) => {
       const key = `transaction-record-${idx}`;
-      components[key] = new TransactionRecord({ ...record });
+      components[key] = new TransactionRecord({ isEditable, ...record });
     });
 
     return components;

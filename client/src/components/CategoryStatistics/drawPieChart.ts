@@ -5,6 +5,7 @@ export type Pie = Array<{
 
 const RADIAN = Math.PI / 50;
 const START_ANGLE = -25;
+const END_ANGLE = 100 + START_ANGLE;
 const PIE_CHART_RADIUS = 127;
 
 function drawPieChart(element: HTMLElement, canvasID: string, info: Pie): void {
@@ -25,24 +26,30 @@ function drawPieChart(element: HTMLElement, canvasID: string, info: Pie): void {
     const endAngle = RADIAN * (angle + 100);
 
     ctx.fillStyle = '#2ac1bc';
-    ctx?.beginPath();
-    ctx?.moveTo(x, y);
-    ctx?.arc(x, y, radius, startAngle, endAngle);
-    ctx?.closePath();
-    ctx?.fill();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.arc(x, y, radius, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fill();
   }
 
-  info.forEach(({ color, pie }) => {
+  info.forEach(({ color, pie }, i) => {
     const startAngle = RADIAN * angle;
+
     angle += pie;
+    if (i === info.length - 1) {
+      angle = END_ANGLE;
+    }
     const endAngle = RADIAN * angle;
 
+    console.log(pie, angle);
+
     ctx.fillStyle = color;
-    ctx?.beginPath();
-    ctx?.moveTo(x, y);
-    ctx?.arc(x, y, radius, startAngle, endAngle);
-    ctx?.closePath();
-    ctx?.fill();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.arc(x, y, radius, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fill();
   });
 }
 
