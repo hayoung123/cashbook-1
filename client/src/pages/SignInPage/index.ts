@@ -14,6 +14,7 @@ import getValidityMessage from 'src/utils/getValidityMessages';
 import { getUrlParams } from 'src/utils/window';
 
 import githubIcon from 'public/assets/icon/github.svg';
+import { responseType } from 'src/type/type';
 
 interface FormType extends EventTarget {
   email?: HTMLInputElement;
@@ -86,15 +87,7 @@ export default class SignInPage extends Component {
         password: DEMO_PASSWORD,
       });
 
-      if (!res.success) {
-        this.displayError(res.errorMessage);
-        return;
-      }
-
-      const { accessToken } = res.response;
-      localStorage.setItem('_at', accessToken);
-
-      this.setLoggedInState(true);
+      this.validateAuth(res);
     } catch (err) {
       console.log(err);
     }
@@ -165,15 +158,7 @@ export default class SignInPage extends Component {
         password,
       });
 
-      if (!res.success) {
-        this.displayError(res.errorMessage);
-        return;
-      }
-
-      const { accessToken } = res.response;
-      localStorage.setItem('_at', accessToken);
-
-      this.setLoggedInState(true);
+      this.validateAuth(res);
     } catch (err) {
       console.log(err);
     }
@@ -189,14 +174,18 @@ export default class SignInPage extends Component {
   async setGithubAuth(): Promise<void> {
     const { code } = getUrlParams();
     if (!code) return;
-    const res = await getGithubAuth(code);
 
-    if (!res.success) {
-      this.displayError(res.errorMessage as string);
+    const result = await getGithubAuth(code);
+    this.validateAuth(result);
+  }
+
+  validateAuth(loginResult: responseType): void {
+    if (!loginResult.success) {
+      this.displayError(loginResult.errorMessage as string);
       return;
     }
 
-    const { accessToken } = res.response;
+    const { accessToken } = loginResult.response;
     localStorage.setItem('_at', accessToken);
 
     this.setLoggedInState(true);
