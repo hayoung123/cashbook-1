@@ -83,6 +83,7 @@ total-price-info {
   color: var(--body-color);
   font-size: var(--bold-medium-size);
   font-weight: 500;
+  margin-bottom: 24px;
   & > div:first-child {
     display: flex;
     gap: 8px;
