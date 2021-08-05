@@ -20,6 +20,18 @@ function drawPieChart(element: HTMLElement, canvasID: string, info: Pie): void {
 
   let angle = START_ANGLE;
 
+  if (info.length === 0) {
+    const startAngle = RADIAN * angle;
+    const endAngle = RADIAN * (angle + 100);
+
+    ctx.fillStyle = '#2ac1bc';
+    ctx?.beginPath();
+    ctx?.moveTo(x, y);
+    ctx?.arc(x, y, radius, startAngle, endAngle);
+    ctx?.closePath();
+    ctx?.fill();
+  }
+
   info.forEach(({ color, pie }) => {
     const startAngle = RADIAN * angle;
     angle += pie;

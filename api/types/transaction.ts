@@ -6,6 +6,7 @@ export interface getTransactionParamType {
   month: string;
   isIncome: boolean;
   isExpenditure: boolean;
+  category: string;
 }
 
 export interface TransactionRecordType {

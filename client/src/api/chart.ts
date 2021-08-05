@@ -1,6 +1,6 @@
 import { getState } from 'src/lib/observer';
 
-import { STATISTICS_URL } from 'src/configs/urls';
+import { STATISTICS_URL, TRANSACTION_URL } from 'src/configs/urls';
 
 import { dateState, DateType } from 'src/store/transaction';
 
@@ -22,5 +22,16 @@ export const getTrend = async (category: string): Promise<responseType> => {
   const query = `type=trend&year=${year}&category=${category}`;
 
   const data = await fetchWrapper(`${STATISTICS_URL}?${query}`, 'GET');
+  return data;
+};
+
+export const getCategoryTransaction = async (category: string): Promise<responseType> => {
+  const { year, month } = getState<DateType>(dateState);
+
+  const query = `
+    year=${year}&month=${month}&category=${category}&isIncome=false&isExpenditure=true
+  `;
+
+  const data = await fetchWrapper(`${TRANSACTION_URL}?${query.trim()}`, 'GET');
   return data;
 };

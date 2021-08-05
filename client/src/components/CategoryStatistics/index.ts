@@ -11,16 +11,21 @@ import {
   trendState,
   TrendType,
 } from 'src/store/statistics';
+import { transactionState, transactionType } from 'src/store/transaction';
 
 import { getNumberWithComma } from 'src/utils/price';
 import { getCategoryColor } from 'src/utils/category';
-import { getTrend } from 'src/api/chart';
+import { getTrend, getCategoryTransaction } from 'src/api/chart';
 import drawPieChart from './drawPieChart';
 
 import { objType } from 'src/type/type';
 import { CategoryStatisticsType } from 'src/type/statistics';
 
-export default class CategoryStatistics extends Component<void, void> {
+interface StateType {
+  currentSelected: string;
+}
+
+export default class CategoryStatistics extends Component<StateType, void> {
   constructor() {
     super();
     this.keys = [statisticsState];
@@ -28,7 +33,16 @@ export default class CategoryStatistics extends Component<void, void> {
     this.addClass('category__statistics');
   }
 
+  initState(): StateType {
+    return {
+      currentSelected: '',
+    };
+  }
+
+  // TODO: 선택 시 배경 어둡게 하기
   setTemplate(): string {
+    const currentSelected = this.state?.currentSelected;
+
     const { totalExpenditure, categoryList }: StatisticsType =
       getState<StatisticsType>(statisticsState);
 
@@ -38,7 +52,7 @@ export default class CategoryStatistics extends Component<void, void> {
         <canvas id="pie-chart" width="254" height="254"></canvas>
       </div>
       <div class="statistic-container">
-        <h3>이번 달 지출 금액 ${getNumberWithComma(totalExpenditure)}원</h3>
+        <h3>이번 달 지출 금액 ${getNumberWithComma(totalExpenditure)}원 ${currentSelected}</h3>
         <table>
           <colgroup>
             <col>
@@ -47,15 +61,17 @@ export default class CategoryStatistics extends Component<void, void> {
           </colgruop>
           <tbody>
             ${categoryList
-              .map(({ expenditure }, idx) => {
+              .map(({ category, expenditure }, idx) => {
                 const percentage = Math.round((expenditure / totalExpenditure) * 100);
+                const isSelected = currentSelected === category;
+
                 return `
-                  <tr id=${idx}>
+                  <tr class="${isSelected ? 'selected' : ''}" id=${idx}>
                     <td class="category"><div id="chart__badge-${idx}"></div></td>
                     <td class="percentage">${percentage}%</td>
                     <td class="money">${getNumberWithComma(expenditure)}원</td>
                   </tr>
-                  `;
+                `;
               })
               .join('')}
           </tbody>
@@ -102,25 +118,39 @@ export default class CategoryStatistics extends Component<void, void> {
       const button: HTMLTableRowElement | null = target.closest('tr');
       if (!button) return;
 
-      button.parentElement?.querySelectorAll('tr').forEach((t) => {
-        t.classList.remove('selected');
-      });
-
       if (button.tagName === 'TR') {
-        button.classList.add('selected');
-
         const { categoryList }: StatisticsType = getState<StatisticsType>(statisticsState);
-        const currentCategory = categoryList[+button.id].category;
+        const selectedCategory = categoryList[+button.id].category;
+
+        const { currentCategory } = getState<currentCategoryType>(currentCategoryState);
         const setCurrentCategoryState = setState<currentCategoryType>(currentCategoryState);
 
-        setCurrentCategoryState({ currentCategory });
-        const t = await getTrend(currentCategory);
-        if (t.success) {
-          const yearlyTrend = t.response.map((v: number) => Math.abs(v));
+        if (currentCategory === selectedCategory) {
+          return;
+        }
+
+        const res = await Promise.all([
+          getCategoryTransaction(selectedCategory),
+          getTrend(selectedCategory),
+        ]);
+
+        const transactionRes = res[0];
+        const trendRes = res[1];
+
+        if (transactionRes.success) {
+          const setTransactionState = setState<transactionType>(transactionState);
+          setTransactionState(transactionRes.response);
+        }
+
+        if (trendRes.success) {
+          const yearlyTrend = trendRes.response.map((v: number) => Math.abs(v));
           const setTrendState = setState<TrendType>(trendState);
 
           setTrendState({ yearlyTrend });
+          this.setState({ currentSelected: selectedCategory });
         }
+
+        setCurrentCategoryState({ currentCategory: selectedCategory });
       }
     } catch (err) {
       console.log(err);
