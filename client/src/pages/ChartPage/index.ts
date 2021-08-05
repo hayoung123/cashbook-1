@@ -31,7 +31,7 @@ export default class ChartPage extends Component<StateType, void> {
   }
 
   setComponents(): objType {
-    const { currentCategory } = getState<currentCategoryType>(currentCategoryState);
+    const currentCategory = getState<currentCategoryType>(currentCategoryState);
 
     return {
       'chart__category-statistics': new CategoryStatistics(),

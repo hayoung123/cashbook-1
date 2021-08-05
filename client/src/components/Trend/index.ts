@@ -5,6 +5,8 @@ import { CATEGORY__INFO } from 'src/constant/category';
 
 import TransationList from 'src/components/TransactionList';
 
+import pointIcon from 'public/assets/icon/point.svg';
+
 import {
   currentCategoryState,
   currentCategoryType,
@@ -23,7 +25,7 @@ export default class Trend extends Component<void, void> {
   }
 
   setTemplate(): string {
-    const { currentCategory }: currentCategoryType =
+    const currentCategory: currentCategoryType =
       getState<currentCategoryType>(currentCategoryState);
 
     const category = CATEGORY__INFO[currentCategory]?.name || '';
@@ -31,7 +33,9 @@ export default class Trend extends Component<void, void> {
     return `
       <section class="container box">
         <h3>${category} 카테고리 소비 추이</h3>
-        <canvas id="line-chart" width="750" height="310"></canvas>
+        <canvas id="line-chart" width="750" height="310">
+          <img id="point" src=${pointIcon} >
+        </canvas>
       </section>
       <section class="container">
         <div id="chart__list"></div>
