@@ -147,10 +147,11 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   setComponents(): objType {
     if (!this.state) return {};
 
-    const { isOpenCategory, isOpenPayment } = this.state;
+    const { isOpenCategory, isOpenPayment, isIncome } = this.state;
     return {
       ...(isOpenCategory && {
         'form__category-dropdown': new CategoryDropdown({
+          isIncome,
           setCategory: this.dropdownCallback.bind(this, 'category', 'isOpenCategory'),
         }),
       }),
