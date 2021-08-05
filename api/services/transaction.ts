@@ -137,15 +137,6 @@ async function editTransaction(editTransactionData: EditTransactionParamType): P
     });
   }
 
-  const isUserPayment = await checkUserPayment(userId, payment);
-
-  if (!isUserPayment) {
-    throw errorGenerator({
-      message: 'unowned payment',
-      code: 'payment/unowned-payment',
-    });
-  }
-
   await db.Transaction.update(
     {
       USERId: userId,
