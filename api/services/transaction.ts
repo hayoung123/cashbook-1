@@ -23,6 +23,7 @@ async function getTransaction({
   month,
   isIncome,
   isExpenditure,
+  category,
 }: getTransactionParamType): Promise<TransactionDataType> {
   const { startDate, endDate } = getSideDate(+year, +month);
   let totalIncome = 0;
@@ -35,6 +36,7 @@ async function getTransaction({
       date: {
         [Op.between]: [startDate, endDate],
       },
+      ...(category && { category: category }),
     },
     order: [['date', 'DESC']],
   });

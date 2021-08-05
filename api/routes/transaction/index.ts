@@ -30,9 +30,9 @@ router.get('/', validateToken, async (req, res) => {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken('access', accessToken);
 
-    const { year, month, isIncome, isExpenditure } = req.query;
+    const { year, month, isIncome = 'false', isExpenditure = 'false', category } = req.query;
 
-    if (!year || !month || !isIncome || !isExpenditure) {
+    if (!year || !month) {
       throw errorGenerator({
         code: 'req/query-not-found',
         message: 'Required query not found',
@@ -43,6 +43,7 @@ router.get('/', validateToken, async (req, res) => {
       userId,
       year,
       month,
+      category,
       isIncome: isIncome === 'true',
       isExpenditure: isExpenditure === 'true',
     } as getTransactionParamType);
