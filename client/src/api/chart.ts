@@ -5,8 +5,9 @@ import { STATISTICS_URL } from 'src/configs/urls';
 import { dateState, DateType } from 'src/store/transaction';
 
 import fetchWrapper from 'src/utils/fetchWrapper';
+import { responseType } from 'src/type/type';
 
-export const getChartStatistics = async (): Promise<{ success: boolean; response: any }> => {
+export const getChartStatistics = async (): Promise<responseType> => {
   const { year, month } = getState<DateType>(dateState);
 
   const query = `type=category&year=${year}&month=${month}`;
@@ -15,7 +16,7 @@ export const getChartStatistics = async (): Promise<{ success: boolean; response
   return data;
 };
 
-export const getTrend = async (category: string): Promise<{ success: boolean; response: any }> => {
+export const getTrend = async (category: string): Promise<responseType> => {
   const { year } = getState<DateType>(dateState);
 
   const query = `type=trend&year=${year}&category=${category}`;

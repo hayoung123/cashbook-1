@@ -8,9 +8,12 @@ import xBtn from 'public/assets/icon/xBtn.svg';
 import { userPaymentState, PaymentType } from 'src/store/payment';
 
 import _ from 'src/utils/dom';
+import { deleteUserPayment } from 'src/api/payment';
 
 interface PropsType {
   setPayment: (payment: string) => void;
+  controlPopup: (isOpen: boolean) => void;
+  setError: (msg: string) => void;
 }
 
 export default class PaymentDropdown extends Component<void, PropsType> {
@@ -48,14 +51,27 @@ export default class PaymentDropdown extends Component<void, PropsType> {
     const target = e.target as HTMLElement;
     const paymentItem = target.closest('.payment-item');
 
+    if (_.isTarget(target, '.payment-dropdown__delete-btn')) {
+      const payment = paymentItem?.firstElementChild?.textContent || '';
+      deleteUserPayment(payment);
+      this.props.setPayment('');
+      return;
+    }
+
     if (paymentItem) {
       const payment = paymentItem.firstElementChild?.textContent || '';
       this.props.setPayment(payment);
     }
 
     if (_.isTarget(target, '.payment-add-btn')) {
-      //모달창
+      this.props.controlPopup(true);
     }
+  }
+
+  async deletePayment(payment: string): Promise<void> {
+    const result = await deleteUserPayment(payment);
+
+    if (!result.success) this.props.setError(result.errorMessage ?? '');
   }
 }
 

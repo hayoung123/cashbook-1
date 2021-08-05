@@ -2,7 +2,19 @@ import { PAYMENT_URL } from 'src/configs/urls';
 
 import fetchWrapper from 'src/utils/fetchWrapper';
 
-export const getUserPayment = async (): Promise<{ success: boolean; response: any }> => {
-  const data = await fetchWrapper(PAYMENT_URL, 'GET');
-  return data;
+import { responseType } from 'src/type/type';
+
+export const getUserPayment = async (): Promise<responseType> => {
+  const result = await fetchWrapper(PAYMENT_URL, 'GET');
+  return result;
+};
+
+export const createUserPayment = async (payment: string): Promise<responseType> => {
+  const result = await fetchWrapper(PAYMENT_URL, 'POST', { payment });
+  return result;
+};
+
+export const deleteUserPayment = async (payment: string): Promise<responseType> => {
+  const result = await fetchWrapper(PAYMENT_URL, 'DELETE', { payment });
+  return result;
 };
