@@ -68,12 +68,10 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     this.bodyEvent = this.closeDropdown.bind(this);
 
     this.addClass('transaction__form-container');
-    if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
   }
   initState(): StateType {
     return {
       isIncome: this.props.data.price >= 0 ? true : false,
-      isAbleSubmit: false,
       isOpenPayment: false,
       isOpenCategory: false,
       isOpenPopup: false,
@@ -85,13 +83,13 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
 
   addEvent(): void {
     _.onEvent(this, 'click', this.handleClick.bind(this));
-    _.onEvent(this, 'input', this.handleDateInput.bind(this));
+    _.onEvent(this, 'input', this.handleInput.bind(this));
   }
   setTemplate(): string {
     if (!this.state) return '';
 
     const { category, payment } = this.state;
-    const { isIncome, isAbleSubmit, isOpenPayment, isOpenCategory, isOpenPopup } = this.state;
+    const { isIncome, isOpenPayment, isOpenCategory, isOpenPopup } = this.state;
 
     return `
     <div class="transaction__type">
@@ -139,13 +137,15 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
           <span>원</span>
         </div>
       </div>
-      <button class="transaction__form-submit-btn">
-        <img src=${isAbleSubmit ? activeSubmitBtn : inActiveSubmitBtn} alt='제출 버튼' />
-      </button>
-    </div>
-    <div class='transaction-form__error'>${this.state.errorState}</div>
-    ${isOpenPopup ? `<div id="payment__add-popup"></div>` : ''}
-    `;
+        <button class="transaction__form-submit-btn">
+          <img src=${
+            this.checkAbleSubmit() ? activeSubmitBtn : inActiveSubmitBtn
+          } alt='제출 버튼' />
+        </button>
+      </div>
+      <div class='transaction-form__error'>${this.state.errorState}</div>
+      ${isOpenPopup ? `<div id="payment__add-popup"></div>` : ''}
+        `;
   }
 
   setComponents(): objType {
@@ -289,7 +289,12 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   // 드롭다운 아이템 클릭 콜백함수
   dropdownCallback(type: string, stateKey: string, value: string): void {
     this.setState({ [type]: value, [stateKey]: false });
-    if (this.checkAbleSubmit()) this.setState({ isAbleSubmit: true });
+    if (this.checkAbleSubmit()) this.controlSubmitBtn(true);
+  }
+
+  controlSubmitBtn(isActive: boolean): void {
+    const submitBtn = _.$('.transaction__form-submit-btn>img', this) as HTMLImageElement;
+    submitBtn.src = isActive ? activeSubmitBtn : inActiveSubmitBtn;
   }
 
   controlPopup(isOpen: boolean): void {
@@ -300,7 +305,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     this.setState({ errorState: msg });
   }
 
-  handleDateInput(e: Event): void {
+  handleInput(e: Event): void {
     const target = e.target as HTMLInputElement;
 
     if (target.name === 'date') {
@@ -312,11 +317,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
     if (target.name === 'title') this.title = target.value;
     if (target.name === 'price') this.price = Math.abs(+target.value);
 
-    if (this.state?.isAbleSubmit !== this.checkAbleSubmit()) {
-      this.setState({ isAbleSubmit: this.checkAbleSubmit() });
-      const input = _.$(`input[name=${target.name}]`, this) as HTMLInputElement;
-      _.focusInput(input);
-    }
+    this.controlSubmitBtn(this.checkAbleSubmit());
   }
 
   checkAbleSubmit(): boolean {
