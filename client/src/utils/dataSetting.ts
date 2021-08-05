@@ -1,5 +1,9 @@
 import { getState, setState } from 'src/lib/observer';
 
+import MainPage from 'src/pages/MainPage';
+import CalendarPage from 'src/pages/CalendarPage';
+import ChartPage from 'src/pages/ChartPage';
+
 import { pageState, PageStateType } from 'src/store/page';
 import { transactionState, transactionType } from 'src/store/transaction';
 import { calendarDataState, CalendarStatisticsType } from 'src/store/calendar';
@@ -18,22 +22,23 @@ export async function setTransactionData(): Promise<any> {
   const { Page } = getState<PageStateType>(pageState);
   const pageName = Page?.name;
   //TODO에러처리
+  console.log(Page, pageName);
 
-  if (pageName === 'MainPage') {
+  if (pageName === MainPage.name) {
     const { success, response } = await getTransaction();
     if (success) {
       const setTransactionState = setState<transactionType>(transactionState);
       setTransactionState(response);
     }
   }
-  if (pageName === 'CalendarPage') {
+  if (pageName === CalendarPage.name) {
     const { success, response } = await getCalendarStatistics();
     if (success) {
       const setCalendarState = setState<CalendarStatisticsType>(calendarDataState);
       setCalendarState(response);
     }
   }
-  if (pageName === 'ChartPage') {
+  if (pageName === ChartPage.name) {
     const { success, response } = await getChartStatistics();
     if (success) {
       const setStatisticsState = setState<StatisticsType>(statisticsState);
