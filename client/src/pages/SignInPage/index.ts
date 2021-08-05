@@ -1,15 +1,19 @@
-import Component from 'src/lib/component';
+import './style.scss';
 
-import { router } from 'src/..';
+import Component from 'src/lib/component';
 import { setState } from 'src/lib/observer';
-import { isLoggedInState } from 'src/store/page';
-import fetchWrapper from 'src/utils/fetchWrapper';
-import getValidityMessage from 'src/utils/getValidityMessages';
+import { router } from 'src/..';
 
 import { SIGNIN_URL } from 'src/configs/urls';
 
+import { isLoggedInState } from 'src/store/page';
+
+import { getGithubAuth, getGithubLoginUrl } from 'src/api/auth';
+import fetchWrapper from 'src/utils/fetchWrapper';
+import getValidityMessage from 'src/utils/getValidityMessages';
+import { getUrlParams } from 'src/utils/window';
+
 import githubIcon from 'public/assets/icon/github.svg';
-import './style.scss';
 
 interface FormType extends EventTarget {
   email?: HTMLInputElement;
@@ -26,6 +30,7 @@ export default class SignInPage extends Component {
     super();
     this.addClass('page');
     this.setLoggedInState = setState<boolean>(isLoggedInState);
+    this.setGithubAuth();
   }
 
   setTemplate(): string {
@@ -57,7 +62,7 @@ export default class SignInPage extends Component {
           <button id="signin-demo" class="oauth-button demo">
           데모용 샘플 계정으로 로그인
           </button>
-          <button class="oauth-button github">
+          <button id="oauth-button github" class="oauth-button github">
             <img src="${githubIcon}" alt="github" />
             GitHub로 로그인
           </button>
@@ -133,6 +138,10 @@ export default class SignInPage extends Component {
         await this.signInDemo();
       }
 
+      if (button.id === 'oauth-button github') {
+        await this.signInGithub();
+      }
+
       button.disabled = false;
     } catch (err) {
       console.log(err);
@@ -168,6 +177,29 @@ export default class SignInPage extends Component {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async signInGithub(): Promise<void> {
+    const result = await getGithubLoginUrl();
+    if (result.success) {
+      window.location.href = result.response.url;
+    }
+  }
+
+  async setGithubAuth(): Promise<void> {
+    const { code } = getUrlParams();
+    if (!code) return;
+    const res = await getGithubAuth(code);
+
+    if (!res.success) {
+      this.displayError(res.errorMessage as string);
+      return;
+    }
+
+    const { accessToken } = res.response;
+    localStorage.setItem('_at', accessToken);
+
+    this.setLoggedInState(true);
   }
 }
 
