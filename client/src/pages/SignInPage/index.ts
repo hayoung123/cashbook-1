@@ -8,10 +8,9 @@ import { SIGNIN_URL } from 'src/configs/urls';
 
 import { isLoggedInState } from 'src/store/page';
 
-import { getGithubAuth, getGithubLoginUrl } from 'src/api/auth';
+import { getGithubLoginUrl } from 'src/api/auth';
 import fetchWrapper from 'src/utils/fetchWrapper';
 import getValidityMessage from 'src/utils/getValidityMessages';
-import { getUrlParams } from 'src/utils/window';
 
 import githubIcon from 'public/assets/icon/github.svg';
 import { responseType } from 'src/type/type';
@@ -31,7 +30,6 @@ export default class SignInPage extends Component {
     super();
     this.addClass('page');
     this.setLoggedInState = setState<boolean>(isLoggedInState);
-    this.setGithubAuth();
   }
 
   setTemplate(): string {
@@ -169,14 +167,6 @@ export default class SignInPage extends Component {
     if (result.success) {
       window.location.href = result.response.url;
     }
-  }
-
-  async setGithubAuth(): Promise<void> {
-    const { code } = getUrlParams();
-    if (!code) return;
-
-    const result = await getGithubAuth(code);
-    this.validateAuth(result);
   }
 
   validateAuth(loginResult: responseType): void {
