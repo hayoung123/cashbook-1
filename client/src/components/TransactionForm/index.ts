@@ -59,12 +59,14 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   bodyEvent: (arg: string) => void;
   constructor(props: PropsType = INIT_FORM) {
     super(props);
+    console.log(this.props);
     this.date = this.props.data.date;
     this.title = this.props.data.title;
     this.price = Math.abs(this.props.data.price);
     this.bodyEvent = this.closeDropdown.bind(this);
 
     this.addClass('transaction__form-container');
+    this.reRender();
   }
   initState(): StateType {
     return {
@@ -83,7 +85,7 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   }
   setTemplate(): string {
     if (!this.state) return '';
-
+    console.log(this.date);
     const { category, payment } = this.state;
     const { isIncome, isOpenPayment, isOpenCategory } = this.state;
 
