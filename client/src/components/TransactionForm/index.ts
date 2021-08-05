@@ -34,7 +34,6 @@ interface PropsType {
 interface StateType {
   [key: string]: string | boolean;
   isIncome: boolean;
-  isAbleSubmit: boolean;
   isOpenPayment: boolean;
   isOpenCategory: boolean;
   isOpenPopup: boolean;
