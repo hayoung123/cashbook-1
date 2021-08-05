@@ -2,8 +2,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import corsOptions from './configs/cors';
 import './utils/env';
+import corsOptions from './configs/cors';
 
 import routes from './routes';
 
