@@ -236,17 +236,22 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   }
 
   async deleteRecord(): Promise<void> {
-    const { success } = await deleteTransaction(this.props.data.id);
+    const { success, errorMessage } = await deleteTransaction(this.props.data.id);
     if (success) setTransactionData();
+    else {
+      this.setError(errorMessage || '다시 시도해주세요');
+    }
   }
 
   //TODO 에러처리
   //유저 결제수단 setting
   async setUserPayment(): Promise<void> {
-    const { success, response } = await getUserPayment();
+    const { success, response, errorMessage } = await getUserPayment();
     if (success) {
       const setUserPaymentState = setState<PaymentType>(userPaymentState);
       setUserPaymentState(response);
+    } else {
+      this.setError(errorMessage || '다시 시도해주세요');
     }
   }
 
