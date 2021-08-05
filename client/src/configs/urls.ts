@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:4000';
+// const BASE_URL = 'http://localhost:4000';
+const BASE_URL = 'http://3.34.139.247:4000';
 
 export const AUTH_URL = `${BASE_URL}/auth`;
 export const SIGNIN_URL = `${BASE_URL}/auth/signin`;
