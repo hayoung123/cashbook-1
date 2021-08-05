@@ -14,22 +14,30 @@ async function fetchWrapper(url: string, method: MethodType, body?: ObjectType):
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify(body),
     });
 
     if (!res.ok) {
-      if (method === 'HEAD') {
-        return { success: false };
+      if (res.status === 401) {
+        window.localStorage.removeItem('_at');
       }
+
       const { errorMessage } = await res.json();
       return { success: false, errorMessage };
     }
 
-    if (method === 'HEAD') {
-      return { success: true };
-    }
-
     const response = await res.json();
+
+    if (response.requestAgain) {
+      const { newAccessToken } = response;
+      if (newAccessToken) {
+        window.localStorage.setItem('_at', newAccessToken);
+      }
+
+      const newResult = await fetchWrapper(url, method, body);
+      return newResult;
+    }
 
     return { success: true, response };
   } catch (err) {

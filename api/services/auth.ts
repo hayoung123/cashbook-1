@@ -1,8 +1,6 @@
-import { VerifyErrors } from 'jsonwebtoken';
-
 import { db } from 'models/db';
 
-import { createToken, verifyToken } from 'utils/jwt';
+import { createToken } from 'utils/jwt';
 import errorGenerator from 'utils/error-generator';
 import { hashPassword, checkPassword } from 'utils/encryption';
 
@@ -36,43 +34,6 @@ async function signUp(email: string, password: string): Promise<TokenType> {
   const refreshToken = createToken('refresh', { uid });
 
   return { accessToken, refreshToken };
-}
-
-async function verifyAuth(token: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    verifyToken('access', token, (err: VerifyErrors | null) => {
-      if (!err) {
-        resolve();
-        return;
-      }
-
-      switch (err.name) {
-        case 'ToeknExpiredError':
-          reject(
-            errorGenerator({
-              message: err.message,
-              code: 'auth/token-expired',
-            }),
-          );
-          break;
-        case 'JsonWebTokenError':
-          reject(
-            errorGenerator({
-              message: err.message,
-              code: 'auth/invalid-token',
-            }),
-          );
-          break;
-        default:
-          reject(
-            errorGenerator({
-              message: err.message,
-              code: 'auth/invalid-token',
-            }),
-          );
-      }
-    });
-  });
 }
 
 async function signIn(email: string, password: string): Promise<TokenType> {
@@ -112,5 +73,4 @@ async function signIn(email: string, password: string): Promise<TokenType> {
 export default {
   signIn,
   signUp,
-  verifyAuth,
 };

@@ -4,11 +4,13 @@ import signin from './signin';
 import signup from './signup';
 import signout from './signout';
 
-import authService from 'services/auth';
-
-import validateToken from 'middlewares/validate-token';
-
-import { getAccessToken, checkTokenExpiration, decodeToken, createToken } from 'utils/jwt';
+import {
+  getAccessToken,
+  checkTokenExpiration,
+  decodeToken,
+  createToken,
+  checkTokenValidity,
+} from 'utils/jwt';
 import errorHandler from 'utils/error-handler';
 import errorGenerator from 'utils/error-generator';
 
@@ -18,29 +20,10 @@ router.use('/signin', signin);
 router.use('/signup', signup);
 router.use('/signout', signout);
 
-router.head('/', async (req, res) => {
-  try {
-    const token = getAccessToken(req.headers.authorization);
-
-    if (!token) {
-      throw errorGenerator({
-        message: 'No token',
-        code: 'req/no-token',
-      });
-    }
-
-    await authService.verifyAuth(token);
-
-    res.status(200).end();
-  } catch (err) {
-    console.log(err);
-    const { statusCode, errorMessage } = errorHandler(err.code);
-    res.status(statusCode).json({ errorMessage });
-  }
-});
-
 router.get('/', async (req, res) => {
   try {
+    const { redirect } = req.query;
+
     const accessToken = getAccessToken(req.headers.authorization);
     const refreshToken = req.cookies['_rt'];
 
@@ -50,6 +33,8 @@ router.get('/', async (req, res) => {
         code: 'req/no-token',
       });
     }
+
+    const isValidAccessToken = await checkTokenValidity('access', accessToken);
 
     const isAccessTokenExpired = await checkTokenExpiration('access', accessToken);
     const isRefreshTokenExpired = await checkTokenExpiration('refresh', refreshToken);
@@ -62,16 +47,14 @@ router.get('/', async (req, res) => {
       });
     }
 
-    if (!isAccessTokenExpired) {
-      const { uid } = decodeToken('access', accessToken);
-      const newRefreshToken = createToken('refresh', { uid });
-      res.cookie('_rt', newRefreshToken, { httpOnly: true });
-      res.status(200).json({ requestAgain: true });
-      return;
-    }
-
     const { uid } = decodeToken('refresh', refreshToken);
     const newAccessToken = createToken('access', { uid });
+
+    if (!redirect) {
+      const result = isValidAccessToken ? {} : { newAccessToken };
+      res.status(200).json(result);
+      return;
+    }
 
     res.status(200).json({ requestAgain: true, newAccessToken });
   } catch (err) {

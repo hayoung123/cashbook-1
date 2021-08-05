@@ -7,8 +7,9 @@ import errorHandler from 'utils/error-handler';
 async function validateToken(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
+    const refreshToken = req.cookies['_rt'];
 
-    if (!accessToken) {
+    if (!accessToken || !refreshToken) {
       throw errorGenerator({
         message: 'No token',
         code: 'req/no-token',
@@ -40,7 +41,7 @@ async function validateToken(req: Request, res: Response, next: NextFunction): P
     });
 
     if (isTokenExpired) {
-      res.redirect(303, '/auth');
+      res.redirect(303, '/auth?redirect=true');
       return;
     }
 

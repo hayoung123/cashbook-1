@@ -2,6 +2,8 @@ import express from 'express';
 
 import transactionService from 'services/transaction-statistics';
 
+import validateToken from 'middlewares/validate-token';
+
 import { decodeToken, getAccessToken } from 'utils/jwt';
 import errorGenerator from 'utils/error-generator';
 import errorHandler from 'utils/error-handler';
@@ -24,7 +26,7 @@ const router = express.Router();
  *     - type: calendar  : 달력 월별 통계 데이터 조회
  */
 
-router.get('/', async (req, res) => {
+router.get('/', validateToken, async (req, res) => {
   try {
     const { type, year, month, category } = req.query;
 

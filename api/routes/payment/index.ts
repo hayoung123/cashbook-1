@@ -2,6 +2,8 @@ import express from 'express';
 
 import paymentService from 'services/payment';
 
+import validateToken from 'middlewares/validate-token';
+
 import { decodeToken, getAccessToken } from 'utils/jwt';
 import errorHandler from 'utils/error-handler';
 import errorGenerator from 'utils/error-generator';
@@ -16,7 +18,7 @@ const router = express.Router();
  * post: 결제수단 추가
  */
 
-router.get('/', async (req, res) => {
+router.get('/', validateToken, async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken('access', accessToken);
@@ -30,7 +32,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.delete('/', async (req, res) => {
+router.delete('/', validateToken, async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken('access', accessToken);
@@ -53,7 +55,7 @@ router.delete('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validateToken, async (req, res) => {
   try {
     const accessToken = getAccessToken(req.headers.authorization);
     const { uid: userId } = decodeToken('access', accessToken);
