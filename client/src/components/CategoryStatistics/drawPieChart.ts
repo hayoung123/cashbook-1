@@ -42,8 +42,6 @@ function drawPieChart(element: HTMLElement, canvasID: string, info: Pie): void {
     }
     const endAngle = RADIAN * angle;
 
-    console.log(pie, angle);
-
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.moveTo(x, y);
