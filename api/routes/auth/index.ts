@@ -3,6 +3,7 @@ import express from 'express';
 import signin from './signin';
 import signup from './signup';
 import signout from './signout';
+import github from './github';
 
 import {
   getAccessToken,
@@ -19,6 +20,7 @@ const router = express.Router();
 router.use('/signin', signin);
 router.use('/signup', signup);
 router.use('/signout', signout);
+router.use('/github', github);
 
 router.get('/', async (req, res) => {
   try {
