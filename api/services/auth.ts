@@ -81,6 +81,26 @@ async function signIn(email: string, password: string, isOAuth?: boolean): Promi
   return { accessToken, refreshToken };
 }
 
+async function signInWithGithub(code: string): Promise<TokenType> {
+  const { access_token } = await getGithubAccessToken(code);
+
+  const email = await getUserEmailByGithub(access_token);
+
+  const userCount = await db.User.count({
+    where: { email },
+  });
+
+  let result: TokenType;
+
+  if (userCount > 0) {
+    result = await signIn(email, access_token, true);
+  } else {
+    result = await signUp(email, access_token, true);
+  }
+
+  return result;
+}
+
 async function getGithubAccessToken(code: string): Promise<any> {
   const GITHUB_AT_URL = 'https://github.com/login/oauth/access_token';
   const CLIENT_ID = process.env.CLIENT_ID;
@@ -115,6 +135,7 @@ async function getUserEmailByGithub(accessToken: string): Promise<any> {
 export default {
   signIn,
   signUp,
+  signInWithGithub,
   getGithubAccessToken,
   getUserEmailByGithub,
 };

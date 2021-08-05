@@ -1,12 +1,8 @@
 import express from 'express';
 
-import { db } from 'models/db';
-
 import authService from 'services/auth';
 
 import errorHandler from 'utils/error-handler';
-
-import { TokenType } from 'types/auth';
 
 const router = express.Router();
 
@@ -30,23 +26,7 @@ router.post('/', async (req, res) => {
   try {
     const { code } = req.body;
 
-    const { access_token } = await authService.getGithubAccessToken(code as string);
-
-    const email = await authService.getUserEmailByGithub(access_token);
-
-    const userCount = await db.User.count({
-      where: { email },
-    });
-
-    let result: TokenType;
-
-    if (userCount > 0) {
-      result = await authService.signIn(email, access_token, true);
-    } else {
-      result = await authService.signUp(email, access_token, true);
-    }
-
-    const { accessToken, refreshToken } = result;
+    const { accessToken, refreshToken } = await authService.signInWithGithub(code);
 
     res.cookie('_rt', refreshToken, { httpOnly: true });
     res.status(200).json({ accessToken });
