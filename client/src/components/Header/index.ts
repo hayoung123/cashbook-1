@@ -11,9 +11,11 @@ import rightArrow from 'public/assets/icon/rightArrow.svg';
 import logoutIcon from 'public/assets/icon/logoutIcon.svg';
 
 import { dateState, DateType } from 'src/store/transaction';
+import { isLoggedInState } from 'src/store/page';
 
 import { router } from 'src/..';
 import _ from 'src/utils/dom';
+import { userLogout } from 'src/api/auth';
 import { setTransactionData } from 'src/utils/dataSetting';
 import { getNextMonth, getPrevMonth } from 'src/utils/date';
 
@@ -84,12 +86,26 @@ export default class Header extends Component {
       setTransactionData();
     }
 
+    if (_.isTarget(target, '.logout-btn')) {
+      this.logout();
+    }
+
     const button: HTMLButtonElement | null = target.closest('.navigator>button');
     if (!button) return;
 
     const path: string | void = button.dataset?.path;
 
     if (path && path !== window.location.pathname) router.push(path);
+  }
+
+  async logout(): Promise<void> {
+    const setIsLoggedInState = setState<boolean>(isLoggedInState);
+    const result = await userLogout();
+
+    if (result.success) {
+      localStorage.clear();
+      setIsLoggedInState(false);
+    }
   }
 }
 
