@@ -2,11 +2,12 @@ import './style.scss';
 
 import Component from 'src/lib/component';
 
-import { CATEGORY__INFO } from 'src/constant/category';
+import { INCOME_CATEGORY_INFO, EXPENDITURE_CATEGORY_INFO } from 'src/constant/category';
 
 import _ from 'src/utils/dom';
 
 interface PropsType {
+  isIncome: boolean;
   setCategory: (category: string) => void;
 }
 
@@ -20,7 +21,9 @@ export default class CategoryDropdown extends Component<void, PropsType> {
     _.onEvent(this, 'click', this.handleClick.bind(this));
   }
   setTemplate(): string {
-    const categoryTemplate = Object.entries(CATEGORY__INFO).reduce((acc, [key, { name }]) => {
+    const CATEGORY_LIST = this.props.isIncome ? INCOME_CATEGORY_INFO : EXPENDITURE_CATEGORY_INFO;
+
+    const categoryTemplate = Object.entries(CATEGORY_LIST).reduce((acc, [key, { name }]) => {
       return acc + `<div class='category-item' data-id='${key}'>${name}</div>`;
     }, '');
 

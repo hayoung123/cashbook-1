@@ -8,11 +8,14 @@ import chartIcon from 'public/assets/icon/chartIcon.svg';
 import historyIcon from 'public/assets/icon/historyIcon.svg';
 import leftArrow from 'public/assets/icon/leftArrow.svg';
 import rightArrow from 'public/assets/icon/rightArrow.svg';
+import logoutIcon from 'public/assets/icon/logoutIcon.svg';
 
 import { dateState, DateType } from 'src/store/transaction';
+import { isLoggedInState } from 'src/store/page';
 
 import { router } from 'src/..';
 import _ from 'src/utils/dom';
+import { userLogout } from 'src/api/auth';
 import { setTransactionData } from 'src/utils/dataSetting';
 import { getNextMonth, getPrevMonth } from 'src/utils/date';
 
@@ -52,6 +55,9 @@ export default class Header extends Component {
           </button>
         </div>
         <div class="navigator">
+          <button class="nav-btn logout-btn">
+            <img src=${logoutIcon} alt='로그아웃'/>
+          </button>
           <button class="nav-btn ${isHistory ? 'selected' : ''}" data-path="/">
             <img src=${historyIcon} alt='거래내역 보기'/>
           </button>
@@ -80,12 +86,26 @@ export default class Header extends Component {
       setTransactionData();
     }
 
+    if (_.isTarget(target, '.logout-btn')) {
+      this.logout();
+    }
+
     const button: HTMLButtonElement | null = target.closest('.navigator>button');
     if (!button) return;
 
     const path: string | void = button.dataset?.path;
 
     if (path && path !== window.location.pathname) router.push(path);
+  }
+
+  async logout(): Promise<void> {
+    const setIsLoggedInState = setState<boolean>(isLoggedInState);
+    const result = await userLogout();
+
+    if (result.success) {
+      localStorage.clear();
+      setIsLoggedInState(false);
+    }
   }
 }
 

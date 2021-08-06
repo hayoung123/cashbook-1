@@ -1,22 +1,29 @@
 import './style.scss';
 
-import Component from 'src/lib/component';
+import Component, { objType } from 'src/lib/component';
 import { getState } from 'src/lib/observer';
 
 import xBtn from 'public/assets/icon/xBtn.svg';
 
+import PaymentAddPupup from '../popup/PaymentAddPopup';
+import PaymentDeletePupup from '../popup/PaymentDeletePopup';
+
 import { userPaymentState, PaymentType } from 'src/store/payment';
 
 import _ from 'src/utils/dom';
-import { deleteUserPayment } from 'src/api/payment';
 
 interface PropsType {
   setPayment: (payment: string) => void;
-  controlPopup: (isOpen: boolean) => void;
   setError: (msg: string) => void;
 }
 
-export default class PaymentDropdown extends Component<void, PropsType> {
+interface StateType {
+  isOpenAddPopup: boolean;
+  isOpenDeletePopup: boolean;
+  selectPayment: string;
+}
+
+export default class PaymentDropdown extends Component<StateType, PropsType> {
   constructor(props: PropsType) {
     super(props);
     this.keys = [userPaymentState];
@@ -24,11 +31,23 @@ export default class PaymentDropdown extends Component<void, PropsType> {
     this.addClass('dropdown');
   }
 
+  initState(): StateType {
+    return {
+      isOpenAddPopup: false,
+      isOpenDeletePopup: false,
+      selectPayment: '',
+    };
+  }
+
   addEvent(): void {
     _.onEvent(this, 'click', this.handleClick.bind(this));
   }
 
   setTemplate(): string {
+    if (!this.state) return '';
+
+    const { isOpenAddPopup, isOpenDeletePopup } = this.state;
+
     const userPayment: Array<string> = getState<PaymentType>(userPaymentState);
     const paymentTemplate = userPayment.reduce((acc, cur) => {
       return (acc += `
@@ -44,7 +63,31 @@ export default class PaymentDropdown extends Component<void, PropsType> {
     return `
       ${paymentTemplate}
       <div class='payment-add-btn'>추가하기</div>
+      ${isOpenAddPopup ? `<div id=payment-add-popup></div>` : ''}
+      ${isOpenDeletePopup ? `<div id=payment-delete-popup></div>` : ''}
     `;
+  }
+
+  setComponents(): objType {
+    if (!this.state) return {};
+
+    const { isOpenAddPopup, isOpenDeletePopup, selectPayment } = this.state;
+
+    return {
+      ...(isOpenAddPopup && {
+        'payment-add-popup': new PaymentAddPupup({
+          setPayment: this.props.setPayment,
+          controlPopup: this.controlPopup.bind(this, 'add'),
+        }),
+      }),
+      ...(isOpenDeletePopup && {
+        'payment-delete-popup': new PaymentDeletePupup({
+          payment: selectPayment,
+          setPayment: this.props.setPayment,
+          controlPopup: this.controlPopup.bind(this, 'delete'),
+        }),
+      }),
+    };
   }
 
   handleClick(e: Event): void {
@@ -53,8 +96,8 @@ export default class PaymentDropdown extends Component<void, PropsType> {
 
     if (_.isTarget(target, '.payment-dropdown__delete-btn')) {
       const payment = paymentItem?.firstElementChild?.textContent || '';
-      deleteUserPayment(payment);
-      this.props.setPayment('');
+      this.setState({ selectPayment: payment });
+      this.controlPopup('delete', true);
       return;
     }
 
@@ -64,14 +107,13 @@ export default class PaymentDropdown extends Component<void, PropsType> {
     }
 
     if (_.isTarget(target, '.payment-add-btn')) {
-      this.props.controlPopup(true);
+      this.controlPopup('add', true);
     }
   }
 
-  async deletePayment(payment: string): Promise<void> {
-    const result = await deleteUserPayment(payment);
-
-    if (!result.success) this.props.setError(result.errorMessage ?? '');
+  controlPopup(type: string, isOpen: boolean): void {
+    if (type === 'add') this.setState({ isOpenAddPopup: isOpen });
+    if (type === 'delete') this.setState({ isOpenDeletePopup: isOpen });
   }
 }
 

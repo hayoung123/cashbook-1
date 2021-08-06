@@ -12,7 +12,6 @@ import { CATEGORY__INFO } from 'src/constant/category';
 
 import CategoryDropdown from 'src/components/dropdown/CategoryDropdown';
 import PaymentDropdown from 'src/components/dropdown/PaymentDropdown';
-import PaymentAddPupup from 'src/components/popup/PaymentAddPopup';
 
 import { userPaymentState, PaymentType } from 'src/store/payment';
 
@@ -36,7 +35,6 @@ interface StateType {
   isIncome: boolean;
   isOpenPayment: boolean;
   isOpenCategory: boolean;
-  isOpenPopup: boolean;
   errorState: string;
   category: string;
   payment: string;
@@ -61,19 +59,20 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   bodyEvent: (arg: string) => void;
   constructor(props: PropsType = INIT_FORM) {
     super(props);
+    console.log(this.props);
     this.date = this.props.data.date;
     this.title = this.props.data.title;
     this.price = Math.abs(this.props.data.price);
     this.bodyEvent = this.closeDropdown.bind(this);
 
     this.addClass('transaction__form-container');
+    if (this.props.isEdit) this.reRender();
   }
   initState(): StateType {
     return {
       isIncome: this.props.data.price >= 0 ? true : false,
       isOpenPayment: false,
       isOpenCategory: false,
-      isOpenPopup: false,
       errorState: '',
       category: CATEGORY__INFO[this.props.data.category]?.name,
       payment: this.props.data.payment,
@@ -86,9 +85,8 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   }
   setTemplate(): string {
     if (!this.state) return '';
-
     const { category, payment } = this.state;
-    const { isIncome, isOpenPayment, isOpenCategory, isOpenPopup } = this.state;
+    const { isIncome, isOpenPayment, isOpenCategory } = this.state;
 
     return `
     <div class="transaction__type">
@@ -143,31 +141,24 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
         </button>
       </div>
       <div class='transaction-form__error'>${this.state.errorState}</div>
-      ${isOpenPopup ? `<div id="payment__add-popup"></div>` : ''}
         `;
   }
 
   setComponents(): objType {
     if (!this.state) return {};
 
-    const { isOpenCategory, isOpenPayment, isOpenPopup } = this.state;
+    const { isOpenCategory, isOpenPayment, isIncome } = this.state;
     return {
       ...(isOpenCategory && {
         'form__category-dropdown': new CategoryDropdown({
+          isIncome,
           setCategory: this.dropdownCallback.bind(this, 'category', 'isOpenCategory'),
         }),
       }),
       ...(isOpenPayment && {
         'form__payment-dropdown': new PaymentDropdown({
           setPayment: this.dropdownCallback.bind(this, 'payment', 'isOpenPayment'),
-          controlPopup: this.controlPopup.bind(this),
           setError: this.setError.bind(this),
-        }),
-      }),
-      ...(isOpenPopup && {
-        'payment__add-popup': new PaymentAddPupup({
-          setPayment: this.dropdownCallback.bind(this, 'payment', 'isOpenPayment'),
-          controlPopup: this.controlPopup.bind(this),
         }),
       }),
     };
@@ -245,17 +236,22 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   }
 
   async deleteRecord(): Promise<void> {
-    const { success } = await deleteTransaction(this.props.data.id);
+    const { success, errorMessage } = await deleteTransaction(this.props.data.id);
     if (success) setTransactionData();
+    else {
+      this.setError(errorMessage || '다시 시도해주세요');
+    }
   }
 
   //TODO 에러처리
   //유저 결제수단 setting
   async setUserPayment(): Promise<void> {
-    const { success, response } = await getUserPayment();
+    const { success, response, errorMessage } = await getUserPayment();
     if (success) {
       const setUserPaymentState = setState<PaymentType>(userPaymentState);
       setUserPaymentState(response);
+    } else {
+      this.setError(errorMessage || '다시 시도해주세요');
     }
   }
 
@@ -294,10 +290,6 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   controlSubmitBtn(isActive: boolean): void {
     const submitBtn = _.$('.transaction__form-submit-btn>img', this) as HTMLImageElement;
     submitBtn.src = isActive ? activeSubmitBtn : inActiveSubmitBtn;
-  }
-
-  controlPopup(isOpen: boolean): void {
-    this.setState({ isOpenPopup: isOpen });
   }
 
   setError(msg: string): void {
