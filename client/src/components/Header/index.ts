@@ -55,18 +55,18 @@ export default class Header extends Component {
           </button>
         </div>
         <div class="navigator">
-        <img src=${historyIcon} alt='거래내역 보기'/>
+        <button class="nav-btn ${isHistory ? 'selected' : ''}" data-path="/">
+          <img src=${historyIcon} alt='거래내역 보기'/>
         </button>
         <button class="nav-btn ${isCalendar ? 'selected' : ''}" data-path="/calendar" >
-        <img src=${calendarIcon} alt='달력 보기'/>
+          <img src=${calendarIcon} alt='달력 보기'/>
         </button>
         <button class="nav-btn ${isChart ? 'selected' : ''}" data-path="/chart">
-        <img src=${chartIcon} alt='통계 보기'/>
+          <img src=${chartIcon} alt='통계 보기'/>
         </button>
         <button class="nav-btn logout-btn">
           <img src=${logoutIcon} alt='로그아웃'/>
         </button>
-        <button class="nav-btn ${isHistory ? 'selected' : ''}" data-path="/">
         </div>
       </div>
     `;
