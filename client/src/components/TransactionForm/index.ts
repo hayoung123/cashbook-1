@@ -59,7 +59,6 @@ export default class TransactionFrom extends Component<StateType, PropsType> {
   bodyEvent: (arg: string) => void;
   constructor(props: PropsType = INIT_FORM) {
     super(props);
-    console.log(this.props);
     this.date = this.props.data.date;
     this.title = this.props.data.title;
     this.price = Math.abs(this.props.data.price);
