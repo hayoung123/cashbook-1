@@ -26,13 +26,9 @@ export const trendState = initState<TrendType>({
   },
 });
 
-export interface currentCategoryType {
-  currentCategory: string;
-}
+export type currentCategoryType = string;
 
 export const currentCategoryState = initState<currentCategoryType>({
   key: 'currentCategoryState',
-  defaultValue: {
-    currentCategory: '',
-  },
+  defaultValue: '',
 });

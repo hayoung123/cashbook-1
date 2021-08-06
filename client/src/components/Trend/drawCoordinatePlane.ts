@@ -19,7 +19,7 @@ function drawCoordinatePlane(element: HTMLElement, canvasID: string): void {
   const gridHeight = COORDINATE_HEIGHT / ROWS;
   const gridWidth = COORDINATE_WIDTH / COLUMNS;
 
-  for (let i = 0; i < COLUMNS; i++) {
+  for (let i = 1; i < ROWS; i++) {
     ctx.strokeStyle = '#ccd3d3';
     ctx.beginPath();
     ctx.moveTo(0, gridHeight * i);
@@ -27,7 +27,7 @@ function drawCoordinatePlane(element: HTMLElement, canvasID: string): void {
     ctx.stroke();
   }
 
-  for (let i = 0; i < COLUMNS; i++) {
+  for (let i = 1; i < COLUMNS; i++) {
     ctx.strokeStyle = '#ccd3d3';
     ctx.beginPath();
     ctx.moveTo(gridWidth * i, 0);

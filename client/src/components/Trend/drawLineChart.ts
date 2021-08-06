@@ -29,22 +29,34 @@ function drawLineChart(element: HTMLElement, canvasID: string, info: number[]): 
   const heightUnit = 240 / (maxValue - minValue);
   const offset = minValue * heightUnit;
 
-  // Chart Start
-  ctx.moveTo(gridWidth, 270 - (minValue * heightUnit - offset));
+  // Chart start
+  ctx.moveTo(gridWidth, 270 - (info[0] * heightUnit - offset));
   ctx.beginPath();
 
+  let preX = gridWidth;
+  let preY = 270 - (info[0] * heightUnit - offset);
+
+  // Draw chart
   info.forEach((price, i) => {
     const x = gridWidth * (i + 1);
     const y = 270 - (price * heightUnit - offset);
 
-    ctx.lineTo(x, y);
+    ctx.bezierCurveTo((preX + x) / 2, preY, (preX + x) / 2, y, x, y);
+
+    preX = x;
+    preY = y;
   });
   ctx.stroke();
 
-  info.forEach((price, i) => {
-    const x = gridWidth * (i + 1);
-    const y = 270 - (price * heightUnit - offset);
-    ctx.fillText(getNumberWithComma(price), x, y - 12);
+  // Draw points and texts
+  const point = element.querySelector('#point') as SVGImageElement;
+  point.addEventListener('load', () => {
+    info.forEach((price, i) => {
+      const x = gridWidth * (i + 1);
+      const y = 270 - (price * heightUnit - offset);
+      ctx.fillText(getNumberWithComma(price), x, y - 12);
+      ctx.drawImage(point, x - 5, y - 5);
+    });
   });
 }
 

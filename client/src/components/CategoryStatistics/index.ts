@@ -41,7 +41,7 @@ export default class CategoryStatistics extends Component<StateType, void> {
 
   // TODO: 선택 시 배경 어둡게 하기
   setTemplate(): string {
-    const currentSelected = this.state?.currentSelected;
+    const currentSelected = getState<currentCategoryType>(currentCategoryState);
 
     const { totalExpenditure, categoryList }: StatisticsType =
       getState<StatisticsType>(statisticsState);
@@ -52,7 +52,7 @@ export default class CategoryStatistics extends Component<StateType, void> {
         <canvas id="pie-chart" width="254" height="254"></canvas>
       </div>
       <div class="statistic-container">
-        <h3>이번 달 지출 금액 ${getNumberWithComma(totalExpenditure)}원 ${currentSelected}</h3>
+        <h3>이번 달 지출 금액 ${getNumberWithComma(totalExpenditure)}원</h3>
         <table>
           <colgroup>
             <col>
@@ -122,7 +122,7 @@ export default class CategoryStatistics extends Component<StateType, void> {
         const { categoryList }: StatisticsType = getState<StatisticsType>(statisticsState);
         const selectedCategory = categoryList[+button.id].category;
 
-        const { currentCategory } = getState<currentCategoryType>(currentCategoryState);
+        const currentCategory = getState<currentCategoryType>(currentCategoryState);
         const setCurrentCategoryState = setState<currentCategoryType>(currentCategoryState);
 
         if (currentCategory === selectedCategory) {
@@ -150,7 +150,7 @@ export default class CategoryStatistics extends Component<StateType, void> {
           this.setState({ currentSelected: selectedCategory });
         }
 
-        setCurrentCategoryState({ currentCategory: selectedCategory });
+        setCurrentCategoryState(selectedCategory);
       }
     } catch (err) {
       console.log(err);
